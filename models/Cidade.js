@@ -1,10 +1,9 @@
 import { Sequelize, DataTypes } from "sequelize";
-
 import sequelize from "../db/conn.js";
 
-const Profissao = sequelize.define('Profissao', {
+const Cidade = sequelize.define('Cidade', {
 
-    IdProfissao:{
+    IdCidade:{
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
@@ -14,14 +13,12 @@ const Profissao = sequelize.define('Profissao', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    Descricao:{
+    UF:{
         type: DataTypes.STRING,
-        allowNull: true
+        references: {
+            model: UF,
+            key: 'UF'
+        }
     }
-
-},{ 
-    tableName: 'PROFISSAO',
-    timestamps: false,
-    });
-
-export default Profissao;
+    
+});

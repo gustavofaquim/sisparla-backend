@@ -2,26 +2,26 @@ import { Sequelize, DataTypes } from "sequelize";
 
 import sequelize from "../db/conn.js";
 
-const Profissao = sequelize.define('Profissao', {
+import Profissao from "./Profissao.js";
 
-    IdProfissao:{
+
+const Religiao = sequelize.define('Religiao', {
+
+    IdReligiao:{
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
+        allowNull: false,
         unique: true
     },
     Nome:{
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    Descricao:{
-        type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false,
+        unique: true
     }
-
-},{ 
-    tableName: 'PROFISSAO',
+},
+{ 
+    tableName: 'RELIGIAO',
     timestamps: false,
     });
 
-export default Profissao;
+export default Religiao;

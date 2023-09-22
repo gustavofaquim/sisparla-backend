@@ -4,6 +4,8 @@ import sequelize from "../db/conn.js";
 
 import Profissao from "./Profissao.js";
 
+import Religiao from "./Religiao.js";
+
 const Apoiador = sequelize.define('Apoiador', {
 
     IdApoiador:{
@@ -41,6 +43,13 @@ const Apoiador = sequelize.define('Apoiador', {
             key: 'IdProfissao'
         }
     },
+    Religiao:{
+        type: DataTypes.INTEGER,
+        references:{
+            model: Religiao,
+            key: 'IdReligiao'
+        }
+    }
 
 }, { 
     tableName: 'APOIADOR',
@@ -53,11 +62,12 @@ Apoiador.belongsTo(Profissao, {
     as: 'ProfissaoApoiador'
 });
 
+Apoiador.belongsTo(Religiao, {
+    foreignKey: 'Religiao',
+    as: 'ApoiadorReligiao'
+});
 
-Apoiador.prototype.getProfissao = async function() {
-    const profissao = await Profissao.findByPk(this.Profissao);
-    return profissao;
-};
+
 
 export default Apoiador;
 
