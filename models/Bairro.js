@@ -1,8 +1,10 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../db/conn.js";
 
+import Cidade from "./Cidade.js";
 
-const Bairro = sequelize.define('bairro',{
+
+const Bairro = sequelize.define('Bairro',{
 
     IdBairro:{
         type: DataTypes.INTEGER,
@@ -26,4 +28,16 @@ const Bairro = sequelize.define('bairro',{
         type: DataTypes.STRING,
         allowNull: true
     }
-}); 
+},{
+    tableName: 'BAIRRO',
+    timestamps: false,
+});
+
+
+Bairro.belongsTo(Cidade, {
+    foreignKey: 'Cidade',
+    as: 'CidadeApoiador'
+});
+
+
+export default Bairro;

@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 async function main(){
     try {
         
-        const sequelize = new Sequelize('SisParla', 'root', '123456789', {
+        const sequelize = new Sequelize('SisParla', 'root', '', {
             host: 'localhost',
             dialect: 'mysql'
         });

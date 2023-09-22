@@ -3,8 +3,10 @@ import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../db/conn.js";
 
 import Profissao from "./Profissao.js";
-
 import Religiao from "./Religiao.js";
+import Endereco from "./Endereco.js";
+import Classificacao from "./Classificacao.js";
+import SituacaoCadastro from "./SituacaoCadastro.js";
 
 const Apoiador = sequelize.define('Apoiador', {
 
@@ -49,7 +51,32 @@ const Apoiador = sequelize.define('Apoiador', {
             model: Religiao,
             key: 'IdReligiao'
         }
-    }
+    },
+    Endereco:{
+        type: DataTypes.INTEGER,
+        references:{
+            model: Endereco,
+            key: 'IdEndereco'
+        }
+    },
+    Classificacao:{
+        type: DataTypes.INTEGER,
+        references:{
+            model: Classificacao,
+            key: 'IdClassificacao'
+        }
+    },
+    Situacao:{
+        type: DataTypes.INTEGER,
+        references:{
+            model: SituacaoCadastro,
+            key: "IdSituacao"
+        }
+    },
+    InformacaoAdicional:{
+        type: DataTypes.STRING,
+        allowNull: true
+    }  
 
 }, { 
     tableName: 'APOIADOR',
@@ -65,6 +92,21 @@ Apoiador.belongsTo(Profissao, {
 Apoiador.belongsTo(Religiao, {
     foreignKey: 'Religiao',
     as: 'ApoiadorReligiao'
+});
+
+Apoiador.belongsTo(Endereco, {
+    foreignKey: 'Endereco',
+    as: 'EnderecoApoiador'
+});
+
+Apoiador.belongsTo(Classificacao, {
+    foreignKey: 'Classificacao',
+    as: 'ClassificacaoApoiador'
+});
+
+Apoiador.belongsTo(SituacaoCadastro, {
+    foreignKey: 'Situacao',
+    as: 'SituacaoCadastroApoiador'
 });
 
 

@@ -1,6 +1,8 @@
 import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../db/conn.js";
 
+import Estado from "./Estado.js";
+
 const Cidade = sequelize.define('Cidade', {
 
     IdCidade:{
@@ -13,12 +15,24 @@ const Cidade = sequelize.define('Cidade', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    UF:{
-        type: DataTypes.STRING,
+    Estado:{
+        type: DataTypes.INTEGER,
         references: {
-            model: UF,
-            key: 'UF'
+            model: Estado,
+            key: 'IdEstado'
         }
     }
     
+},
+{ 
+    tableName: 'CIDADE',
+    timestamps: false,
 });
+
+Cidade.belongsTo(Estado, {
+    foreignKey: 'Estado',
+    as: 'EstadoApoiador'
+});
+
+
+export default Cidade;

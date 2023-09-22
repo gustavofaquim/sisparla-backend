@@ -2,7 +2,7 @@ import { Sequelize, DataTypes } from "sequelize";
 
 import sequelize from "../db/conn.js";
 
-import Religiao from "./Bairro.js";
+import Bairro from "./Bairro.js";
 
 const Endereco = sequelize.define('Endereco', {
 
@@ -32,4 +32,14 @@ const Endereco = sequelize.define('Endereco', {
         allowNull: true
     }
 
+},{
+    tableName: 'ENDERECO',
+    timestamps: false,
 });
+
+Endereco.belongsTo(Bairro, {
+    foreignKey: 'Bairro',
+    as: 'BairroApoiador'
+});
+
+export default Endereco;
