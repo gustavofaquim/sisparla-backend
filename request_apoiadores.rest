@@ -1,0 +1,47 @@
+###
+GET http://localhost:3000/api/apoiadores
+
+
+###
+GET http://localhost:3000/api/apoiadores/2
+
+
+###
+POST http://localhost:3000/api/apoiadores
+Content-Type: application/json
+
+{
+    "Nome": "Fulano de Tal",
+    "Apelido": "Fulaninho",
+    "DataNascimento": "01/12/2001",
+    "Email": "fulanodetal@gmail.com",
+    "Profissao": 1,
+    "Religiao": 1,
+    "Endereco": 1,
+    "Classificacao": 1,
+    "Situacao": 1,
+    "InformacaoAdicional": "Fazendo um teste de envio de dados via API"
+}
+
+
+###
+PUT http://localhost:3000/api/apoiadores/2
+Content-Type: application/json
+
+{
+    "Nome": "Fulano de Tal Sobrinho",
+    "Apelido": null,
+    "DataNascimento": "01/12/2001",
+    "Email": "fulanodetal@gmail.com",
+    "Profissao": 1,
+    "Religiao": 1,
+    "Endereco": 1,
+    "Classificacao": 1,
+    "Situacao": 1,
+    "InformacaoAdicional": "Fazendo um teste de envio de dados via API"
+}
+
+
+###
+DELETE http://localhost:3000/api/apoiadores/2
+

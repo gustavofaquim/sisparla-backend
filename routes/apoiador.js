@@ -19,5 +19,15 @@ router
     .delete((req,res) => apoiadorController.deleteById(req,res));
 
 
+router
+    .route("/apoiadores")
+    .post((req,res) => apoiadorController.create(req,res));
+
+
+router
+    .route("/apoiadores/:id")
+    .put((req,res) => apoiadorController.updateById(req,res));
+
+
 
 export default router;

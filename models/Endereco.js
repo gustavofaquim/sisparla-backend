@@ -8,7 +8,7 @@ const Endereco = sequelize.define('Endereco', {
 
     idEndereco:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         unique: true
     },
@@ -22,6 +22,10 @@ const Endereco = sequelize.define('Endereco', {
     Numero:{
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    Lagradouro:{
+        type: DataTypes.STRING,
+        allowNull: true
     },
     Quadra: {
         type: DataTypes.STRING,

@@ -5,7 +5,7 @@ const Estado = sequelize.define('Estado',{
     
     IdEstado:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         unique: true
     },

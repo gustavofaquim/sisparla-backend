@@ -13,7 +13,7 @@ const Apoiador = sequelize.define('Apoiador', {
     IdApoiador:{
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
+        allowNull: true,
         unique: true
     },
     Nome:{

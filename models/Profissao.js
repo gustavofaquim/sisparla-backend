@@ -6,7 +6,7 @@ const Profissao = sequelize.define('Profissao', {
 
     IdProfissao:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         unique: true
     },

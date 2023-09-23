@@ -5,7 +5,7 @@ import sequelize from "../db/conn.js";
 const Classificacao = sequelize.define('Classificacao', {
     idClassificacao:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         unique: true
     },

@@ -7,7 +7,7 @@ const Cidade = sequelize.define('Cidade', {
 
     IdCidade:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         unique: true
     },

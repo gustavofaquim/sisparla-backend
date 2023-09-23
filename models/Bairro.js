@@ -8,7 +8,7 @@ const Bairro = sequelize.define('Bairro',{
 
     IdBairro:{
         type: DataTypes.INTEGER,
-        allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         unique: true
     },
