@@ -13,7 +13,7 @@ const Apoiador = sequelize.define('Apoiador', {
     IdApoiador:{
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: true,
+        autoIncrement: true,
         unique: true
     },
     Nome:{
@@ -39,18 +39,13 @@ const Apoiador = sequelize.define('Apoiador', {
         unique: true, // Garante que o email seja único
     },
     Profissao:{
-        type: DataTypes.INTEGER,
-        references: {
-            model: Profissao,
-            key: 'IdProfissao'
-        }
+        type: DataTypes.STRING,
+        allowNull: true,
+       
     },
     Religiao:{
-        type: DataTypes.INTEGER,
-        references:{
-            model: Religiao,
-            key: 'IdReligiao'
-        }
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     Endereco:{
         type: DataTypes.INTEGER,
@@ -84,15 +79,6 @@ const Apoiador = sequelize.define('Apoiador', {
     }
 );
 
-Apoiador.belongsTo(Profissao, {
-    foreignKey: 'Profissao',
-    as: 'ProfissaoApoiador'
-});
-
-Apoiador.belongsTo(Religiao, {
-    foreignKey: 'Religiao',
-    as: 'ApoiadorReligiao'
-});
 
 Apoiador.belongsTo(Endereco, {
     foreignKey: 'Endereco',

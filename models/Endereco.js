@@ -2,22 +2,26 @@ import { Sequelize, DataTypes } from "sequelize";
 
 import sequelize from "../db/conn.js";
 
-import Bairro from "./Bairro.js";
+import Cidade from "./Cidade.js";
 
 const Endereco = sequelize.define('Endereco', {
 
     idEndereco:{
         type: DataTypes.INTEGER,
-        allowNull: true,
+        autoIncrement: true,
         primaryKey: true,
         unique: true
     },
-    Bairro:{
+    Cidade:{
         type: DataTypes.INTEGER,
-        references: {
-            model: Bairro,
-            key: 'IdBairro'
+        references:{
+            model: Cidade,
+            key: 'IdCidade'
         }
+    },
+    Bairro:{
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     Numero:{
         type: DataTypes.STRING,
@@ -41,9 +45,9 @@ const Endereco = sequelize.define('Endereco', {
     timestamps: false,
 });
 
-Endereco.belongsTo(Bairro, {
-    foreignKey: 'Bairro',
-    as: 'BairroApoiador'
+Endereco.belongsTo(Cidade, {
+    foreignKey: 'Cidade',
+    as: 'CidadeApoiador'
 });
 
 export default Endereco;

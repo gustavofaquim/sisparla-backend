@@ -3,7 +3,7 @@ GET http://localhost:3000/api/apoiadores
 
 
 ###
-GET http://localhost:3000/api/apoiadores/2
+GET http://localhost:3000/api/apoiadores/5
 
 
 ###
@@ -11,34 +11,50 @@ POST http://localhost:3000/api/apoiadores
 Content-Type: application/json
 
 {
-    "Nome": "Fulano de Tal",
-    "Apelido": "Fulaninho",
-    "DataNascimento": "01/12/2001",
-    "Email": "fulanodetal@gmail.com",
-    "Profissao": 1,
-    "Religiao": 1,
-    "Endereco": 1,
-    "Classificacao": 1,
-    "Situacao": 1,
-    "InformacaoAdicional": "Fazendo um teste de envio de dados via API"
+    "nome": "Fulano de Tal",
+    "apelido": "Fulaninho",
+    "dataNascimento": "01/12/2001",
+    "email": "fulanodetal@gmail.com",
+    "profissao": "Outros",
+    "religiao": "Cotolica",
+    "endereco": 
+        {
+            "cidade": 2,
+            "bairro": "Vila Nova",
+            "numero": "45",
+            "lagradouro": "Rua 15",
+            "quadra": "G-16",
+            "pontoReferencia": "Ao lado da igreja."
+        },
+    "classificacao": 10,
+    "situacao": 5,
+    "informacaoAdicional": "Fazendo um teste de envio de dados via API"
 }
 
 
 ###
-PUT http://localhost:3000/api/apoiadores/2
+PUT http://localhost:3000/api/apoiadores/5
 Content-Type: application/json
 
 {
-    "Nome": "Fulano de Tal Sobrinho",
-    "Apelido": null,
-    "DataNascimento": "01/12/2001",
-    "Email": "fulanodetal@gmail.com",
-    "Profissao": 1,
-    "Religiao": 1,
-    "Endereco": 1,
-    "Classificacao": 1,
-    "Situacao": 1,
-    "InformacaoAdicional": "Fazendo um teste de envio de dados via API"
+    "nome": "Fulano de Tal Sobrinho",
+    "apelido": "Fulaninho",
+    "dataNascimento": "01/12/2001",
+    "email": "fulanodetal@gmail.com",
+    "profissao": "Outros",
+    "religiao": "Cotolica",
+    "endereco": 
+        {
+            "cidade": 2,
+            "bairro": "Vila Nova",
+            "numero": "45",
+            "lagradouro": "Rua 16",
+            "quadra": "G-16",
+            "pontoReferencia": "Ao lado da igreja."
+        },
+    "classificacao": 10,
+    "situacao": 5,
+    "informacaoAdicional": "Fazendo um teste de envio de dados via API"
 }
 
 

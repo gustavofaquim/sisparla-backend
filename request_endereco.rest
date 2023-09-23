@@ -16,3 +16,19 @@ Content-Type: application/json
     "quadra": "G9",
     "pontoReferencia": null
 }
+
+
+
+###
+PUT http://localhost:3000/api/enderecos/4
+Content-Type: application/json
+
+{   
+    "cidade": 1,
+    "nome": "Jardim Sorriso I",
+    "cep": "76300000",
+    "numero": "85",
+    "lagradouro": "Rua 26-B",
+    "quadra": "G9",
+    "pontoReferencia": null
+}

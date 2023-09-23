@@ -36,7 +36,7 @@ const Bairro = sequelize.define('Bairro',{
 
 Bairro.belongsTo(Cidade, {
     foreignKey: 'Cidade',
-    as: 'CidadeApoiador'
+    as: 'CidadeBairro'
 });
 
 

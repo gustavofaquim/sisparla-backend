@@ -2,7 +2,8 @@
 import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
 import cidadeModel from "../models/Cidade.js";
-import bairroController from "./bairroController.js";
+import apoiadorModel from "../models/Apoiador.js";
+
 
 const enderecoController = {
 
@@ -34,16 +35,72 @@ const enderecoController = {
     },
 
 
+    find: async (endereco) => {
+
+
+        try {
+            
+            let end = await enderecoModel.findOne({
+                where: {
+                    Cidade: endereco.cidade,
+                    Bairro: endereco.bairro,
+                    numero: endereco.numero,
+                    lagradouro: endereco.lagradouro,
+                    quadra: endereco.quadra,
+                    pontoReferencia: endereco.pontoReferencia 
+                }
+            });
+
+            return end;
+
+        } catch (error) {
+            console.log(`Erro ao buscar o endereco ${error}`);
+            throw new Error('Erro ao buscar endereço');
+        }
+
+    },
+
+
+
+
+    createIfNotExists: async (endereco) => {
+
+       
+        try {
+            
+            let novoEndereco = await enderecoController.find(endereco);
+
+            if(novoEndereco){
+                return novoEndereco;
+            }
+
+            novoEndereco = await enderecoModel.create({
+               Cidade: endereco.cidade,
+               Bairro: endereco.bairro,
+               Numero: endereco.numero,
+               Lagradouro: endereco.lagradouro,
+               Quadra: endereco.quadra,
+               PontoReferencia: endereco.pontoReferencia
+            });
+
+            return novoEndereco;
+            
+        } catch (error) {
+            console.log(`Erro criar novo endereço ${error}`);
+            throw new Error('Erro ao criar endereço');
+        }
+
+    },
+
+
     create: async (req,res) => {
 
         const { cidade, nome, cep, numero, lagradouro, quadra, pontoReferencia } = req.body;
 
         try {
             
-            const bairro = await bairroController.createIfNotExists(cidade, nome, cep);
             
            const novoEndereco = await enderecoModel.create({
-                Bairro: bairro.IdBairro,
                 Numero: numero,
                 Lagradouro: lagradouro,
                 Quadra: quadra,
@@ -57,6 +114,40 @@ const enderecoController = {
             console.log(`Erro ao cadastrar o endereco: ${error}`);
             res.status(500).json({msg: 'Erro ao cadastrar o endereco'})
         }
+    },
+
+    update: async(id, endereco) => {
+    
+        const {cidade, bairro, numero, lagradouro, quadra, pontoReferencia } = endereco;
+
+        try {
+            
+            const endereco = await enderecoModel.findByPk(id);
+
+            if(!endereco){
+                return {msg: 'Endereço não encontrado'};
+               // return res.status(404).json({msg: 'Endereço não encontrado'});
+            }
+            
+            await endereco.update({
+                Cidade: cidade,
+                Bairro: bairro,
+                Numero: numero,
+                Lagradouro: lagradouro,
+                Quadra: quadra,
+                PontoReferencia: pontoReferencia
+            });
+
+            const enderecoAtualizado = await enderecoModel.findByPk(id);
+
+            return enderecoAtualizado;
+
+        } catch (error) {
+            console.log(`Erro ao atualizar o endereco: ${error}`);
+            return({msg: 'Erro ao atualizar o endereco'});
+        }
+
+
     }
 
 

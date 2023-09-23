@@ -7,6 +7,7 @@ import bairroModel from "../models/Bairro.js";
 import cidadeModel from "../models/Cidade.js";
 import classificacaoModel from "../models/Classificacao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
+import enderecoController from "./enderecoController.js";
 
 const apoiadorController = {
 
@@ -18,32 +19,15 @@ const apoiadorController = {
 
             const apoiadores = await apoiadorModel.findAll({
                 include: [
-                   {
-                        model: profissaoModel,
-                        as: 'ProfissaoApoiador',
-                        foreignKey: 'Profissao'
-                    },
-                    {
-                        model: religiaoModel,
-                        as: 'ApoiadorReligiao',
-                        foreignKey: 'Religiao'
-                    },
                     {
                         model: enderecoModel,
                         as: 'EnderecoApoiador',
                         foreignKey: 'Endereco',
-                        include:[
-                            {
-                                model: bairroModel,
-                                as: 'BairroApoiador',
-                                foreignKey: 'Bairro',
-                                include: [{
-                                    model: cidadeModel,
-                                    as: 'CidadeApoiador',
-                                    foreignKey: 'Cidade',
-                                }]
-                            }
-                        ]
+                        include:{
+                            model: cidadeModel,
+                            as: 'CidadeApoiador',
+                            foreignKey: 'Cidade',
+                        }
                     },
                     {
                         model: classificacaoModel,
@@ -79,32 +63,16 @@ const apoiadorController = {
         try {
             const apoiador = await apoiadorModel.findByPk(id, {
                 include: [
-                    {
-                        model: profissaoModel,
-                        as: 'ProfissaoApoiador',
-                        foreignKey: 'Profissao'
-                     },
-                     {
-                        model: religiaoModel,
-                        as: 'ApoiadorReligiao',
-                        foreignKey: 'Religiao'
-                     },
+                    
                      {
                         model: enderecoModel,
                         as: 'EnderecoApoiador',
                         foreignKey: 'Endereco',
-                        include:[
-                             {
-                                model: bairroModel,
-                                as: 'BairroApoiador',
-                                foreignKey: 'Bairro',
-                                include: [{
-                                    model: cidadeModel,
-                                    as: 'CidadeApoiador',
-                                    foreignKey: 'Cidade',
-                                 }]
-                             }
-                         ]
+                        include:{
+                            model: cidadeModel,
+                            as: 'CidadeApoiador',
+                            foreignKey: 'Cidade',
+                        }
                      },
                      {
                         model: classificacaoModel,
@@ -137,7 +105,7 @@ const apoiadorController = {
     updateById: async(req, res) => {
 
         const { id } = req.params;
-        const { body } = req;
+        const { nome, cpf, apelido, dataNascimento, email, profsissao, religiao,endereco,classificacao, situacao, informacaoAdicional } = req.body;
 
         try {
             
@@ -147,7 +115,22 @@ const apoiadorController = {
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
 
-            await apoiador.update(body);
+
+            const end = await  enderecoController.update(apoiador.Endereco,endereco);
+
+            await apoiador.update({
+                Nome: nome,
+                CPF: cpf,
+                Apelido: apelido,
+                DataNascimento: dataNascimento,
+                Email: email,
+                Profsissao: profsissao,
+                Religiao: religiao,
+                Endereco: apoiador.Enderco,
+                Classificacao: classificacao,
+                Situacao: situacao,
+                InformacaoAdicional: informacaoAdicional
+            });
 
             const apoiadorAtualizado = await apoiadorModel.findByPk(id);
 
@@ -162,11 +145,28 @@ const apoiadorController = {
 
     create: async (req,res) => {
 
-        const { body } = req;
+
+        const { nome, cpf, apelido, dataNascimento, email, profsissao, religiao,endereco,classificacao, situacao, informacaoAdicional } = req.body;
+
 
         try {
 
-            const novoApoiador = await apoiadorModel.create(body);
+            const end = await enderecoController.createIfNotExists(endereco);
+            
+
+            const novoApoiador = await apoiadorModel.create({
+                Nome: nome,
+                CPF: cpf,
+                Apelido: apelido,
+                DataNascimento: dataNascimento,
+                Email: email,
+                Profsissao: profsissao,
+                Religiao: religiao,
+                Endereco: end.dataValues.idEndereco,
+                Classificacao: classificacao,
+                Situacao: situacao,
+                InformacaoAdicional: informacaoAdicional
+            });
 
             res.json(novoApoiador);
 
