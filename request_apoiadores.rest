@@ -11,22 +11,22 @@ POST http://localhost:3000/api/apoiadores
 Content-Type: application/json
 
 {
-    "nome": "Fulano de Tal",
-    "apelido": "Fulaninho",
-    "dataNascimento": "01/12/2001",
-    "email": "fulanodetal@gmail.com",
-    "profissao": "Outros",
-    "religiao": "Cotolica",
+    "nome": "Ciclano de Tal",
+    "apelido": null,
+    "dataNascimento": "01/12/2005",
+    "email": "ciclanodetal@gmail.com",
+    "profissao": "Médico",
+    "religiao": "Ateu",
     "endereco": 
         {
             "cidade": 2,
-            "bairro": "Vila Nova",
-            "numero": "45",
-            "lagradouro": "Rua 15",
-            "quadra": "G-16",
-            "pontoReferencia": "Ao lado da igreja."
+            "bairro": "Residencial Boa Nova",
+            "numero": "02",
+            "lagradouro": "Avenida 05",
+            "quadra": "T",
+            "pontoReferencia": null
         },
-    "classificacao": 10,
+    "classificacao": 8,
     "situacao": 5,
     "informacaoAdicional": "Fazendo um teste de envio de dados via API"
 }
