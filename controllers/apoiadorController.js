@@ -1,3 +1,4 @@
+import { Sequelize, Op } from 'sequelize';
 
 import apoiadorModel from "../models/Apoiador.js";
 import profissaoModel from "../models/Profissao.js";
@@ -16,7 +17,31 @@ const apoiadorController = {
     findAll: async(req,res) => {
       
         try {
+            
+            const { termoBusca } = req.query;
 
+
+            const whereClause = {};
+
+            if (termoBusca) {
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } },
+                    { Apelido: { [Op.like]: `%${termoBusca}%` } },
+                    { Email: { [Op.like]: `%${termoBusca}%` } },
+                    {
+                        '$EnderecoApoiador.CidadeApoiador.Nome$': {
+                            [Op.like]: `%${termoBusca}%`,
+                        },
+                    },
+                    {
+                        '$SituacaoCadastroApoiador.Descricao$':{
+                            [Op.like]: `%${termoBusca}%`,
+                        }
+                    }
+                ]
+            }
+    
+            
             const apoiadores = await apoiadorModel.findAll({
                 include: [
                     {
@@ -41,14 +66,13 @@ const apoiadorController = {
                         foreignKey: 'Situacao',
 
                     }
-                ]
+                ],
+                where: whereClause
             });
-
-            
+           
             
             res.json(apoiadores);
         
-
 
         } catch (error) {
             console.log(`Erro ao buscar a lista de dados: ${error}`);
