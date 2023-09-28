@@ -12,4 +12,18 @@ router.use("/", apoiadorRouter);
 import enderecoRouter from "./endereco.js";
 router.use("/", enderecoRouter);
 
+
+// Profissao router
+import profissaoRouter from "./profissao.js";
+router.use("/", profissaoRouter);
+
+// Classificacao
+import classificacaoRouter from "./classificacao.js";
+router.use("/", classificacaoRouter);
+
+
+//Situacao Cadastrodo
+import situacaoCadastroRouter from "./situacaoCadastro.js";
+router.use("/", situacaoCadastroRouter);
+
 export default router;
