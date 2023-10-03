@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 
 import profissaoController from '../controllers/profissaoController.js';
 

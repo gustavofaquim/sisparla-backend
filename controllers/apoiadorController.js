@@ -1,4 +1,5 @@
 import { Sequelize, Op } from 'sequelize';
+import sequelize from "../db/conn.js";
 
 import apoiadorModel from "../models/Apoiador.js";
 import profissaoModel from "../models/Profissao.js";
@@ -9,6 +10,8 @@ import cidadeModel from "../models/Cidade.js";
 import classificacaoModel from "../models/Classificacao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
 import enderecoController from "./enderecoController.js";
+import classificacaoController from './classificacaoController.js';
+import situacaoCadastroController from './situacaoController.js';
 
 const apoiadorController = {
 
@@ -168,33 +171,59 @@ const apoiadorController = {
 
 
     create: async (req,res) => {
-
-
-        const { nome, cpf, apelido, dataNascimento, email, profsissao, religiao,endereco,classificacao, situacao, informacaoAdicional } = req.body;
-
-
+        
+        // Inicia a transação
+        const t = await sequelize.transaction();        
+     
         try {
 
-            const end = await enderecoController.createIfNotExists(endereco);
-            
+            const {
+                nome, apelido, profissao, cpf, religiao, nascimento, classificacao, email, telefone, situacao, 
+                cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia, 
+                entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
+                partido, partidoCargo, partidoLideranca,
+                informacoesAdicionais 
+            } = req.body
 
+            const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia}
+
+            const end = await enderecoController.createIfNotExists(enderecoCompleto, { transaction: t });
+            const classif = await classificacaoController.findByName(classificacao, { transaction: t });
+            const sit = await situacaoCadastroController.findByName(situacao, { transaction: t });
+            const enti = await entidadeController.findByName(entidadeNome, {transaction: t});
+          
+            
             const novoApoiador = await apoiadorModel.create({
                 Nome: nome,
-                CPF: cpf,
+                CPF: cpf || null,
                 Apelido: apelido,
-                DataNascimento: dataNascimento,
+                DataNascimento: nascimento,
                 Email: email,
-                Profsissao: profsissao,
+                Profsissao: profissao,
                 Religiao: religiao,
                 Endereco: end.dataValues.idEndereco,
-                Classificacao: classificacao,
-                Situacao: situacao,
-                InformacaoAdicional: informacaoAdicional
-            });
+                Classificacao: classif.idClassificacao,
+                Situacao: sit.idSituacao,
+                InformacaoAdicional: informacoesAdicionais,
+                Vinculacao: {
+                    Apoiador: novoApoiador.idApoiador,
+                    Cargo: entidadeCargo,
+                    Entidade: enti.idEntidade, 
+                    Lideranca: entidadeLideranca
+                },
+            }, { transaction: t });
+
+
+            // Confirma a transação
+            await t.commit();
 
             res.json(novoApoiador);
 
         } catch (error) {
+            
+            // Em caso de erro, desfaz a transação
+            await t.rollback();
+
             console.log(`Erro ao cadastrar o apoiador: ${error}`);
             res.status(500).json({msg: 'Erro ao cadastrar o apoiador'})
         }

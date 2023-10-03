@@ -3,6 +3,8 @@ import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
 import cidadeModel from "../models/Cidade.js";
 import apoiadorModel from "../models/Apoiador.js";
+import estadoController from "./estadoController.js";
+import cidadeController from "./cidadeController.js";
 
 
 const enderecoController = {
@@ -37,12 +39,16 @@ const enderecoController = {
 
     find: async (endereco) => {
 
-
+        
         try {
-            
+
+            const estado = await estadoController.findByName(endereco.estado);
+            const cidade = await cidadeController.find(endereco.cidade, estado.IdEstado);
+
+        
             let end = await enderecoModel.findOne({
                 where: {
-                    Cidade: endereco.cidade,
+                    Cidade: cidade.IdCidade,
                     Bairro: endereco.bairro,
                     numero: endereco.numero,
                     lagradouro: endereco.lagradouro,
@@ -65,8 +71,9 @@ const enderecoController = {
 
     createIfNotExists: async (endereco) => {
 
-       
+
         try {
+
             
             let novoEndereco = await enderecoController.find(endereco);
 
@@ -74,8 +81,11 @@ const enderecoController = {
                 return novoEndereco;
             }
 
+            const estado = await estadoController.findByName(endereco.estado);
+            const cidade = await cidadeController.find(endereco.cidade, estado.IdEstado);
+
             novoEndereco = await enderecoModel.create({
-               Cidade: endereco.cidade,
+               Cidade: cidade.IdCidade,
                Bairro: endereco.bairro,
                Numero: endereco.numero,
                Lagradouro: endereco.lagradouro,

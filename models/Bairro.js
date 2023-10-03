@@ -16,7 +16,7 @@ const Bairro = sequelize.define('Bairro',{
         type: DataTypes.INTEGER,
         references: {
             model: Cidade,
-            key: 'IdCIdade'
+            key: 'IdCidade'
         }
     },
     Nome: {

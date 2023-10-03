@@ -26,4 +26,20 @@ router.use("/", classificacaoRouter);
 import situacaoCadastroRouter from "./situacaoCadastro.js";
 router.use("/", situacaoCadastroRouter);
 
+
+// Tipo Entidade
+import tipoEntidadeRouter from "./tipoEntidade.js";
+router.use("/", tipoEntidadeRouter);
+
+
+// Estados
+import estadoRouter from "./estado.js";
+router.use("/", estadoRouter);
+
+
+// Entidades
+import entidadeRouter from "./entidade.js";
+router.use("/", entidadeRouter);
+
+
 export default router;
