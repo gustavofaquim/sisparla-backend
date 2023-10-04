@@ -7,6 +7,7 @@ import Religiao from "./Religiao.js";
 import Endereco from "./Endereco.js";
 import Classificacao from "./Classificacao.js";
 import SituacaoCadastro from "./SituacaoCadastro.js";
+import Vinculacao from "./Vinculacao.js";
 
 const Apoiador = sequelize.define('Apoiador', {
 
@@ -93,6 +94,11 @@ Apoiador.belongsTo(Classificacao, {
 Apoiador.belongsTo(SituacaoCadastro, {
     foreignKey: 'Situacao',
     as: 'SituacaoCadastroApoiador'
+});
+
+Apoiador.belongsTo(Vinculacao, {
+    foreignKey: 'Apoiador',
+    as: 'VinculacaoApoiador'
 });
 
 

@@ -71,6 +71,30 @@ const entidadeController = {
             console.log(`Erro ao buscar a entidade: ${error}`);
             res.status(500).json({msg: 'Erro ao buscar a entidade'})
         }
+    },
+
+    createIfNotExists: async(entidade) => {
+        try {
+            
+
+            let novaEntidade = await entidadeController.findByName(entidade.entidadeNome);
+
+            if(novaEntidade){
+                return novaEntidade;
+            }
+
+            novaEntidade = await entidadeModel.create({
+                Nome: entidade.entidadeNome,
+                Sigla: entidade.entidadeSigla,
+                Tipo: entidade.entidadeTipo,
+            });
+
+            return novaEntidade;
+
+        } catch (error) {
+            console.log(`Erro criar a nova entidade: ${error}`);
+            throw new Error('Erro criar a nova entidade');
+        }
     }
 }
 

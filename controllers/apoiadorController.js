@@ -7,11 +7,14 @@ import religiaoModel from "../models/Religiao.js";
 import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
 import cidadeModel from "../models/Cidade.js";
+import Vinculacao from '../models/Vinculacao.js';
 import classificacaoModel from "../models/Classificacao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
 import enderecoController from "./enderecoController.js";
 import classificacaoController from './classificacaoController.js';
 import situacaoCadastroController from './situacaoController.js';
+import entidadeController from "./entidadeController.js";
+
 
 const apoiadorController = {
 
@@ -170,10 +173,38 @@ const apoiadorController = {
     },
 
 
+    criarApoiadorComVinculacao: async (dadosApoiador, dadosVinculacao) => {
+        // Inicia a transação
+        const t = await sequelize.transaction();
+        
+        try {
+            // Cria o Apoiador
+            const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
+    
+            // Cria a Vinculacao com o IdApoiador
+            await Vinculacao.create({
+                ApoiadorId: novoApoiador.id,
+                ...dadosVinculacao,
+            }, { transaction: t });
+    
+            // Confirma a transação
+            await t.commit();
+    
+            return novoApoiador;
+        } catch (error) {
+            // Em caso de erro, desfaz a transação
+            await t.rollback();
+            throw error; // Rejoga o erro para o chamador lidar
+        }
+    },
+
+
     create: async (req,res) => {
         
         // Inicia a transação
-        const t = await sequelize.transaction();        
+        const t = await sequelize.transaction();    
+        
+        let novoApoiador;
      
         try {
 
@@ -186,14 +217,17 @@ const apoiadorController = {
             } = req.body
 
             const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia}
+            
+            const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
             const end = await enderecoController.createIfNotExists(enderecoCompleto, { transaction: t });
             const classif = await classificacaoController.findByName(classificacao, { transaction: t });
             const sit = await situacaoCadastroController.findByName(situacao, { transaction: t });
-            const enti = await entidadeController.findByName(entidadeNome, {transaction: t});
+            const enti = await entidadeController.createIfNotExists(entidadeCompleta, {transaction: t});
+
           
             
-            const novoApoiador = await apoiadorModel.create({
+            const dadosApoiador = {
                 Nome: nome,
                 CPF: cpf || null,
                 Apelido: apelido,
@@ -205,14 +239,15 @@ const apoiadorController = {
                 Classificacao: classif.idClassificacao,
                 Situacao: sit.idSituacao,
                 InformacaoAdicional: informacoesAdicionais,
-                Vinculacao: {
-                    Apoiador: novoApoiador.idApoiador,
-                    Cargo: entidadeCargo,
-                    Entidade: enti.idEntidade, 
-                    Lideranca: entidadeLideranca
-                },
-            }, { transaction: t });
+            };
 
+            const dadosVinculacao = {
+                Cargo: entidadeCargo,
+                Entidade: enti.idEntidade, 
+                Lideranca: entidadeLideranca,
+            };
+
+            const novoApoiador = await criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
 
             // Confirma a transação
             await t.commit();
