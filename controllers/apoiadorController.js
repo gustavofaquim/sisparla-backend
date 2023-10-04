@@ -19,7 +19,6 @@ import entidadeController from "./entidadeController.js";
 const apoiadorController = {
 
 
-
     findAll: async(req,res) => {
       
         try {
@@ -173,17 +172,21 @@ const apoiadorController = {
     },
 
 
+
     criarApoiadorComVinculacao: async (dadosApoiador, dadosVinculacao) => {
+        
+       
         // Inicia a transação
         const t = await sequelize.transaction();
         
         try {
             // Cria o Apoiador
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
-    
+
+
             // Cria a Vinculacao com o IdApoiador
             await Vinculacao.create({
-                ApoiadorId: novoApoiador.id,
+                Apoiador: novoApoiador.IdApoiador,
                 ...dadosVinculacao,
             }, { transaction: t });
     
@@ -199,13 +202,10 @@ const apoiadorController = {
     },
 
 
+
+
     create: async (req,res) => {
-        
-        // Inicia a transação
-        const t = await sequelize.transaction();    
-        
-        let novoApoiador;
-     
+         
         try {
 
             const {
@@ -220,10 +220,10 @@ const apoiadorController = {
             
             const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
-            const end = await enderecoController.createIfNotExists(enderecoCompleto, { transaction: t });
-            const classif = await classificacaoController.findByName(classificacao, { transaction: t });
-            const sit = await situacaoCadastroController.findByName(situacao, { transaction: t });
-            const enti = await entidadeController.createIfNotExists(entidadeCompleta, {transaction: t});
+            const end = await enderecoController.createIfNotExists(enderecoCompleto);
+            const classif = await classificacaoController.findByName(classificacao);
+            const sit = await situacaoCadastroController.findByName(situacao);
+            const enti = await entidadeController.createIfNotExists(entidadeCompleta);
 
           
             
@@ -247,22 +247,17 @@ const apoiadorController = {
                 Lideranca: entidadeLideranca,
             };
 
-            const novoApoiador = await criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
-
-            // Confirma a transação
-            await t.commit();
+    
+            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
 
             res.json(novoApoiador);
 
         } catch (error) {
-            
-            // Em caso de erro, desfaz a transação
-            await t.rollback();
-
             console.log(`Erro ao cadastrar o apoiador: ${error}`);
             res.status(500).json({msg: 'Erro ao cadastrar o apoiador'})
         }
     },
+    
 
 
     deleteById: async (req,res) => {

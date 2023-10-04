@@ -21,7 +21,7 @@ router
 
 router
     .route("/apoiadores")
-    .post((req,res) => apoiadorController.criarApoiadorComVinculacao(req,res));
+    .post((req,res) => apoiadorController.create(req,res));
 
 
 router
