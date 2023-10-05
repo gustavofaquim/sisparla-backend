@@ -3,6 +3,7 @@ import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "../db/conn.js";
 
 import Apoiador from "./Apoiador.js";
+import Entidade from "./Entidade.js";
 
 const Vinculacao = sequelize.define('Vinculacao', {
     idVinculacao:{
@@ -11,7 +12,7 @@ const Vinculacao = sequelize.define('Vinculacao', {
         primaryKey: true,
         unique: true
     },
-    ApoiadorId:{
+    Apoiador:{
         type: DataTypes.INTEGER,
         references:{
             model: 'Apoiador',
@@ -22,6 +23,13 @@ const Vinculacao = sequelize.define('Vinculacao', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    Entidade: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Entidade',
+            key: 'IdEntidade'
+        }
+    },
     Lideranca: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -31,6 +39,10 @@ const Vinculacao = sequelize.define('Vinculacao', {
     timestamps: false
 });
 
+Vinculacao.belongsTo(Entidade, {
+    foreignKey: 'Entidade',
+    as: 'VinculacaoEntidade'
+});
 
 
 export default Vinculacao;

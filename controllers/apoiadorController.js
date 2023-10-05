@@ -225,7 +225,7 @@ const apoiadorController = {
             const sit = await situacaoCadastroController.findByName(situacao);
             const enti = await entidadeController.createIfNotExists(entidadeCompleta);
 
-          
+            console.log(enti);
             
             const dadosApoiador = {
                 Nome: nome,
@@ -243,12 +243,12 @@ const apoiadorController = {
 
             const dadosVinculacao = {
                 Cargo: entidadeCargo,
-                Entidade: enti.idEntidade, 
+                Entidade: enti.IdEntidade, 
                 Lideranca: entidadeLideranca,
             };
 
     
-            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
+           const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
 
             res.json(novoApoiador);
 
