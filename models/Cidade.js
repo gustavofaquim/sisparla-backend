@@ -22,7 +22,6 @@ const Cidade = sequelize.define('Cidade', {
             key: 'IdEstado'
         }
     }
-    
 },
 { 
     tableName: 'CIDADE',

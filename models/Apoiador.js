@@ -96,10 +96,10 @@ Apoiador.belongsTo(SituacaoCadastro, {
     as: 'SituacaoCadastroApoiador'
 });
 
-Apoiador.belongsTo(Vinculacao, {
+/* Apoiador.belongsTo(Vinculacao, {
     foreignKey: 'Apoiador',
     as: 'VinculacaoApoiador'
-});
+}); */
 
 
 

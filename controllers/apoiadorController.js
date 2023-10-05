@@ -225,7 +225,6 @@ const apoiadorController = {
             const sit = await situacaoCadastroController.findByName(situacao);
             const enti = await entidadeController.createIfNotExists(entidadeCompleta);
 
-            console.log(enti);
             
             const dadosApoiador = {
                 Nome: nome,
