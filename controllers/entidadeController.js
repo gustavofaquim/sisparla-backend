@@ -67,9 +67,29 @@ const entidadeController = {
                     }
                 }
             })
+
+            
+            return entidade;
+            
         } catch (error) {
             console.log(`Erro ao buscar a entidade: ${error}`);
-            res.status(500).json({msg: 'Erro ao buscar a entidade'})
+            throw new Error('Erro ao buscar a entidade');
+        }
+    },
+
+
+    findByAcronym: async(sigla) => {
+        try {
+            const entidade = await entidadeModel.findOne({
+                where: {
+                    Sigla: sigla
+                }
+            });
+
+            return entidade;
+        } catch (error) {
+            console.log(`Erro ao buscar a entidade: ${error}`);
+            throw new Error('Erro ao buscar a entidade');
         }
     },
 

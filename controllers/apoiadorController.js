@@ -173,7 +173,7 @@ const apoiadorController = {
 
 
 
-    criarApoiadorComVinculacao: async (dadosApoiador, dadosVinculacao) => {
+    criarApoiadorComVinculacao: async (dadosApoiador, dadosVinculacao, dadosPartido) => {
         
        
         // Inicia a transação
@@ -184,11 +184,22 @@ const apoiadorController = {
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
 
 
-            // Cria a Vinculacao com o IdApoiador
-            await Vinculacao.create({
-                Apoiador: novoApoiador.IdApoiador,
-                ...dadosVinculacao,
-            }, { transaction: t });
+            if(dadosVinculacao){
+                 // Cria a Vinculacao com o IdApoiador
+                await Vinculacao.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosVinculacao,
+                }, { transaction: t });
+            }
+
+            if(dadosPartido){
+                // Cria a Vinculacao com o IdApoiador
+                await Vinculacao.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosPartido,
+                }, { transaction: t });
+            }
+           
     
             // Confirma a transação
             await t.commit();
@@ -220,10 +231,13 @@ const apoiadorController = {
             
             const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
+
             const end = await enderecoController.createIfNotExists(enderecoCompleto);
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
             const enti = await entidadeController.createIfNotExists(entidadeCompleta);
+            const parti = await entidadeController.findByAcronym(partido);
+        
 
             
             const dadosApoiador = {
@@ -246,8 +260,15 @@ const apoiadorController = {
                 Lideranca: entidadeLideranca,
             };
 
-    
-           const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao);
+
+            const dadosPartido = {
+                Cargo: partidoCargo,
+                Entidade: parti.IdEntidade,
+                Lideranca: partidoLideranca
+            }
+
+
+            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao, dadosPartido);
 
             res.json(novoApoiador);
 
