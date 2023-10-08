@@ -42,4 +42,9 @@ import entidadeRouter from "./entidade.js";
 router.use("/", entidadeRouter);
 
 
+// usuarios
+import usuarioRouter from "./usuario.js";
+router.use("/", usuarioRouter);
+
+
 export default router;

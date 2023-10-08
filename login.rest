@@ -1,0 +1,8 @@
+###
+POST http://localhost:3000/api/logar
+Content-Type: application/json
+
+{
+   "nomeUsuario": "gustavo.faquim",
+   "senha": "1234569"
+}
