@@ -4,6 +4,7 @@ import sequelize from "../db/conn.js";
 
 import Profissao from "./Profissao.js";
 import Religiao from "./Religiao.js";
+import Telefone from "./Telefone.js";
 import Endereco from "./Endereco.js";
 import Classificacao from "./Classificacao.js";
 import SituacaoCadastro from "./SituacaoCadastro.js";

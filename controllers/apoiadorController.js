@@ -6,6 +6,7 @@ import profissaoModel from "../models/Profissao.js";
 import religiaoModel from "../models/Religiao.js";
 import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
+import TelefoneModel from "../models/Telefone.js"
 import cidadeModel from "../models/Cidade.js";
 import Vinculacao from '../models/Vinculacao.js';
 import classificacaoModel from "../models/Classificacao.js";
@@ -173,8 +174,9 @@ const apoiadorController = {
 
 
 
-    criarApoiadorComVinculacao: async (dadosApoiador, dadosVinculacao, dadosPartido) => {
+    criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
         
+        console.log(dadosEntidade);
        
         // Inicia a transação
         const t = await sequelize.transaction();
@@ -184,11 +186,11 @@ const apoiadorController = {
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
 
 
-            if(dadosVinculacao){
+            if(dadosEntidade){
                  // Cria a Vinculacao com o IdApoiador
                 await Vinculacao.create({
                     Apoiador: novoApoiador.IdApoiador,
-                    ...dadosVinculacao,
+                    ...dadosEntidade,
                 }, { transaction: t });
             }
 
@@ -199,7 +201,14 @@ const apoiadorController = {
                     ...dadosPartido,
                 }, { transaction: t });
             }
-           
+
+            if(dadosTelefone){
+                await TelefoneModel.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosTelefone
+                },{ transaction: t })
+            }
+            
     
             // Confirma a transação
             await t.commit();
@@ -227,18 +236,59 @@ const apoiadorController = {
                 informacoesAdicionais 
             } = req.body
 
+            let dadosEntidade;
+            let dadosPartido;
+            let dadosTelefone;
+
+           
+          
             const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia}
             
-            const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
+           
 
+             // Verifica se existe entidade
+             if(entidadeNome != null && entidadeNome.length > 1){
+                const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
+                const enti = await entidadeController.createIfNotExists(entidadeCompleta);
+
+                dadosEntidade = {
+                    Cargo: entidadeCargo,
+                    Entidade: enti.IdEntidade, 
+                    Lideranca: entidadeLideranca,
+                };
+            }
+
+            // Verifica se existe partido
+            if(partido != null && partido.length > 1){
+                const parti = await entidadeController.findByAcronym(partido);
+
+                dadosPartido = {
+                    Cargo: partidoCargo,
+                    Entidade: parti.IdEntidade,
+                    Lideranca: partidoLideranca
+                }
+            }
+
+             
+        
+
+            // Verifica se existe número de telefone
+            if(telefone != null && telefone.length > 6){
+                
+                dadosTelefone = {
+                    Numero: telefone,
+                    WhatsApp: 's',
+                    Principal: 's' 
+                };
+            }
+
+            
+            
             const end = await enderecoController.createIfNotExists(enderecoCompleto);
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
-            const enti = await entidadeController.createIfNotExists(entidadeCompleta);
-            const parti = await entidadeController.findByAcronym(partido);
         
-
             
             const dadosApoiador = {
                 Nome: nome,
@@ -254,21 +304,9 @@ const apoiadorController = {
                 InformacaoAdicional: informacoesAdicionais,
             };
 
-            const dadosVinculacao = {
-                Cargo: entidadeCargo,
-                Entidade: enti.IdEntidade, 
-                Lideranca: entidadeLideranca,
-            };
-
-
-            const dadosPartido = {
-                Cargo: partidoCargo,
-                Entidade: parti.IdEntidade,
-                Lideranca: partidoLideranca
-            }
-
-
-            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosVinculacao, dadosPartido);
+            
+            
+            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone);
 
             res.json(novoApoiador);
 
