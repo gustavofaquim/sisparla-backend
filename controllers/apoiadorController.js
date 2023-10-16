@@ -115,6 +115,10 @@ const apoiadorController = {
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
  
+                     }, {
+                        model: TelefoneModel,
+                        as: 'TelefoneApoiador',
+                        foreignKey: 'IdApoiador'
                      }
                  ]
             });
@@ -122,7 +126,7 @@ const apoiadorController = {
             if(!apoiador){
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
-
+           
             res.json(apoiador);
 
         } catch (error) {
@@ -176,7 +180,7 @@ const apoiadorController = {
 
     criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
         
-        console.log(dadosEntidade);
+        
        
         // Inicia a transação
         const t = await sequelize.transaction();

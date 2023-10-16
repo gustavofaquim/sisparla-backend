@@ -86,6 +86,7 @@ const enderecoController = {
 
             novoEndereco = await enderecoModel.create({
                Cidade: cidade.IdCidade,
+               CEP: endereco.CEP,
                Bairro: endereco.bairro,
                Numero: endereco.numero,
                Lagradouro: endereco.lagradouro,

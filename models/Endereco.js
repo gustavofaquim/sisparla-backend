@@ -19,6 +19,10 @@ const Endereco = sequelize.define('Endereco', {
             key: 'IdCidade'
         }
     },
+    CEP: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     Bairro:{
         type: DataTypes.STRING,
         allowNull: true,

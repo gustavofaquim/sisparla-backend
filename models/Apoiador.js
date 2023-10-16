@@ -87,6 +87,12 @@ Apoiador.belongsTo(Endereco, {
     as: 'EnderecoApoiador'
 });
 
+Apoiador.belongsTo(Telefone, {
+    foreignKey: 'IdApoiador',
+    as: 'TelefoneApoiador'
+});
+
+
 Apoiador.belongsTo(Classificacao, {
     foreignKey: 'Classificacao',
     as: 'ClassificacaoApoiador'
