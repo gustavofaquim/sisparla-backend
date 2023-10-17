@@ -92,6 +92,11 @@ Apoiador.belongsTo(Telefone, {
     as: 'TelefoneApoiador'
 });
 
+Apoiador.hasMany(Vinculacao, {
+    foreignKey: 'Apoiador',
+    as: 'Vinculacao'
+});
+
 
 Apoiador.belongsTo(Classificacao, {
     foreignKey: 'Classificacao',

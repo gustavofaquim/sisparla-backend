@@ -7,6 +7,7 @@ import religiaoModel from "../models/Religiao.js";
 import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
 import TelefoneModel from "../models/Telefone.js"
+import EntidadeModel from "../models/Entidade.js";
 import cidadeModel from "../models/Cidade.js";
 import Vinculacao from '../models/Vinculacao.js';
 import classificacaoModel from "../models/Classificacao.js";
@@ -114,11 +115,21 @@ const apoiadorController = {
                         model: SituacaoCadastro,
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
- 
-                     }, {
+                     }, 
+                     {
                         model: TelefoneModel,
                         as: 'TelefoneApoiador',
                         foreignKey: 'IdApoiador'
+                     }, 
+                     {
+                        model: Vinculacao,
+                        as: 'Vinculacao',
+                        foreignKey: 'Apoiador',
+                        include:{
+                            model: EntidadeModel,
+                            as: 'VinculacaoEntidade',
+                            foreignKey: 'Entidade',
+                        }
                      }
                  ]
             });
