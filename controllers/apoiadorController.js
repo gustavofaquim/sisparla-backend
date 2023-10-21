@@ -77,7 +77,6 @@ const apoiadorController = {
                 where: whereClause
             });
            
-            
             res.json(apoiadores);
         
 
@@ -137,8 +136,12 @@ const apoiadorController = {
             if(!apoiador){
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
+
+            const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
            
-            res.json(apoiador);
+
+           // res.json(apoiador); //-> objeto original
+            res.json(apoiadorD); // -> objeto desestruturado...
 
         } catch (error) {
             console.log(`Erro ao buscar o apoiador: ${error}`);
@@ -146,11 +149,95 @@ const apoiadorController = {
         }
     },
 
+    destructuringApoiador: (apoiador) => {
+
+        try {
+            
+            const idApoiador = apoiador.IdApoiador;
+            const nome = apoiador.Nome;
+            const apelido = apoiador.Apelido;
+            const cpf = apoiador.CPF;
+            const dataNascimento = apoiador.DataNascimento;
+            const idProfissao = apoiador.Profissao;
+            const religiao = apoiador.Religiao;
+            const email = apoiador.Email;
+            const informacaoAdicional = apoiador.InformacaoAdicional;
+
+
+            const idClassificacao = apoiador.Classificacao;
+            const idSituacao = apoiador.Situacao;
+
+
+            const numeroTelefone = apoiador.TelefoneApoiador.Numero;
+            const numeroWhatsapp = apoiador.TelefoneApoiador.WhatsApp;
+
+
+            const cep = apoiador.EnderecoApoiador.CEP;
+            const cidade = apoiador.EnderecoApoiador.CidadeApoiador.Nome;
+            const estado = null;
+
+            const idEndereco = apoiador.EnderecoApoiador.idEndereco;
+            const bairro = apoiador.EnderecoApoiador.Bairro;
+            const lagradouro = apoiador.EnderecoApoiador.Lagradouro;
+            const quadra = apoiador.EnderecoApoiador.Quadra;
+            const numeroEndereco = apoiador.EnderecoApoiador.Numero;
+            const pontoReferencia = apoiador.EnderecoApoiador.PontoReferencia;
+
+
+            let entidadeTipo = '';
+            let entidadeNome = '';
+            let entidadeSigla = '';
+            let entidadeCargo = '';
+            let entidadeLideranca = '';
+
+            let partidoId = '';
+            let partidoCargo = '';
+            let partidoLideranca = '';
+
+
+            apoiador.Vinculacao.forEach((e, index) => {
+                entidadeTipo = e.VinculacaoEntidade.Tipo;
+               
+                if (entidadeTipo !== 'Partido Político' && entidadeTipo) {
+                    
+                    entidadeNome = e.VinculacaoEntidade.Nome;
+                    entidadeSigla = e.VinculacaoEntidade.Sigla;
+                    entidadeLideranca = e.Lideranca;
+                    entidadeCargo = e.Cargo;
+
+                } else {
+                    partidoId = e.VinculacaoEntidade.IdEntidade;
+                    partidoLideranca = e.Lideranca;
+                    partidoCargo = e.Cargo;
+                }
+            });
+            
+          
+
+            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, religiao, email, 
+                informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp, idEndereco,
+                cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
+                entidadeTipo, entidadeNome, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
+                partidoLideranca, partidoCargo
+            };
+
+            return apoiadorD;
+
+        } catch (error) {
+            console.log('Erro ao desestruturar Apoiador: ' + error);
+            throw error;
+        }
+
+    },
+
 
     updateById: async(req, res) => {
 
         const { id } = req.params;
-        const { nome, cpf, apelido, dataNascimento, email, profsissao, religiao,endereco,classificacao, situacao, informacaoAdicional } = req.body;
+        console.log('Backend ID: ' + id);
+        console.log('Dados');
+        console.log(req.body);
+
 
         try {
             
@@ -161,25 +248,88 @@ const apoiadorController = {
             }
 
 
-            const end = await  enderecoController.update(apoiador.Endereco,endereco);
+            const {idApoiador, nome, apelido,  cpf, dataNascimento, idProfissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp,
+            idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
+            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
 
-            await apoiador.update({
+
+            let dadosEntidade;
+            let dadosPartido;
+            let dadosTelefone;
+
+
+            const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, quadra, pontoReferencia};
+
+            let end;
+
+            if(!idEndereco){
+                end = await enderecoController.createIfNotExists(enderecoCompleto);
+            }else{
+                end = await enderecoController.update(idEndereco, enderecoCompleto)
+            }
+
+
+            console.log(end);
+
+            // Verifica se existe entidade
+            if(entidadeNome != null && entidadeNome.length > 1){
+                const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
+
+                const enti = await entidadeController.createIfNotExists(entidadeCompleta);
+                
+                dadosEntidade = {
+                    Cargo: entidadeCargo,
+                    Entidade: enti.IdEntidade, 
+                    Lideranca: entidadeLideranca,
+                };
+
+            }
+
+            
+            // Verifica se existe partido
+            if(partidoId != null && partidoId >= 1){
+                
+                dadosPartido = {
+                    IdEntidade: partidoId,
+                    Cargo: partidoCargo,
+                    Entidade: partidoId,
+                    Lideranca: partidoLideranca
+                }
+            }
+
+            
+    
+            // Verifica se existe número de telefone
+            if(numeroTelefone != null && numeroTelefone.length > 6){
+                
+                dadosTelefone = {
+                    Numero: numeroTelefone,
+                    WhatsApp: numeroWhatsapp || '',
+                    Principal: 's' 
+                };
+            }
+
+            
+            const dadosApoiador = {
+                IdApoiador: idApoiador,
                 Nome: nome,
-                CPF: cpf,
+                CPF: cpf || null,
                 Apelido: apelido,
                 DataNascimento: dataNascimento,
                 Email: email,
-                Profsissao: profsissao,
+                Profsissao: idProfissao,
                 Religiao: religiao,
-                Endereco: apoiador.Enderco,
-                Classificacao: classificacao,
-                Situacao: situacao,
-                InformacaoAdicional: informacaoAdicional
-            });
+                Endereco: end.dataValues.idEndereco,
+                Classificacao: idClassificacao,
+                Situacao: idSituacao,
+                InformacaoAdicional: informacaoAdicional,
+            };
 
-            const apoiadorAtualizado = await apoiadorModel.findByPk(id);
-
+            
+            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone);
+            
             res.json(apoiadorAtualizado);
+
 
         } catch (error) {
             console.log(`Erro ao atualizar o registro: ${error}`);
@@ -187,6 +337,92 @@ const apoiadorController = {
         }
     },
 
+
+    atualizarApoiadorComVinculacao: async(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
+
+       
+        // Inicia a transação
+        const t = await sequelize.transaction();
+
+        try {
+            
+            // Atualiza o Apoiador
+            const attApoiador = await apoiadorModel.update(dadosApoiador, {
+                where: { IdApoiador: dadosApoiador.IdApoiador },
+                transaction: t,
+            });
+            
+         
+           
+            const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
+                where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
+                defaults: {
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Cargo: dadosEntidade.Cargo,
+                    Entidade: dadosEntidade.Entidade,
+                    Lideranca: dadosEntidade.Lideranca
+                },
+                transaction: t
+            });
+
+            if (!createdEntidade) {
+                // Se não foi criado, significa que já existia, então você pode atualizar os valores
+                await vinculacaoInstanceEntidade.update({
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Cargo: dadosEntidade.Cargo,
+                    Lideranca: dadosEntidade.Lideranca
+                }, { transaction: t });
+            }
+
+           
+
+           const [vinculacaoInstancePartido, createdPartido] = await Vinculacao.findOrCreate({
+                where: { Entidade: dadosPartido.Entidade, Apoiador: dadosApoiador.IdApoiador },
+                defaults: {
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Cargo: dadosPartido.Cargo,
+                    Entidade: dadosPartido.Entidade,
+                    Lideranca: dadosPartido.Lideranca
+                },
+                transaction: t
+            });
+
+           
+
+            if (!createdPartido) {
+                // Se não foi criado, significa que já existia, então você pode atualizar os valores
+                await vinculacaoInstancePartido.update({
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Cargo: dadosPartido.Cargo,
+                    Lideranca: dadosPartido.Lideranca
+                }, { transaction: t });
+            }
+
+            
+
+            
+            if(dadosTelefone){
+                await TelefoneModel.create({
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Numero: dadosTelefone.Numero,
+                    WhatsApp: dadosTelefone.WhatsApp,
+                    Principal: dadosTelefone.Principal
+                },{ where: {Apoiador: dadosApoiador}, transaction: t })
+            }
+
+           
+
+            // Confirma a transação
+            await t.commit();
+
+            return attApoiador;
+        
+        } catch (error) {
+            // Em caso de erro, desfaz a transação
+            await t.rollback();
+            throw error; 
+        }
+    },
 
 
     criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
@@ -262,7 +498,7 @@ const apoiadorController = {
            
 
              // Verifica se existe entidade
-             if(entidadeNome != null && entidadeNome.length > 1){
+            if(entidadeNome != null && entidadeNome.length > 1){
                 const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
