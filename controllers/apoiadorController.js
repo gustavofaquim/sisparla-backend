@@ -174,7 +174,8 @@ const apoiadorController = {
             
             const cep = apoiador?.EnderecoApoiador?.CEP;
             const cidade = apoiador?.EnderecoApoiador?.CidadeApoiador?.Nome;
-            const estado = null;
+            const estado = apoiador?.EnderecoApoiador?.CidadeApoiador?.Estado;
+
             
             const idEndereco = apoiador?.EnderecoApoiador?.idEndereco;
             const bairro = apoiador?.EnderecoApoiador?.Bairro;
@@ -235,7 +236,7 @@ const apoiadorController = {
         const { id } = req.params;
         console.log('Backend ID: ' + id);
         console.log('Dados');
-        console.log(req.body);
+        //console.log(req.body);
 
 
         try {
@@ -262,12 +263,14 @@ const apoiadorController = {
             let end;
 
             if(!idEndereco){
+                console.log('entrou no novo endereço');
                 end = await enderecoController.createIfNotExists(enderecoCompleto);
             }else{
+                console.log('entrou no att endereço');
                 end = await enderecoController.update(idEndereco, enderecoCompleto)
             }
 
-
+            console.log(cep);
             console.log(end);
 
             // Verifica se existe entidade

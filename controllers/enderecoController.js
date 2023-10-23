@@ -128,26 +128,28 @@ const enderecoController = {
         }
     },
 
-    update: async(id, endereco) => {
+    update: async(id, enderecoCompleto) => {
 
 
         try {
             
             const endereco = await enderecoModel.findByPk(id);
-
+            const cidade = await cidadeController.createIfNotExists(enderecoCompleto.cidade, enderecoCompleto.estado);
+            
             if(!endereco){
                 return {msg: 'Endereço não encontrado'};
             }
+           
             
             await endereco.update({
-                CEP: endereco.cep,
-                Cidade: endereco.cidade,
-                Bairro: endereco.bairro,
+                Cidade: cidade.IdCidade,
+                CEP: enderecoCompleto.cep,
+                Bairro: enderecoCompleto.bairro,
                 Numero: endereco.numero,
-                Lagradouro: endereco.lagradouro,
-                Quadra: endereco.quadra,
-                PontoReferencia: endereco.pontoReferencia
-            });
+                Lagradouro: enderecoCompleto.lagradouro,
+                Quadra: enderecoCompleto.quadra,
+                PontoReferencia: enderecoCompleto.pontoReferencia
+            }, { where: {IdEndereco: id }});
 
             const enderecoAtualizado = await enderecoModel.findByPk(id);
 
