@@ -58,6 +58,10 @@ Content-Type: application/json
 }
 
 
+
+###
+GET http://localhost:3000/api/classificacoes
+
 ###
 DELETE http://localhost:3000/api/apoiadores/2
 

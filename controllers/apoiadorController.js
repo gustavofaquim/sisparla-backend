@@ -158,7 +158,7 @@ const apoiadorController = {
             const apelido = apoiador?.Apelido;
             const cpf = apoiador?.CPF;
             const dataNascimento = apoiador?.DataNascimento;
-            const idProfissao = apoiador?.Profissao;
+            const profissao = apoiador?.Profissao;
             const religiao = apoiador?.Religiao;
             const email = apoiador?.Email;
             const informacaoAdicional = apoiador?.InformacaoAdicional;
@@ -214,7 +214,7 @@ const apoiadorController = {
             
           
 
-            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, religiao, email, 
+            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
@@ -248,11 +248,11 @@ const apoiadorController = {
             }
 
 
-            const {idApoiador, nome, apelido,  cpf, dataNascimento, idProfissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp,
+            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
 
-
+            
             let dadosEntidade;
             let dadosPartido;
             let dadosTelefone;
@@ -263,15 +263,12 @@ const apoiadorController = {
             let end;
 
             if(!idEndereco){
-                console.log('entrou no novo endereço');
                 end = await enderecoController.createIfNotExists(enderecoCompleto);
             }else{
-                console.log('entrou no att endereço');
                 end = await enderecoController.update(idEndereco, enderecoCompleto)
             }
 
-            console.log(cep);
-            console.log(end);
+            
 
             // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
@@ -320,9 +317,9 @@ const apoiadorController = {
                 Apelido: apelido,
                 DataNascimento: dataNascimento,
                 Email: email,
-                Profsissao: idProfissao,
+                Profissao: profissao,
                 Religiao: religiao,
-                Endereco: end.dataValues.idEndereco,
+                Endereco: end?.dataValues?.idEndereco,
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
                 InformacaoAdicional: informacaoAdicional,
