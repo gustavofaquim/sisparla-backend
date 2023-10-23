@@ -153,36 +153,35 @@ const apoiadorController = {
 
         try {
             
-            const idApoiador = apoiador.IdApoiador;
-            const nome = apoiador.Nome;
-            const apelido = apoiador.Apelido;
-            const cpf = apoiador.CPF;
-            const dataNascimento = apoiador.DataNascimento;
-            const idProfissao = apoiador.Profissao;
-            const religiao = apoiador.Religiao;
-            const email = apoiador.Email;
-            const informacaoAdicional = apoiador.InformacaoAdicional;
-
-
-            const idClassificacao = apoiador.Classificacao;
-            const idSituacao = apoiador.Situacao;
-
-
-            const numeroTelefone = apoiador.TelefoneApoiador.Numero;
-            const numeroWhatsapp = apoiador.TelefoneApoiador.WhatsApp;
-
-
-            const cep = apoiador.EnderecoApoiador.CEP;
-            const cidade = apoiador.EnderecoApoiador.CidadeApoiador.Nome;
+            const idApoiador = apoiador?.IdApoiador;
+            const nome = apoiador?.Nome;
+            const apelido = apoiador?.Apelido;
+            const cpf = apoiador?.CPF;
+            const dataNascimento = apoiador?.DataNascimento;
+            const idProfissao = apoiador?.Profissao;
+            const religiao = apoiador?.Religiao;
+            const email = apoiador?.Email;
+            const informacaoAdicional = apoiador?.InformacaoAdicional;
+            
+            
+            const idClassificacao = apoiador?.Classificacao;
+            const idSituacao = apoiador?.Situacao;
+            
+            
+            const numeroTelefone = apoiador?.TelefoneApoiador?.Numero;
+            const numeroWhatsapp = apoiador?.TelefoneApoiador?.WhatsApp;
+            
+            
+            const cep = apoiador?.EnderecoApoiador?.CEP;
+            const cidade = apoiador?.EnderecoApoiador?.CidadeApoiador?.Nome;
             const estado = null;
-
-            const idEndereco = apoiador.EnderecoApoiador.idEndereco;
-            const bairro = apoiador.EnderecoApoiador.Bairro;
-            const lagradouro = apoiador.EnderecoApoiador.Lagradouro;
-            const quadra = apoiador.EnderecoApoiador.Quadra;
-            const numeroEndereco = apoiador.EnderecoApoiador.Numero;
-            const pontoReferencia = apoiador.EnderecoApoiador.PontoReferencia;
-
+            
+            const idEndereco = apoiador?.EnderecoApoiador?.idEndereco;
+            const bairro = apoiador?.EnderecoApoiador?.Bairro;
+            const lagradouro = apoiador?.EnderecoApoiador?.Lagradouro;
+            const quadra = apoiador?.EnderecoApoiador?.Quadra;
+            const numeroEndereco = apoiador?.EnderecoApoiador?.Numero;
+            const pontoReferencia = apoiador?.EnderecoApoiador?.PontoReferencia;
 
             let entidadeTipo = '';
             let entidadeNome = '';
@@ -280,6 +279,7 @@ const apoiadorController = {
                 dadosEntidade = {
                     Cargo: entidadeCargo,
                     Entidade: enti.IdEntidade, 
+                    Sigla: entidadeSigla,
                     Lideranca: entidadeLideranca,
                 };
 
@@ -360,6 +360,7 @@ const apoiadorController = {
                     Apoiador: dadosApoiador.IdApoiador,
                     Cargo: dadosEntidade.Cargo,
                     Entidade: dadosEntidade.Entidade,
+                    Sigla: dadosEntidade.Sigla,
                     Lideranca: dadosEntidade.Lideranca
                 },
                 transaction: t
