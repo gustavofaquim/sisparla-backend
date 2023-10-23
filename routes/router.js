@@ -47,4 +47,8 @@ import usuarioRouter from "./usuario.js";
 router.use("/", usuarioRouter);
 
 
+// religioes
+import religiaoRouter from "./religiao.js";
+router.use("/", religiaoRouter);
+
 export default router;
