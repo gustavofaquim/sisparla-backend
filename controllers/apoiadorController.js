@@ -252,6 +252,7 @@ const apoiadorController = {
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
 
+            console.log(numeroTelefone);
             
             let dadosEntidade;
             let dadosPartido;
@@ -401,15 +402,25 @@ const apoiadorController = {
             }
 
             
-
-            
-            if(dadosTelefone){
-                await TelefoneModel.create({
+            const [telefoneInstance, createdTelefone] = await Telefone.findOrCreate({
+                where: { Telefone: dadosTelefone.IdTelefone, Apoiador: dadosApoiador.IdApoiador },
+                defaults: {
                     Apoiador: dadosApoiador.IdApoiador,
                     Numero: dadosTelefone.Numero,
                     WhatsApp: dadosTelefone.WhatsApp,
                     Principal: dadosTelefone.Principal
-                },{ where: {Apoiador: dadosApoiador}, transaction: t })
+                },
+                transaction: t
+            });
+
+            
+            if(!createdTelefone){
+                await telefoneInstance.update({
+                    Apoiador: dadosApoiador.IdApoiador,
+                    Numero: dadosTelefone.Numero,
+                    WhatsApp: dadosTelefone.WhatsApp,
+                    Principal: dadosTelefone.Principal
+                },{ transaction: t })
             }
 
            
