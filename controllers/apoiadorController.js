@@ -257,6 +257,7 @@ const apoiadorController = {
             let dadosPartido;
             let dadosTelefone;
 
+            
 
             const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, quadra, pontoReferencia};
 
