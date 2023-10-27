@@ -236,10 +236,9 @@ const apoiadorController = {
     updateById: async(req, res) => {
 
         const { id } = req.params;
-        console.log('Backend ID: ' + id);
+       
         console.log('Dados');
-        //console.log(req.body);
-
+       
 
         try {
             
@@ -253,9 +252,7 @@ const apoiadorController = {
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
-            
-            console.log(numeroAntigo);
-            console.log(numeroTelefone);
+        
             
             let dadosEntidade;
             let dadosPartido;
@@ -273,7 +270,6 @@ const apoiadorController = {
                 end = await enderecoController.update(idEndereco, enderecoCompleto)
             }
 
-            
 
             // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
@@ -361,7 +357,6 @@ const apoiadorController = {
                 transaction: t,
             });
             
-         
            
             const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
                 where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
@@ -369,7 +364,6 @@ const apoiadorController = {
                     Apoiador: dadosApoiador.IdApoiador,
                     Cargo: dadosEntidade.Cargo,
                     Entidade: dadosEntidade.Entidade,
-                    Sigla: dadosEntidade.Sigla,
                     Lideranca: dadosEntidade.Lideranca
                 },
                 transaction: t
@@ -422,7 +416,6 @@ const apoiadorController = {
 
             
             if(!createdTelefone){
-                console.log('entrou no update');
                 
                 await telefoneInstance.update({
                     Apoiador: dadosApoiador.IdApoiador,
@@ -513,11 +506,11 @@ const apoiadorController = {
             let dadosPartido;
             let dadosTelefone;
 
-           
+       
           
             const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia}
             
-           
+            
 
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){

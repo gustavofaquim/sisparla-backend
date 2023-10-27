@@ -47,13 +47,11 @@ const enderecoController = {
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, estado.IdEstado);
 
             
-
-        
             let end = await enderecoModel.findOne({
                 where: {
                     Cidade: cidade.IdCidade,
                     Bairro: endereco.bairro,
-                    numero: endereco.numeroEndereco,
+                    numero: endereco.numero,
                     lagradouro: endereco.lagradouro,
                     quadra: endereco.quadra,
                     pontoReferencia: endereco.pontoReferencia 
@@ -85,6 +83,7 @@ const enderecoController = {
             const estado = await estadoController.findByName(endereco.estado);
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, estado.IdEstado);
 
+          
             novoEndereco = await enderecoModel.create({
                Cidade: cidade.IdCidade,
                CEP: endereco.CEP,
