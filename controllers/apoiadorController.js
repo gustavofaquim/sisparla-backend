@@ -276,14 +276,13 @@ const apoiadorController = {
                 const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
-                
+               
                 dadosEntidade = {
                     Cargo: entidadeCargo,
                     Entidade: enti.IdEntidade, 
                     Sigla: entidadeSigla,
                     Lideranca: entidadeLideranca,
                 };
-
             }
 
             
@@ -331,6 +330,7 @@ const apoiadorController = {
             };
 
             
+            
             const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone);
             
             res.json(apoiadorAtualizado);
@@ -357,76 +357,87 @@ const apoiadorController = {
                 transaction: t,
             });
             
-           
-            const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
-                where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
-                defaults: {
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Cargo: dadosEntidade.Cargo,
-                    Entidade: dadosEntidade.Entidade,
-                    Lideranca: dadosEntidade.Lideranca
-                },
-                transaction: t
-            });
-
-            if (!createdEntidade) {
-                // Se não foi criado, significa que já existia, então você pode atualizar os valores
-                await vinculacaoInstanceEntidade.update({
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Cargo: dadosEntidade.Cargo,
-                    Lideranca: dadosEntidade.Lideranca
-                }, { transaction: t });
-            }
-
-           
-
-           const [vinculacaoInstancePartido, createdPartido] = await Vinculacao.findOrCreate({
-                where: { Entidade: dadosPartido.Entidade, Apoiador: dadosApoiador.IdApoiador },
-                defaults: {
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Cargo: dadosPartido.Cargo,
-                    Entidade: dadosPartido.Entidade,
-                    Lideranca: dadosPartido.Lideranca
-                },
-                transaction: t
-            });
-
-           
-
-            if (!createdPartido) {
-                // Se não foi criado, significa que já existia, então você pode atualizar os valores
-                await vinculacaoInstancePartido.update({
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Cargo: dadosPartido.Cargo,
-                    Lideranca: dadosPartido.Lideranca
-                }, { transaction: t });
-            }
-
-    
-            const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
-                where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
-                defaults: {
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Numero: dadosTelefone.Numero,
-                    WhatsApp: dadosTelefone.WhatsApp,
-                    Principal: dadosTelefone.Principal
-                },
-                transaction: t
-            });
-
             
-            if(!createdTelefone){
-                
-                await telefoneInstance.update({
-                    Apoiador: dadosApoiador.IdApoiador,
-                    Numero: dadosTelefone.Numero,
-                    WhatsApp: dadosTelefone.WhatsApp,
-                    Principal: dadosTelefone.Principal
-                },{ transaction: t })
-            }
-
            
+            if(dadosEntidade){
+                const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
+                    where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
+                    defaults: {
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Cargo: dadosEntidade.Cargo,
+                        Entidade: dadosEntidade.Entidade,
+                        Lideranca: dadosEntidade.Lideranca
+                    },
+                    transaction: t
+                });
+    
+                
+                
+                if (!createdEntidade) {
+                    // Se não foi criado, significa que já existia, então você pode atualizar os valores
+                    await vinculacaoInstanceEntidade.update({
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Cargo: dadosEntidade.Cargo,
+                        Lideranca: dadosEntidade.Lideranca
+                    }, { transaction: t });
+                }
+            }
+           
+           
+        
+            if(dadosPartido){
+                
+                const [vinculacaoInstancePartido, createdPartido] = await Vinculacao.findOrCreate({
+                    where: { Entidade: dadosPartido.Entidade, Apoiador: dadosApoiador.IdApoiador },
+                    defaults: {
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Cargo: dadosPartido.Cargo,
+                        Entidade: dadosPartido.Entidade,
+                        Lideranca: dadosPartido.Lideranca
+                    },
+                    transaction: t
+                });
+            
+               
+                if (!createdPartido) {
+                    // Se não foi criado, significa que já existia, então você pode atualizar os valores
+                    await vinculacaoInstancePartido.update({
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Cargo: dadosPartido.Cargo,
+                        Lideranca: dadosPartido.Lideranca
+                    }, { transaction: t });
+                }
 
+            }
+           
+          
+            if(dadosTelefone){
+                const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
+                    where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
+                    defaults: {
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Numero: dadosTelefone.Numero,
+                        WhatsApp: dadosTelefone.WhatsApp,
+                        Principal: dadosTelefone.Principal
+                    },
+                    transaction: t
+                });
+    
+                
+                if(!createdTelefone){
+                    
+                    await telefoneInstance.update({
+                        Apoiador: dadosApoiador.IdApoiador,
+                        Numero: dadosTelefone.Numero,
+                        WhatsApp: dadosTelefone.WhatsApp,
+                        Principal: dadosTelefone.Principal
+                    },{ transaction: t })
+                }
+    
+            }
+    
+            
+            
             // Confirma a transação
             await t.commit();
 
@@ -537,7 +548,6 @@ const apoiadorController = {
             }
 
              
-        
 
             // Verifica se existe número de telefone
             if(telefone != null && telefone.length > 6){
