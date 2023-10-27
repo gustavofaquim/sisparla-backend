@@ -43,19 +43,41 @@ const enderecoController = {
         try {
 
            // const estado = await estadoController.findByName(endereco.estado);
-            const estado = await estadoController.findByName('GO');
+            const estado = await estadoController.findByName(endereco.estado);
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, estado.IdEstado);
 
             
+            let whereClause = {
+                Cidade: cidade.IdCidade
+            };
+            
+            if (endereco.bairro) {
+                whereClause.Bairro = endereco.bairro;
+            }
+            
+            if (endereco.cep) {
+                whereClause.CEP = endereco.cep;
+            }
+            
+            if (endereco.numero) {
+                whereClause.numero = endereco.numero;
+            }
+            
+            if (endereco.lagradouro) {
+                whereClause.lagradouro = endereco.lagradouro;
+            }
+            
+            if (endereco.quadra) {
+                whereClause.quadra = endereco.quadra;
+            }
+            
+            if (endereco.pontoReferencia) {
+                whereClause.pontoReferencia = endereco.pontoReferencia;
+            }
+            
+
             let end = await enderecoModel.findOne({
-                where: {
-                    Cidade: cidade.IdCidade,
-                    Bairro: endereco.bairro,
-                    numero: endereco.numero,
-                    lagradouro: endereco.lagradouro,
-                    quadra: endereco.quadra,
-                    pontoReferencia: endereco.pontoReferencia 
-                }
+                where: whereClause
             });
 
             return end;
