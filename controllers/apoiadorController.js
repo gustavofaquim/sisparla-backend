@@ -14,6 +14,7 @@ import classificacaoModel from "../models/Classificacao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
 import enderecoController from "./enderecoController.js";
 import classificacaoController from './classificacaoController.js';
+import telefoneController from './telefoneController.js';
 import situacaoCadastroController from './situacaoController.js';
 import entidadeController from "./entidadeController.js";
 
@@ -170,6 +171,7 @@ const apoiadorController = {
             
             const numeroTelefone = apoiador?.TelefoneApoiador?.Numero;
             const numeroWhatsapp = apoiador?.TelefoneApoiador?.WhatsApp;
+            const numeroAntigo =  apoiador?.TelefoneApoiador?.Numero;
             
             
             const cep = apoiador?.EnderecoApoiador?.CEP;
@@ -215,7 +217,7 @@ const apoiadorController = {
           
 
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, profissao, religiao, email, 
-                informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp, idEndereco,
+                informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca, partidoCargo
@@ -248,10 +250,11 @@ const apoiadorController = {
             }
 
 
-            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroWhatsapp,
+            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
-
+            
+            console.log(numeroAntigo);
             console.log(numeroTelefone);
             
             let dadosEntidade;
@@ -304,7 +307,11 @@ const apoiadorController = {
             // Verifica se existe número de telefone
             if(numeroTelefone != null && numeroTelefone.length > 6){
                 
+                const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
+               
+
                 dadosTelefone = {
+                    IdTelefone: tel.idTelefone,
                     Numero: numeroTelefone,
                     WhatsApp: numeroWhatsapp || '',
                     Principal: 's' 
@@ -334,7 +341,7 @@ const apoiadorController = {
 
 
         } catch (error) {
-            console.log(`Erro ao atualizar o registro: ${error}`);
+            console.log(`Erro ao atualizar o apoiador: ${error}`);
             res.status(500).json({msg: 'Erro ao atualizar o registro'});
         }
     },
@@ -401,9 +408,9 @@ const apoiadorController = {
                 }, { transaction: t });
             }
 
-            
-            const [telefoneInstance, createdTelefone] = await Telefone.findOrCreate({
-                where: { Telefone: dadosTelefone.IdTelefone, Apoiador: dadosApoiador.IdApoiador },
+    
+            const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
+                where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
                 defaults: {
                     Apoiador: dadosApoiador.IdApoiador,
                     Numero: dadosTelefone.Numero,
@@ -415,6 +422,8 @@ const apoiadorController = {
 
             
             if(!createdTelefone){
+                console.log('entrou no update');
+                
                 await telefoneInstance.update({
                     Apoiador: dadosApoiador.IdApoiador,
                     Numero: dadosTelefone.Numero,
