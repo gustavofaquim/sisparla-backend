@@ -193,6 +193,7 @@ const apoiadorController = {
             let entidadeLideranca = '';
 
             let partidoId = '';
+            let partidoNome = '';
             let partidoCargo = '';
             let partidoLideranca = '';
 
@@ -210,6 +211,7 @@ const apoiadorController = {
                 } else {
                     partidoId = e.VinculacaoEntidade.IdEntidade;
                     partidoLideranca = e.Lideranca;
+                    partidoNome = e?.VinculacaoEntidade?.Nome
                     partidoCargo = e.Cargo;
                 }
             });
@@ -220,7 +222,7 @@ const apoiadorController = {
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca, partidoCargo
+                partidoLideranca, partidoNome, partidoCargo
             };
 
             return apoiadorD;
