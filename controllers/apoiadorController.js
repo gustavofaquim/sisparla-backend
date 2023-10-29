@@ -269,9 +269,8 @@ const apoiadorController = {
         
             
             let dadosEntidade;
-            let dadosPartido;
             let dadosTelefone;
-            let idFiliacao;
+            let filiacao;
 
             
 
@@ -310,14 +309,14 @@ const apoiadorController = {
                     DiretorioUF: '',
                     Zona: '',
                     Secao: '',
-                    Cargo: partidoCargo,
-                    Lideranca: partidoLideranca
+                    Cargo: partidoCargo || '',
+                    Lideranca: partidoLideranca || 'n'
                 }
 
 
                 //const filiacaoCompleta = {idApoiador, dadosPartido}
                 
-                idFiliacao = await filiacaoController.updateOrCreateIfNotExists(idApoiador,dadosFiliacao);
+                filiacao = await filiacaoController.updateOrCreateIfNotExists(idApoiador,dadosFiliacao);
 
             }
 
@@ -349,7 +348,7 @@ const apoiadorController = {
                 Endereco: end?.dataValues?.idEndereco,
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
-                Filiacao: idFiliacao,
+                Filiacao: filiacao.IdFiliacao,
                 InformacaoAdicional: informacaoAdicional,
             };
 

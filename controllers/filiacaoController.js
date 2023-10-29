@@ -1,5 +1,6 @@
 import filiacaoModel from "../models/FiliacaoPartidaria.js";
 import apoiadorModel from "../models/Apoiador.js";
+import apoiadorController from "./apoiadorController.js";
 
 const filiacaoController = {
 
@@ -46,7 +47,13 @@ const filiacaoController = {
             }
 
             const novaFiliacao = await filiacaoModel.create({
-                dadosFiliacao
+                    Partido: dadosFiliacao.IdPartido,
+                    DiretorioMuniciapal: dadosFiliacao.DiretorioMuniciapal,
+                    DiretorioUF: dadosFiliacao.DiretorioUF,
+                    Zona: dadosFiliacao.Zona,
+                    Secao: dadosFiliacao.Secao,
+                    Cargo: dadosFiliacao.Cargo,
+                    Lideranca: dadosFiliacao.Lideranca
             })
 
             return novaFiliacao;
@@ -58,7 +65,7 @@ const filiacaoController = {
 
     update: async(dadosFiliacao, idFiliacao) => {
 
-        console.log(dadosFiliacao);
+        
         try {
             
             const filiacaoAtualizada = await filiacaoModel.update(
