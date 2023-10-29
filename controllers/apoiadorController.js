@@ -266,23 +266,24 @@ const apoiadorController = {
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
-        
             
+           
+
             let dadosEntidade;
             let dadosTelefone;
             let filiacao;
+            let endereco;
 
             
-
-            const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, quadra, pontoReferencia};
-
-            let end;
-
-            if(!idEndereco){
-                end = await enderecoController.createIfNotExists(enderecoCompleto);
-            }else{
-                end = await enderecoController.update(idEndereco, enderecoCompleto)
+            if(cidade != null && estado != null){
+                const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, quadra, pontoReferencia};
+                if(!idEndereco){
+                    endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+                }else{
+                    endereco = await enderecoController.update(idEndereco, enderecoCompleto)
+                }
             }
+          
 
 
             // Verifica se existe entidade
@@ -292,10 +293,10 @@ const apoiadorController = {
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
                
                 dadosEntidade = {
-                    Cargo: entidadeCargo,
+                    Cargo: entidadeCargo || '',
                     Entidade: enti.IdEntidade, 
                     Sigla: entidadeSigla,
-                    Lideranca: entidadeLideranca,
+                    Lideranca: entidadeLideranca || 'n',
                 };
             }
 
@@ -313,24 +314,22 @@ const apoiadorController = {
                     Lideranca: partidoLideranca || 'n'
                 }
 
-
-                //const filiacaoCompleta = {idApoiador, dadosPartido}
-                
                 filiacao = await filiacaoController.updateOrCreateIfNotExists(idApoiador,dadosFiliacao);
-
             }
 
             
     
             // Verifica se existe número de telefone
             if(numeroTelefone != null && numeroTelefone.length > 6){
+
                 
                 const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
-               
+                
+             
                 dadosTelefone = {
                     IdTelefone: tel.idTelefone,
                     Numero: numeroTelefone,
-                    WhatsApp: numeroWhatsapp || '',
+                    WhatsApp: numeroWhatsapp || 's',
                     Principal: 's' 
                 };
             }
@@ -345,10 +344,10 @@ const apoiadorController = {
                 Email: email,
                 Profissao: profissao,
                 Religiao: religiao,
-                Endereco: end?.dataValues?.idEndereco,
+                Endereco: endereco?.dataValues?.idEndereco,
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
-                Filiacao: filiacao.IdFiliacao,
+                Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacaoAdicional,
             };
 
@@ -366,8 +365,9 @@ const apoiadorController = {
     },
 
 
-    atualizarApoiadorComVinculacao: async(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
+    atualizarApoiadorComVinculacao: async(dadosApoiador, dadosEntidade, dadosTelefone) => {
 
+        console.log(dadosTelefone)
        
         // Inicia a transação
         const t = await sequelize.transaction();
@@ -491,12 +491,16 @@ const apoiadorController = {
             let dadosEntidade;
             let filiacao;
             let dadosTelefone;
+            let endereco;
 
        
+            if(cidade != null && estado != null){
+                const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia};
+
+                endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+            }
           
-            const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia}
-            
-            
+           
 
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
@@ -542,7 +546,7 @@ const apoiadorController = {
 
             
             
-            const end = await enderecoController.createIfNotExists(enderecoCompleto);
+            
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
         
@@ -555,10 +559,10 @@ const apoiadorController = {
                 Email: email,
                 Profsissao: profissao,
                 Religiao: religiao,
-                Endereco: end.dataValues.idEndereco,
+                Endereco: endereco?.dataValues?.idEndereco,
                 Classificacao: classif.idClassificacao,
                 Situacao: sit.idSituacao,
-                Filiacao: filiacao.IdFiliacao,
+                Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
             };
 

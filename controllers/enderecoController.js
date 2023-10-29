@@ -43,8 +43,8 @@ const enderecoController = {
         try {
 
            // const estado = await estadoController.findByName(endereco.estado);
-            const estado = await estadoController.findByName(endereco.estado);
-            const cidade = await cidadeController.createIfNotExists(endereco.cidade, estado.IdEstado);
+            //const estado = await estadoController.findByName(endereco.estado);
+            const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
 
             
             let whereClause = {
@@ -97,13 +97,15 @@ const enderecoController = {
         try {
 
             let novoEndereco = await enderecoController.find(endereco);
-
+            
             if(novoEndereco){
                 return novoEndereco;
             }
-
-            const estado = await estadoController.findByName(endereco.estado);
-            const cidade = await cidadeController.createIfNotExists(endereco.cidade, estado.IdEstado);
+            
+            //const estado = await estadoController.findByName(endereco.estado);
+            
+            
+            const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
 
           
             novoEndereco = await enderecoModel.create({
