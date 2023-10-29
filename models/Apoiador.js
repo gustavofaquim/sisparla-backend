@@ -9,6 +9,7 @@ import Endereco from "./Endereco.js";
 import Classificacao from "./Classificacao.js";
 import SituacaoCadastro from "./SituacaoCadastro.js";
 import Vinculacao from "./Vinculacao.js";
+import FiliacaoPartidaria from "./FiliacaoPartidaria.js";
 
 const Apoiador = sequelize.define('Apoiador', {
 
@@ -49,6 +50,7 @@ const Apoiador = sequelize.define('Apoiador', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    
     Endereco:{
         type: DataTypes.INTEGER,
         references:{
@@ -68,6 +70,14 @@ const Apoiador = sequelize.define('Apoiador', {
         references:{
             model: SituacaoCadastro,
             key: "IdSituacao"
+        }
+    },
+
+    Filiacao: {
+        type: DataTypes.INTEGER,
+        references:{
+            model: FiliacaoPartidaria,
+            key: "IdFiliacao"
         }
     },
     InformacaoAdicional:{
@@ -95,6 +105,12 @@ Apoiador.belongsTo(Telefone, {
 Apoiador.hasMany(Vinculacao, {
     foreignKey: 'Apoiador',
     as: 'Vinculacao'
+});
+
+
+Apoiador.belongsTo(FiliacaoPartidaria, {
+    foreignKey: 'Filiacao',
+    as: 'FiliacaoPartidaria'
 });
 
 

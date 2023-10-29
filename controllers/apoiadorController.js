@@ -6,17 +6,20 @@ import profissaoModel from "../models/Profissao.js";
 import religiaoModel from "../models/Religiao.js";
 import enderecoModel from "../models/Endereco.js";
 import bairroModel from "../models/Bairro.js";
+import PartidoModel from "../models/Partido.js";
 import TelefoneModel from "../models/Telefone.js"
 import EntidadeModel from "../models/Entidade.js";
 import cidadeModel from "../models/Cidade.js";
 import Vinculacao from '../models/Vinculacao.js';
 import classificacaoModel from "../models/Classificacao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
+import FiliacaoModel from "../models/FiliacaoPartidaria.js";
 import enderecoController from "./enderecoController.js";
 import classificacaoController from './classificacaoController.js';
 import telefoneController from './telefoneController.js';
 import situacaoCadastroController from './situacaoController.js';
 import entidadeController from "./entidadeController.js";
+import filiacaoController from './filiacaoController.js';
 
 
 const apoiadorController = {
@@ -122,6 +125,16 @@ const apoiadorController = {
                         foreignKey: 'IdApoiador'
                      }, 
                      {
+                        model: FiliacaoModel,
+                        as: 'FiliacaoPartidaria',
+                        foreignKey: 'IdFiliacao',
+                        include:{
+                            model: PartidoModel,
+                            as: 'PartidoFiliacao',
+                            foreignKey: 'Partido'
+                        }
+                     },
+                     {
                         model: Vinculacao,
                         as: 'Vinculacao',
                         foreignKey: 'Apoiador',
@@ -192,10 +205,14 @@ const apoiadorController = {
             let entidadeCargo = '';
             let entidadeLideranca = '';
 
-            let partidoId = '';
-            let partidoNome = '';
-            let partidoCargo = '';
-            let partidoLideranca = '';
+            const partidoId = apoiador?.FiliacaoPartidaria?.Partido;
+            const partidoNome = apoiador?.FiliacaoPartidaria?.PartidoFiliacao?.Nome;
+            const partidoCargo = apoiador?.FiliacaoPartidaria?.Cargo;
+            const partidoLideranca = apoiador?.FiliacaoPartidaria?.Lideranca;
+            const partidoZona = apoiador?.FiliacaoPartidaria?.Zona;
+            const partidoSecao = apoiador?.FiliacaoPartidaria?.Secao;
+            const diretorioMunicpio = apoiador?.FiliacaoPartidaria?.DiretorioMunicipio;
+            const diretorioUF = apoiador?.FiliacaoPartidaria?.DiretorioUF;
 
 
             apoiador.Vinculacao.forEach((e, index) => {
@@ -208,11 +225,6 @@ const apoiadorController = {
                     entidadeLideranca = e.Lideranca;
                     entidadeCargo = e.Cargo;
 
-                } else {
-                    partidoId = e.VinculacaoEntidade.IdEntidade;
-                    partidoLideranca = e.Lideranca;
-                    partidoNome = e?.VinculacaoEntidade?.Nome
-                    partidoCargo = e.Cargo;
                 }
             });
             
@@ -222,7 +234,7 @@ const apoiadorController = {
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca, partidoNome, partidoCargo
+                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo
             };
 
             return apoiadorD;
@@ -259,6 +271,7 @@ const apoiadorController = {
             let dadosEntidade;
             let dadosPartido;
             let dadosTelefone;
+            let idFiliacao;
 
             
 
@@ -291,12 +304,21 @@ const apoiadorController = {
             // Verifica se existe partido
             if(partidoId != null && partidoId >= 1){
                 
-                dadosPartido = {
-                    IdEntidade: partidoId,
+               const dadosFiliacao = {
+                    IdPartido: partidoId,
+                    DiretorioMunicipio: '',
+                    DiretorioUF: '',
+                    Zona: '',
+                    Secao: '',
                     Cargo: partidoCargo,
-                    Entidade: partidoId,
                     Lideranca: partidoLideranca
                 }
+
+
+                //const filiacaoCompleta = {idApoiador, dadosPartido}
+                
+                idFiliacao = await filiacaoController.updateOrCreateIfNotExists(idApoiador,dadosFiliacao);
+
             }
 
             
@@ -306,7 +328,6 @@ const apoiadorController = {
                 
                 const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
                
-
                 dadosTelefone = {
                     IdTelefone: tel.idTelefone,
                     Numero: numeroTelefone,
@@ -328,12 +349,13 @@ const apoiadorController = {
                 Endereco: end?.dataValues?.idEndereco,
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
+                Filiacao: idFiliacao,
                 InformacaoAdicional: informacaoAdicional,
             };
 
             
             
-            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone);
+            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
             
             res.json(apoiadorAtualizado);
 
@@ -387,7 +409,7 @@ const apoiadorController = {
            
            
         
-            if(dadosPartido){
+            /*if(dadosPartido){
                 
                 const [vinculacaoInstancePartido, createdPartido] = await Vinculacao.findOrCreate({
                     where: { Entidade: dadosPartido.Entidade, Apoiador: dadosApoiador.IdApoiador },
@@ -408,9 +430,9 @@ const apoiadorController = {
                         Cargo: dadosPartido.Cargo,
                         Lideranca: dadosPartido.Lideranca
                     }, { transaction: t });
-                }
+                } *
 
-            }
+            }*/
            
           
             if(dadosTelefone){
