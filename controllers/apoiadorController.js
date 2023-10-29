@@ -474,54 +474,6 @@ const apoiadorController = {
     },
 
 
-    criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone) => {
-        
-        
-       
-        // Inicia a transação
-        const t = await sequelize.transaction();
-        
-        try {
-            // Cria o Apoiador
-            const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
-
-
-            if(dadosEntidade){
-                 // Cria a Vinculacao com o IdApoiador
-                await Vinculacao.create({
-                    Apoiador: novoApoiador.IdApoiador,
-                    ...dadosEntidade,
-                }, { transaction: t });
-            }
-
-            if(dadosPartido){
-                // Cria a Vinculacao com o IdApoiador
-                await Vinculacao.create({
-                    Apoiador: novoApoiador.IdApoiador,
-                    ...dadosPartido,
-                }, { transaction: t });
-            }
-
-            if(dadosTelefone){
-                await TelefoneModel.create({
-                    Apoiador: novoApoiador.IdApoiador,
-                    ...dadosTelefone
-                },{ transaction: t })
-            }
-            
-    
-            // Confirma a transação
-            await t.commit();
-    
-            return novoApoiador;
-        } catch (error) {
-            // Em caso de erro, desfaz a transação
-            await t.rollback();
-            throw error; // Rejoga o erro para o chamador lidar
-        }
-    },
-
-
 
 
     create: async (req,res) => {
@@ -532,12 +484,12 @@ const apoiadorController = {
                 nome, apelido, profissao, cpf, religiao, nascimento, classificacao, email, telefone, situacao, 
                 cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
-                partido, partidoCargo, partidoLideranca,
+                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF,
                 informacoesAdicionais 
             } = req.body
 
             let dadosEntidade;
-            let dadosPartido;
+            let filiacao;
             let dadosTelefone;
 
        
@@ -560,14 +512,20 @@ const apoiadorController = {
             }
 
             // Verifica se existe partido
-            if(partido != null && partido.length > 1){
-                const parti = await entidadeController.findByAcronym(partido);
-
-                dadosPartido = {
-                    Cargo: partidoCargo,
-                    Entidade: parti.IdEntidade,
-                    Lideranca: partidoLideranca
+            if(partidoId != null && partidoId.length >= 1){
+                
+                const dadosFiliacao = {
+                    IdPartido: partidoId,
+                    DiretorioMunicipio: diretorioMunicpio || '',
+                    DiretorioUF: diretorioUF || '',
+                    Zona: zona || '',
+                    Secao: secao || '',
+                    Cargo: partidoCargo || '',
+                    Lideranca: partidoLideranca || 'n'
                 }
+
+                filiacao = await filiacaoController.updateOrCreateIfNotExists(null,dadosFiliacao);
+
             }
 
              
@@ -600,12 +558,13 @@ const apoiadorController = {
                 Endereco: end.dataValues.idEndereco,
                 Classificacao: classif.idClassificacao,
                 Situacao: sit.idSituacao,
+                Filiacao: filiacao.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
             };
 
             
             
-            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosPartido, dadosTelefone);
+            const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
 
             res.json(novoApoiador);
 
@@ -614,6 +573,55 @@ const apoiadorController = {
             res.status(500).json({msg: 'Erro ao cadastrar o apoiador'})
         }
     },
+
+
+    criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosTelefone) => {
+        
+        
+       
+        // Inicia a transação
+        const t = await sequelize.transaction();
+        
+        try {
+            // Cria o Apoiador
+            const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
+
+
+            if(dadosEntidade){
+                 // Cria a Vinculacao com o IdApoiador
+                await Vinculacao.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosEntidade,
+                }, { transaction: t });
+            }
+
+            /*if(dadosPartido){
+                // Cria a Vinculacao com o IdApoiador
+                await Vinculacao.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosPartido,
+                }, { transaction: t });
+            }*/
+
+            if(dadosTelefone){
+                await TelefoneModel.create({
+                    Apoiador: novoApoiador.IdApoiador,
+                    ...dadosTelefone
+                },{ transaction: t })
+            }
+            
+    
+            // Confirma a transação
+            await t.commit();
+    
+            return novoApoiador;
+        } catch (error) {
+            // Em caso de erro, desfaz a transação
+            await t.rollback();
+            throw error; // Rejoga o erro para o chamador lidar
+        }
+    },
+
     
 
 

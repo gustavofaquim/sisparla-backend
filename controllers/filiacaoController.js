@@ -39,12 +39,15 @@ const filiacaoController = {
 
         try {
             
-            const filiacaoExistente = await filiacaoController.findByApoiador(idApoiador);
+            if(idApoiador){
+                const filiacaoExistente = await filiacaoController.findByApoiador(idApoiador);
 
-            if(filiacaoExistente){
-                const filiacaoAtualizada = await filiacaoController.update(dadosFiliacao, filiacaoExistente.IdFiliacao);
-                return filiacaoAtualizada;
+                if(filiacaoExistente){
+                    const filiacaoAtualizada = await filiacaoController.update(dadosFiliacao, filiacaoExistente.IdFiliacao);
+                    return filiacaoAtualizada;
+                }
             }
+            
 
             const novaFiliacao = await filiacaoModel.create({
                     Partido: dadosFiliacao.IdPartido,
