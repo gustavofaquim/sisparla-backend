@@ -383,6 +383,7 @@ const apoiadorController = {
             
            
             if(dadosEntidade){
+                console.log(dadosEntidade);
                 const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
                     where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
                     defaults: {

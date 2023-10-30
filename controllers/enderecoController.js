@@ -42,6 +42,8 @@ const enderecoController = {
         
         try {
 
+            console.log('EnderecoController');
+            console.log(endereco);
            // const estado = await estadoController.findByName(endereco.estado);
             //const estado = await estadoController.findByName(endereco.estado);
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
