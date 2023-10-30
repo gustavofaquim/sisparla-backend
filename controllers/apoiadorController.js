@@ -20,6 +20,7 @@ import telefoneController from './telefoneController.js';
 import situacaoCadastroController from './situacaoController.js';
 import entidadeController from "./entidadeController.js";
 import filiacaoController from './filiacaoController.js';
+import vinculacaoController from './vinculacaoController.js';
 
 
 const apoiadorController = {
@@ -269,7 +270,8 @@ const apoiadorController = {
             
            
 
-            let dadosEntidade;
+            //let dadosEntidade;
+            let vinculacao;
             let dadosTelefone;
             let filiacao;
             let endereco;
@@ -288,17 +290,25 @@ const apoiadorController = {
 
             // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
+
                 const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
 
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
-               
-                dadosEntidade = {
+
+                const dadosVinculacao = {
+                    Apoiador: idApoiador,
                     Cargo: entidadeCargo || '',
                     Entidade: enti.IdEntidade, 
                     Sigla: entidadeSigla,
                     Lideranca: entidadeLideranca || 'n',
                 };
+
+
+                vinculacao = await vinculacaoController.updateOrCreateIfNotExists(dadosVinculacao);
+                
+                
             }
+            
 
             
             // Verifica se existe partido
@@ -353,7 +363,7 @@ const apoiadorController = {
 
             
             
-            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
+            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, null, dadosTelefone);
             
             res.json(apoiadorAtualizado);
 
