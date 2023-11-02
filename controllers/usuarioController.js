@@ -6,9 +6,37 @@ import jwt from "jsonwebtoken";
 const usuarioController = {
 
 
+
+    encrypt: (senha) => {
+
+
+        // Geração do salt
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+        if (err) {
+            throw err;
+        }
+
+        // Hash da senha com o salt
+        bcrypt.hash(senha, salt, (err, hash) => {
+            if (err) {
+            throw err;
+            }
+
+            // Agora 'hash' contém a senha encriptada
+            console.log('Senha Encriptada:', hash);
+        });
+        });
+
+    },
+
+
     find: async(req,res) => {
 
         const {nomeUsuario, senha} = req.body
+        
+
+        //const senha2 = usuarioController.encrypt(senha);
 
         try {
             const usuario = await usuarioModel.findOne({
@@ -17,13 +45,14 @@ const usuarioController = {
                 }
             });
 
-            console.log(usuario);
+            
             if(!usuario){
                 res.status(401).json({msg: 'Nome de Usuário inválido'});
                 return;
             }
+      
 
-            const password = await bcrypt.compare(senha, "fdfdfdfdfdfdfd");
+            const password = await bcrypt.compare(senha, usuario.Senha);
 
             if(!password){
                 res.status(401).json({msg: 'Senha inválida'});

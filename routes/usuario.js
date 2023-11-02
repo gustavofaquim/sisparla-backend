@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import usuarioController from '../controllers/UsuarioController.js';
+import usuarioController from '../controllers/usuarioController.js';
 
 router
     .route('/logar')
