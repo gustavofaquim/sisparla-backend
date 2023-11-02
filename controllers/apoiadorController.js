@@ -115,10 +115,15 @@ const apoiadorController = {
                     const primeiroDia = new Date(data.setDate(primeiro));
                     const ultimoDia = new Date(data.setDate(data.getDate()+6));
 
-                    whereClause.DataNascimento = sequelize.literal(
-                        `(MONTH(DataNascimento) = ${primeiroDia.getMonth() + 1} AND DAY(DataNascimento) BETWEEN ${primeiroDia.getDate()} AND ${ultimoDia.getDate()})
-                        OR
-                        (MONTH(DataNascimento) = ${ultimoDia.getMonth() + 1} AND DAY(DataNascimento) BETWEEN 1 AND ${ultimoDia.getDate()})`);
+                    console.log(primeiroDia)
+                    console.log(ultimoDia)
+
+
+                    whereClause.DataNascimento = {
+                        [Op.and]: [
+                            sequelize.literal(`WEEK(DataNascimento) BETWEEN WEEK('${primeiroDia.toISOString()}') AND WEEK('${ultimoDia.toISOString()}')`),
+                        ],
+                    };
 
                 } else if (periodo === 'mes') {
 
