@@ -62,14 +62,15 @@ const usuarioController = {
             // Gerar token JWT
             const token = jwt.sign({ usuario: usuario.NomeUsuario, regra: usuario.RegraAcesso }, 'secreto', { expiresIn: '1h' });
 
-           
             res.json({ token });
 
         } catch (error) {
             console.log(`Erro buscar usuario: ${error}`);
             res.status(500).json({msg: 'Erro ao buscar usuario'})
         }
-    }
+    },
+
+    
 
 }
 
