@@ -91,6 +91,83 @@ const apoiadorController = {
 
     },
 
+    findByBirthday: async(req,res) => {
+    
+        try {
+            
+            const { periodo } = req.query;
+            //const periodo = id;
+           
+
+            const whereClause = {};
+            
+            const data = new Date();
+            const mesAtual = data.getMonth() + 1;
+
+            if(periodo != null && (periodo === 'semana' || periodo === 'mes') ){
+               
+         
+
+                if (periodo === 'semana') {
+                    
+                    const primeiro = data.getDate() - data.getDay(); 
+ 
+                    const primeiroDia = new Date(data.setDate(primeiro));
+                    const ultimoDia = new Date(data.setDate(data.getDate()+6));
+
+                    whereClause.DataNascimento = sequelize.literal(
+                        `(MONTH(DataNascimento) = ${primeiroDia.getMonth() + 1} AND DAY(DataNascimento) BETWEEN ${primeiroDia.getDate()} AND ${ultimoDia.getDate()})
+                        OR
+                        (MONTH(DataNascimento) = ${ultimoDia.getMonth() + 1} AND DAY(DataNascimento) BETWEEN 1 AND ${ultimoDia.getDate()})`);
+
+                } else if (periodo === 'mes') {
+
+                    whereClause.DataNascimento = sequelize.literal(`MONTH(DataNascimento) = ${mesAtual}`);
+                }
+
+
+            }else{
+                const diaAual = data.getDate();
+                whereClause.DataNascimento = sequelize.literal(`DAY(DataNascimento) = ${diaAual} AND MONTH(DataNascimento) = ${mesAtual}`);
+            }
+
+            const aniversariantes = await apoiadorModel.findAll({
+                where: whereClause,
+                include: [
+                    {
+                        model: enderecoModel,
+                        as: 'EnderecoApoiador',
+                        foreignKey: 'Endereco',
+                        include: {
+                            model: cidadeModel,
+                            as: 'CidadeApoiador',
+                            foreignKey: 'Cidade',
+                        },
+                    },
+                    {
+                        model: classificacaoModel,
+                        as: 'ClassificacaoApoiador',
+                        foreignKey: 'Classificacao',
+                    },
+                    {
+                        model: SituacaoCadastro,
+                        as: 'SituacaoCadastroApoiador',
+                        foreignKey: 'Situacao',
+                    },
+                ],
+            });
+
+            res.json(aniversariantes);
+
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de aniversariantes: ${error}`);
+            res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        
+    },
+
+
     findById: async (req,res) => {
 
         const { id } = req.params;
@@ -637,6 +714,9 @@ const apoiadorController = {
             throw error; // Rejoga o erro para o chamador lidar
         }
     },
+
+
+
 
     
 

@@ -14,6 +14,13 @@ router
     .get((req,res) => apoiadorController.findById(req,res));
 
 
+
+router
+    .route("/aniversariantes")
+    .get((req,res) => apoiadorController.findByBirthday(req,res));
+
+
+
 router
     .route("/apoiadores/:id")
     .delete((req,res) => apoiadorController.deleteById(req,res));
