@@ -47,6 +47,7 @@ import usuarioRouter from "./usuario.js";
 router.use("/", usuarioRouter);
 
 
+
 // religioes
 import religiaoRouter from "./religiao.js";
 router.use("/", religiaoRouter);
@@ -55,5 +56,15 @@ router.use("/", religiaoRouter);
 // partidos
 import partidoRouter from "./partido.js";
 router.use("/", partidoRouter);
+
+
+
+// Categoria de Demandas
+import categoriaDemanda from "./categoriaDemanda.js";
+router.use("/", categoriaDemanda);
+
+// Situação de Demandas
+import situacaoDemanda from "./situacaoDemanda.js";
+router.use("/", situacaoDemanda);
 
 export default router;

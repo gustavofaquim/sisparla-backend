@@ -5,8 +5,6 @@ import jwt from "jsonwebtoken";
 
 const usuarioController = {
 
-
-
     encrypt: (senha) => {
 
 
@@ -69,6 +67,22 @@ const usuarioController = {
             res.status(500).json({msg: 'Erro ao buscar usuario'})
         }
     },
+
+
+    findAssets: async(req,res) => {
+        try {
+            
+            const usuarios = await usuarioModel.findAll({
+                where: {Status: 1}
+            })
+
+            res.json(usuarios);
+
+        } catch (error) {
+            console.log(`Erro buscar usuarios: ${error}`);
+            res.status(500).json({msg: 'Erro ao buscar usuarios'})
+        }
+    }
 
     
 
