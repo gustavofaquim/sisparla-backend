@@ -67,4 +67,10 @@ router.use("/", categoriaDemanda);
 import situacaoDemanda from "./situacaoDemanda.js";
 router.use("/", situacaoDemanda);
 
+
+// Demandas
+import demandaRouter from "./demandas.js";
+router.use("/", demandaRouter);
+
+
 export default router;
