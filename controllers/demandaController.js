@@ -4,6 +4,7 @@ import { Sequelize, Op, where } from 'sequelize';
 import demandaModel from "../models/Demanda.js";
 import SituacaoDemanda from '../models/SituacaoDemanda.js';
 import CategoriaDemanda from '../models/CategoriaDemanda.js';
+import DemandaResponsavel from "../models/Usuario.js";
 
 const demandaController = {
 
@@ -42,6 +43,11 @@ const demandaController = {
                         model: CategoriaDemanda,
                         as: 'DemandaCategoria',
                         foreignKey: 'Demanda'
+                    },
+                    {
+                        model: DemandaResponsavel,
+                        as: 'DemandaResponsavel',
+                        foreignKey: 'Responsavel'
                     }
                 ],
                 where: whereClause
@@ -54,6 +60,56 @@ const demandaController = {
         } catch (error) {
             console.log(`Erro ao buscar a lista de demandas ${error}`);
             res.status(500).json({msg: 'Erro ao buscar a lista de demandas'});
+        }
+    },
+
+    destructuringDemanda: (demanda) => {
+
+        try {
+            
+           
+
+        } catch (error) {
+            
+        }
+
+    },
+
+    findById: async(req,res) => {
+
+        const { id } = req.params;
+
+        try {
+            
+            const demanda = await demandaModel.findByPk(id,{
+                include: [
+                    {
+                        model: SituacaoDemanda,
+                        as: 'DemandaSituaco',
+                        foreignKey: 'Situacao'
+                    },
+                    {
+                        model: CategoriaDemanda,
+                        as: 'DemandaCategoria',
+                        foreignKey: 'Demanda'
+                    },
+                    {
+                        model: DemandaResponsavel,
+                        as: 'DemandaResponsavel',
+                        foreignKey: 'Responsavel'
+                    }
+                ],
+            })
+
+            if(!demanda){
+                return res.status(404).json({msg: 'Demanda não encontrado'});
+            }
+
+            res.json(demanda);
+
+        } catch (error) {
+            console.log(`Erro ao buscar a demanda: ${error}`);
+            res.status(500).json({msg: 'Erro ao buscar a demanda'});
         }
     },
 
