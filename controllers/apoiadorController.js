@@ -336,9 +336,6 @@ const apoiadorController = {
 
         const { id } = req.params;
        
-        console.log('Dados');
-       
-
         try {
             
             const apoiador = await apoiadorModel.findByPk(id);

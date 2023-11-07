@@ -19,7 +19,7 @@ router
 
 router
     .route("/demandas/:id")
-    .put((req,res) => apoiadorController.updateById(req,res));
+    .put((req,res) => demandaController.updateById(req,res));
 
     
 export default router;

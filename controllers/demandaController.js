@@ -66,11 +66,26 @@ const demandaController = {
     destructuringDemanda: (demanda) => {
 
         try {
-            
-           
 
-        } catch (error) {
             
+            const idDemanda = demanda.IdDemanda;
+            const assunto = demanda.Assunto;
+            const descricao = demanda.Descricao;
+            const idCategoria = demanda.Categoria;
+            const idSituacao = demanda.Situacao;
+            const idResponsavel = demanda.Responsavel;
+            const idApoiador = demanda?.Apoiador;
+            const emendaParlamentar = demanda.EmendaParlamentar;
+            const valor = demanda.Valor;
+           
+            const demandaD = {idDemanda, assunto, descricao, idCategoria, idSituacao,
+            idResponsavel, idApoiador, emendaParlamentar, valor};
+
+            return demandaD;
+            
+        } catch (error) {
+            console.log('Erro ao desestruturar a Demanda: ' + error);
+            throw error;
         }
 
     },
@@ -104,8 +119,11 @@ const demandaController = {
             if(!demanda){
                 return res.status(404).json({msg: 'Demanda não encontrado'});
             }
+           
 
-            res.json(demanda);
+            const demandaD = demandaController.destructuringDemanda(demanda);
+
+            res.json(demandaD);
 
         } catch (error) {
             console.log(`Erro ao buscar a demanda: ${error}`);
@@ -140,6 +158,46 @@ const demandaController = {
             console.log(`Erro ao cadastrar a demanda ${error}`);
             res.status(500).json({msg: 'Erro ao cadastrar a demanda'});
         }
+    },
+
+    updateById: async(req,res) => {
+
+        const { id } = req.params;
+        
+
+        try {
+            
+            const demanda = await demandaModel.findByPk(id);
+
+            if(!demanda){
+                return res.status(500).json({msg: 'Demanda não encontrada'});
+            }
+
+            const {assunto, descricao, idCategoria, idSituacao, 
+            idResponsavel, idApoiador, emendaParlamentar, valor} = req.body;
+
+            const dadosDemanda = {
+                Assunto: assunto,
+                Descricao: descricao,
+                Categoria: idCategoria,
+                Situacao: idSituacao,
+                Responsavel: idResponsavel || null,
+                Apoiador: idApoiador || null,
+                EmendaParlamentar: emendaParlamentar,
+                Valor: valor
+            }
+
+            const demandaAtualizada = await demandaModel.update(dadosDemanda, {
+                where: {IdDemanda: id}
+            })
+
+            return res.status(200).json({demandaAtualizada});
+
+        } catch (error) {
+            console.log('Erro ao atualizar a Demanda: ' + error);
+            res.status(500).json({msg: 'Erro ao atualizar a Demanda'});
+        }
+
     }
 }
 
