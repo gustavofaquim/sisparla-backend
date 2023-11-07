@@ -77,9 +77,10 @@ const demandaController = {
             const idApoiador = demanda?.Apoiador;
             const emendaParlamentar = demanda.EmendaParlamentar;
             const valor = demanda.Valor;
+            const data = demanda.Data;
            
             const demandaD = {idDemanda, assunto, descricao, idCategoria, idSituacao,
-            idResponsavel, idApoiador, emendaParlamentar, valor};
+            idResponsavel, idApoiador, emendaParlamentar, valor, data};
 
             return demandaD;
             
@@ -137,7 +138,10 @@ const demandaController = {
       
         try {
             
-            const {assunto, descricao, apoiador, idCategoria, idSituacao, idResponsavel, valor, emandaParlamentar} = req.body
+            const {assunto, descricao, apoiador, idCategoria, idSituacao, idResponsavel, valor, emendaParlamentar} = req.body;
+
+            const dataAtual = new Date();
+
             
             const novaDemanda = await demandaModel.create({
                 Assunto: assunto,
@@ -147,7 +151,8 @@ const demandaController = {
                 Situacao: idSituacao,
                 Responsavel: idResponsavel,
                 Valor: valor || null,
-                EmendaParlamentar: emandaParlamentar || 'N'
+                Data: dataAtual,
+                EmendaParlamentar: emendaParlamentar || 'N'
             })
 
           

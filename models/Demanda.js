@@ -58,6 +58,10 @@ const Demanda = sequelize.define('Demanda', {
         type: DataTypes.STRING,
         allowNull: true,
         default: 'N'
+    },
+    Data: {
+        type: DataTypes.DATE,
+        allowNull: false,
     }
 }, {
     tableName: 'DEMANDA',
