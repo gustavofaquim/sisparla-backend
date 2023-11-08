@@ -5,6 +5,7 @@ import demandaModel from "../models/Demanda.js";
 import SituacaoDemanda from '../models/SituacaoDemanda.js';
 import CategoriaDemanda from '../models/CategoriaDemanda.js';
 import DemandaResponsavel from "../models/Usuario.js";
+import Apoiador from "../models/Apoiador.js";
 
 const demandaController = {
 
@@ -67,6 +68,7 @@ const demandaController = {
 
         try {
 
+            console.log(demanda);
             
             const idDemanda = demanda.IdDemanda;
             const assunto = demanda.Assunto;
@@ -75,12 +77,14 @@ const demandaController = {
             const idSituacao = demanda.Situacao;
             const idResponsavel = demanda.Responsavel;
             const idApoiador = demanda?.Apoiador;
+            const apoiadorNome = demanda?.DemandaApoiador?.Nome;
             const emendaParlamentar = demanda.EmendaParlamentar;
             const valor = demanda.Valor;
             const data = demanda.Data;
+            
            
             const demandaD = {idDemanda, assunto, descricao, idCategoria, idSituacao,
-            idResponsavel, idApoiador, emendaParlamentar, valor, data};
+            idResponsavel, idApoiador, apoiadorNome,  emendaParlamentar, valor, data};
 
             return demandaD;
             
@@ -113,6 +117,11 @@ const demandaController = {
                         model: DemandaResponsavel,
                         as: 'DemandaResponsavel',
                         foreignKey: 'Responsavel'
+                    },
+                    {
+                        model: Apoiador,
+                        as: 'DemandaApoiador',
+                        foreignKey: 'Apoiador'
                     }
                 ],
             })
@@ -138,7 +147,7 @@ const demandaController = {
       
         try {
             
-            const {assunto, descricao, apoiador, idCategoria, idSituacao, idResponsavel, valor, emendaParlamentar} = req.body;
+            const {assunto, descricao, idApoiador, idCategoria, idSituacao, idResponsavel, valor, emendaParlamentar} = req.body;
 
             const dataAtual = new Date();
 
@@ -146,7 +155,7 @@ const demandaController = {
             const novaDemanda = await demandaModel.create({
                 Assunto: assunto,
                 Descricao: descricao,
-                Apoiador: apoiador,
+                Apoiador: idApoiador,
                 Categoria: idCategoria,
                 Situacao: idSituacao,
                 Responsavel: idResponsavel,
@@ -186,8 +195,8 @@ const demandaController = {
                 Descricao: descricao,
                 Categoria: idCategoria,
                 Situacao: idSituacao,
+                Apoiador: idApoiador,
                 Responsavel: idResponsavel || null,
-                Apoiador: idApoiador || null,
                 EmendaParlamentar: emendaParlamentar,
                 Valor: valor
             }
