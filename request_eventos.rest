@@ -1,0 +1,17 @@
+
+POST http://localhost:3000/api/eventos
+Content-Type: application/json
+
+{   
+    "nome": "Evento Teste",
+    "descricao": "teste teste",
+    "responsavel": "Gustavo",
+    "local": "Ceres",
+    "dataHorario": "02/05/2023",
+    "relacao": "Participante",
+    "participantes": [{
+        "nome": "Gustavo"
+    },{
+        "Nome": "Leticia"
+    }]
+}

@@ -73,4 +73,8 @@ import demandaRouter from "./demandas.js";
 router.use("/", demandaRouter);
 
 
+// Eventos
+import eventoRouter from "./evento.js";
+router.use("/", eventoRouter);
+
 export default router;

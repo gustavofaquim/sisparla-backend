@@ -67,8 +67,6 @@ const demandaController = {
     destructuringDemanda: (demanda) => {
 
         try {
-
-            console.log(demanda);
             
             const idDemanda = demanda.IdDemanda;
             const assunto = demanda.Assunto;
