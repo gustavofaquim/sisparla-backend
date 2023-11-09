@@ -8,11 +8,11 @@ const eventoController = {
         try {
             
             const eventos = await eventoModel.findAll();
-            res.json(eventos);
+            return res.json(eventos);
 
         } catch (error) {
             console.log(`Erro ao buscar evento: ${error}`);
-            res.status(500).json({msg: 'Erro ao buscar evento'});
+            return res.status(500).json({msg: 'Erro ao buscar evento'});
         }
     },
 
@@ -21,9 +21,24 @@ const eventoController = {
             
             const {nome, descricao, responsavel, local, dataHorario, relacao, participantes} = req.body;
 
-            console.log(req.body);
-        } catch (error) {
+            const novoEvento = await eventoModel.create({
+                Nome: nome,
+                Descricao: descricao,
+                Responsavel: responsavel,
+                Local: local,
+                DataHorario: dataHorario,
+                Relacao: relacao,
+            });
+
+            if(participantes){
+                console.log('entrou aqui');
+            }
+
+            return res.status(200).json(novoEvento);
             
+        } catch (error) {
+            console.log(`Erro ao cadastrar o evento ${error}`);
+            res.status(500).json({msg: 'Erro ao cadastrar o evento'});
         }
     }
 }
