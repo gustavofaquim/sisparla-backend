@@ -131,11 +131,11 @@ const demandaController = {
 
             const demandaD = demandaController.destructuringDemanda(demanda);
 
-            res.json(demandaD);
+            return res.json(demandaD);
 
         } catch (error) {
             console.log(`Erro ao buscar a demanda: ${error}`);
-            res.status(500).json({msg: 'Erro ao buscar a demanda'});
+            return res.status(500).json({msg: 'Erro ao buscar a demanda'});
         }
     },
 

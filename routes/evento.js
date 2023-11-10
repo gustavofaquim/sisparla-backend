@@ -8,6 +8,10 @@ router
     .route("/eventos")
     .get((req, res) => eventoController.findAll(req,res));
 
+router 
+    .route("/eventos/:id")
+    .get((req,res) => eventoController.findById(req,res));
+
  
 router 
     .route("/eventos")

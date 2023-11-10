@@ -16,10 +16,31 @@ const eventoController = {
         }
     },
 
+    findById: async(req,res) => {
+
+        const { id } = req.params;
+        
+        try {
+            
+            const evento = await eventoModel.findByPk(id);
+
+            if(!evento){
+                return res.status(500).json({msg: 'Evento não encontrado'});
+            }
+
+            return res.json(evento);
+
+        }catch (error) {
+            console.log(`Erro ao buscar o evento: ${error}`);
+            return res.status(500).json({msg: 'Erro ao buscar o evento'});
+        }
+
+    },
+
     create: async(req,res) => {
         try {
             
-            const {nome, descricao, responsavel, local, dataHorario, relacao, participantes} = req.body;
+            const {nome, descricao, responsavel, local, dataHorario, relacao} = req.body;
 
             const novoEvento = await eventoModel.create({
                 Nome: nome,
@@ -30,10 +51,7 @@ const eventoController = {
                 Relacao: relacao,
             });
 
-            if(participantes){
-                console.log('entrou aqui');
-            }
-
+            
             return res.status(200).json(novoEvento);
             
         } catch (error) {
