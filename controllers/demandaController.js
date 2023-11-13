@@ -115,11 +115,6 @@ const demandaController = {
                         model: DemandaResponsavel,
                         as: 'DemandaResponsavel',
                         foreignKey: 'Responsavel'
-                    },
-                    {
-                        model: Apoiador,
-                        as: 'DemandaApoiador',
-                        foreignKey: 'Apoiador'
                     }
                 ],
             })

@@ -68,10 +68,6 @@ const Demanda = sequelize.define('Demanda', {
     timestamps: false
 })
 
-Demanda.belongsTo(Apoiador, {
-    foreignKey: 'Apoiador',
-    as: 'DemandaApoiador'
-});
 
 Demanda.belongsTo(CategoriaDemanda, {
     foreignKey: 'Categoria',

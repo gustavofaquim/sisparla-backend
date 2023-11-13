@@ -21,6 +21,7 @@ import situacaoCadastroController from './situacaoController.js';
 import entidadeController from "./entidadeController.js";
 import filiacaoController from './filiacaoController.js';
 import vinculacaoController from './vinculacaoController.js';
+import DemandaModel from "../models/Demanda.js";
 
 
 const apoiadorController = {
@@ -226,7 +227,12 @@ const apoiadorController = {
                             as: 'VinculacaoEntidade',
                             foreignKey: 'Entidade',
                         }
-                     }
+                     },
+                     {
+                        model: DemandaModel,
+                        as: 'Demanda',
+                        foreignKey: 'Apoiador'
+                     }, 
                  ]
             });
 
@@ -247,6 +253,7 @@ const apoiadorController = {
     },
 
     destructuringApoiador: (apoiador) => {
+
 
         try {
             
@@ -313,13 +320,19 @@ const apoiadorController = {
                 }
             });
             
-          
 
+            let demandas = [];
+
+            apoiador.Demanda?.forEach((e, index) => {
+                demandas.push({ 'demandaId': e.IdDemanda, 'assunto': e.Assunto });
+            });
+            
+        
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo
+                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas
             };
 
             return apoiadorD;
