@@ -17,5 +17,10 @@ router
     .route("/eventos")
     .post((req,res) => eventoController.create(req,res));
 
+
+router 
+    .route("/eventos/:id")
+    .put((req,res) => eventoController.updateById(req,res));
+
     
 export default router;

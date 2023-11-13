@@ -58,6 +58,31 @@ const eventoController = {
             console.log(`Erro ao cadastrar o evento ${error}`);
             res.status(500).json({msg: 'Erro ao cadastrar o evento'});
         }
+    },
+
+    updateById: async(req,res) => {
+        const { id } = req.params;
+
+        try {
+            
+            const evento = await eventoModel.findByPk(id);
+
+            if(!evento){
+                return res.status(500).json({msg: 'Evento não encontrado'});
+            }
+
+            const dadosEvento = req.body;
+
+            const eventoAtualizado = await eventoModel.update(dadosEvento, {
+                where: {IdEvento: id}
+            })
+
+            return res.status(200).json({eventoAtualizado});
+
+        } catch (error) {
+            console.log(`Erro ao atualizar o evento: ${error}`);
+            res.status(500).json({msg: 'Erro ao atualizar o evento'});
+        }
     }
 }
 
