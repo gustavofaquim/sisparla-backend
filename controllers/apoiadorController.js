@@ -68,6 +68,11 @@ const apoiadorController = {
                         }
                     },
                     {
+                        model: TelefoneModel,
+                        as: 'TelefoneApoiador',
+                        foreignKey: 'IdApoiador'
+                     }, 
+                    {
                         model: classificacaoModel,
                         as: 'ClassificacaoApoiador',
                         foreignKey: 'Classificacao',
