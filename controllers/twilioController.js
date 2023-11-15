@@ -15,15 +15,35 @@ const twilioController = {
             const authToken = process.env.TWILIO_AUTH_TOKEN;
             
             const client = twilio(accountSid, authToken);
+           
+            const msg = req.body?.texto;
+            const apoiadores = req.body?.selectedApoiadores;
+            const mediaUrl = req.body?.mediaUrl
 
+            console.log(mediaUrl);
+            
+            return
+    
+            const numerosApoiadores = apoiadores.map(apoiador => {
+                if (!(apoiador?.TelefoneApoiador?.Numero)) {
+                    console.log('Número não informado');
+                    return undefined;
+                }
+            
+                let apoiadorNumero = apoiador?.TelefoneApoiador?.Numero;
+                return `whatsapp:+55${apoiadorNumero}`;
+            }).filter(numero => numero !== undefined);;
+
+ 
             client.messages
             .create({
-                body: 'Fazendo um teste de envio via código.',
+                body: msg,
                 from: 'whatsapp:+14155238886', // Número do Twilio (não seu número pessoal)
-                to: 'whatsapp:+556296828796', // Número do destinatário
+                to: numerosApoiadores, // Número do destinatário
+                mediaUrl: [mediaUrl],
             })
-            .then(message => console.log(message.sid))
-            .catch(err => console.error(err));
+            .then(message => console.log(`Mensagem enviada para ${numerosApoiadores}: ${message}`))
+            .catch(err => console.error(`Erro ao enviar mensagem para ${numerosApoiadores}: ${err}`));
 
             return res.status(200).json(message.sid);
 

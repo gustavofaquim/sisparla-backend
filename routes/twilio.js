@@ -6,6 +6,6 @@ import twilioController from '../controllers/twilioController.js';
 
 router
     .route("/send")
-    .get((req, res) => twilioController.send(req,res));
+    .post((req, res) => twilioController.send(req,res));
 
 export default router;
