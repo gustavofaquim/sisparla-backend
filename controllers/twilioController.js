@@ -5,6 +5,8 @@ dotenv.config();
 import twilio from 'twilio';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
+
 
 
 const twilioController = {
@@ -50,14 +52,17 @@ const twilioController = {
              
             
             console.log('Número de elementos em arquivos:', arquivos.length);
-           
           
+            
+            const teste = await twilioController.saveImage(arquivos);
+            console.log(teste);
+            return 
             client.messages
             .create({
                 body: msg,
                 from: 'whatsapp:+14155238886', // Número do Twilio (não seu número pessoal)
                 to: numerosApoiadores, // Número do destinatário
-                mediaUrl: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Faquitemplacas.com.br%2FprodutosDetalhes.php%3Fp%3Datencao-area-de-teste&psig=AOvVaw07ulg2vk6pZSYjf_gQtLA2&ust=1700156070857000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJjZg4fFxoIDFQAAAAAdAAAAABAE',
+                mediaUrl: [''],
             })
             .then(message => {
                 console.log(`Mensagem enviada para ${numerosApoiadores}: ${message}`);
@@ -72,6 +77,41 @@ const twilioController = {
         } catch (error) {
             console.log(`Houve um erro ao enviar a mensagem: ${error}`);
             return res.status(500).json('Houve um erro ao enviar a mensagem');
+        }
+
+    },
+
+
+    saveImage: async(arquivos) => {
+
+        try {
+            
+            // Verifique se há um arquivo de imagem na requisição
+            if (!arquivos) {
+                return res.status(400).send('Nenhuma imagem enviada');
+            }
+
+
+            // Caminho para a pasta onde você deseja salvar as imagens
+            const pastaDestino = 'public/images';
+
+            // Garanta que a pasta exista, se não, crie-a
+            if (!fs.existsSync(pastaDestino)) {
+                fs.mkdirSync(pastaDestino, { recursive: true });
+            }
+
+            // Caminho completo do arquivo no servidor
+            const caminhoArquivo = path.join(pastaDestino, arquivos.filename);
+
+            // Mova o arquivo para a pasta de destino
+            fs.renameSync(req.file.path, caminhoArquivo);
+
+
+            res.send('Imagem salva com sucesso!');
+
+        }catch (error) {
+            console.error('Erro ao salvar a imagem:', error);
+            es.status(500).send('Erro interno do servidor');
         }
 
     }
