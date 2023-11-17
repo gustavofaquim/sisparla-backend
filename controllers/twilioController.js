@@ -22,7 +22,18 @@ const twilioController = {
            
             const msg = req.body?.texto;
             const apoiadores = req.body?.selectedApoiadores;
-            const arquivos = req.body?.selectedFiles || [];
+
+            console.log(req.file);
+
+            const {name} = req.body;
+
+            const file = req.file;
+
+            console.log('Name:' + name);
+            console.log("File: " + file);
+            res.json({msg: "Imagem salva com sucesso"});
+
+            return 
             
     
             const numerosApoiadores = apoiadores.map(apoiador => {
@@ -36,27 +47,11 @@ const twilioController = {
             }).filter(numero => numero !== undefined);;
 
 
-            const mediaUrls = arquivos.map((file, index) => {
-                try {
             
-                    const url = `data:${file.type};base64,${file.data}`;
-                    const originalname = file.name;
+             return
             
-                    return { url, originalname };
-                } catch (error) {
-                    console.error(`Erro ao criar mediaUrl para arquivo ${index + 1}:`, error);
-                    return null;
-                }
-            }).filter(url => url !== null);
-            
-             
-            
-            console.log('Número de elementos em arquivos:', arquivos.length);
           
             
-            const teste = await twilioController.saveImage(arquivos);
-            console.log(teste);
-            return 
             client.messages
             .create({
                 body: msg,
@@ -82,39 +77,26 @@ const twilioController = {
     },
 
 
-    saveImage: async(arquivos) => {
+    saveImagem: async(req,res) => {
 
         try {
             
-            // Verifique se há um arquivo de imagem na requisição
-            if (!arquivos) {
-                return res.status(400).send('Nenhuma imagem enviada');
-            }
+            const {name} = req.body;
+
+            const file = req.file;
+
+            console.log('Name:' + name);
+            console.log("File: " + file);
+            res.json({msg: "Imagem salva com sucesso"});
 
 
-            // Caminho para a pasta onde você deseja salvar as imagens
-            const pastaDestino = 'public/images';
-
-            // Garanta que a pasta exista, se não, crie-a
-            if (!fs.existsSync(pastaDestino)) {
-                fs.mkdirSync(pastaDestino, { recursive: true });
-            }
-
-            // Caminho completo do arquivo no servidor
-            const caminhoArquivo = path.join(pastaDestino, arquivos.filename);
-
-            // Mova o arquivo para a pasta de destino
-            fs.renameSync(req.file.path, caminhoArquivo);
-
-
-            res.send('Imagem salva com sucesso!');
-
-        }catch (error) {
-            console.error('Erro ao salvar a imagem:', error);
-            es.status(500).send('Erro interno do servidor');
+        } catch (error) {
+            console.log('Erro ao salvar imagem')
+            res.status(500).json({msg: 'Erro ao salvar imagem'});
+                    
         }
-
     }
+
 }
 
 export default twilioController;
