@@ -39,7 +39,7 @@ const Apoiador = sequelize.define('Apoiador', {
     },
     Email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true, // Garante que o email seja único
     },
     Profissao:{

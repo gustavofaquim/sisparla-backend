@@ -205,6 +205,61 @@ const demandaController = {
             res.status(500).json({msg: 'Erro ao atualizar a Demanda'});
         }
 
+    },
+
+
+    updateSituacaoById: async(req,res) => {
+
+        const { id } = req.params;
+
+        try {
+            
+            const demanda = await demandaModel.findByPk(id);
+
+            if(!demanda){
+                console.log('Demanda não encontrada');
+                return;
+            }
+
+            const {situacao} = req.body;
+
+            const demandaAtualizada = await demandaModel.update(
+                {Situacao: situacao}, 
+                {where: {IdDemanda: id}}
+            )
+
+            return res.status(200).json({demandaAtualizada});
+
+        } catch (error) {
+            console.log('Erro ao atualizar a situacao da demanda: ' + error);
+            res.status(500).json({msg: 'Erro ao atualiza a situacao da demanda'});
+        }
+
+    },
+
+    deleteById: async(req,res) => {
+
+        const { id } = req.params;
+
+        try {
+            
+            const demandaDeletada  = await demandaModel.destroy({
+                where: {
+                    IdDemanda: id,
+                },
+            })
+
+            if(demandaDeletada === 0){
+                return res.status(404).json({msg: 'Demanda não encontrado'});
+            }
+
+            res.status(200).json({msg: 'Demanda deletado com sucesso'});
+
+
+        } catch (error) {
+            console.log('Erro ao excluir demanda: ' + error);
+            res.status(500).json({msg: 'Erro ao excluir demanda: '});
+        }
     }
 }
 

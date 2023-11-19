@@ -21,5 +21,12 @@ router
     .route("/demandas/:id")
     .put((req,res) => demandaController.updateById(req,res));
 
+router
+    .route("/muda-situacao-demanda/:id")
+    .put((req,res) => demandaController.updateSituacaoById(req,res));
+
+router
+    .route("/demandas/:id")
+    .delete((req,res) => demandaController.deleteById(req,res));
     
 export default router;

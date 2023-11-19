@@ -64,10 +64,6 @@ const mensagemController = {
                 console.error(`Erro ao enviar mensagem para ${numerosApoiadores}: ${err}`);
                 return res.status(500).json('Houve um erro ao enviar a mensagem');
             });
-
-            
-            
-
         } catch (error) {
             console.log(`Houve um erro ao enviar a mensagem: ${error}`);
             return res.status(500).json('Houve um erro ao enviar a mensagem');

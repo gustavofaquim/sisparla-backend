@@ -45,6 +45,7 @@ const Demanda = sequelize.define('Demanda', {
     },
     Responsavel: {
         type: DataTypes.INTEGER,
+        allowNull: true,
         references:{
             model: 'Responsavel',
             key: 'IdUsuario'

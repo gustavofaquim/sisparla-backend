@@ -74,3 +74,13 @@ Content-Type: application/json
     "nomeUsuario": "gustavofaquim",
     "senha": "123456789"
 }
+
+
+###
+PUT http://localhost:3000/api/muda-situacao-demanda/1
+Content-Type: application/json
+
+{
+    "Situacao": 5,
+    
+}
