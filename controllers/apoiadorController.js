@@ -121,9 +121,6 @@ const apoiadorController = {
                     const primeiroDia = new Date(data.setDate(primeiro));
                     const ultimoDia = new Date(data.setDate(data.getDate()+6));
 
-                    console.log(primeiroDia)
-                    console.log(ultimoDia)
-
 
                     whereClause.DataNascimento = {
                         [Op.and]: [
@@ -155,6 +152,11 @@ const apoiadorController = {
                             foreignKey: 'Cidade',
                         },
                     },
+                    {
+                        model: TelefoneModel,
+                        as: 'TelefoneApoiador',
+                        foreignKey: 'IdApoiador'
+                     }, 
                     {
                         model: classificacaoModel,
                         as: 'ClassificacaoApoiador',
