@@ -41,15 +41,20 @@ const mensagemController = {
 
                 return arquivo.path
             })
+
  
-           
+            //const mediaUrls = [urls];
+            const mediaUrls = ['link'];
+            
+            console.log(mediaUrls);
+
             client.messages
             .create({
                 body: msg,
                 from: 'whatsapp:+14155238886', // Número do Twilio (não seu número pessoal)
                 to: numerosApoiadores, // Número do destinatário
                 //mediaUrl: urls
-                mediaUrl: ['https://i.ibb.co/k8FpdBJ/Whats-App-Image-2023-11-15-at-09-15-28.jpg', 'https://i.ibb.co/2gC4JZk/Captura-de-tela-de-2023-07-16-19-46-26.png'],
+                mediaUrl: mediaUrls
             })
             .then(message => {
                 console.log(`Mensagem enviada para ${numerosApoiadores}`);

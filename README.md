@@ -1,2 +1,7 @@
-# sisparla-backend
-Sistema de Apoio à Atividade Parlamentar
+# SisParla
+
+---
+
+API de gerenciamento de atividades parlamentares. 
+
+---
