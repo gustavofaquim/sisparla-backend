@@ -180,6 +180,62 @@ const apoiadorController = {
         
     },
 
+    findByDayBirthday: async() => {
+
+        try {
+            
+            const whereClause = {};
+
+            const data = new Date();
+            
+            const mesAtual = data.getMonth() + 1;
+            const diaAual = data.getDate();
+            
+
+            whereClause.DataNascimento = sequelize.literal(`DAY(DataNascimento) = ${diaAual} AND MONTH(DataNascimento) = ${mesAtual}`);
+
+
+            const aniversariantes = await apoiadorModel.findAll({
+                where: whereClause,
+                include: [
+                    {
+                        model: enderecoModel,
+                        as: 'EnderecoApoiador',
+                        foreignKey: 'Endereco',
+                        include: {
+                            model: cidadeModel,
+                            as: 'CidadeApoiador',
+                            foreignKey: 'Cidade',
+                        },
+                    },
+                    {
+                        model: TelefoneModel,
+                        as: 'TelefoneApoiador',
+                        foreignKey: 'IdApoiador'
+                     }, 
+                    {
+                        model: classificacaoModel,
+                        as: 'ClassificacaoApoiador',
+                        foreignKey: 'Classificacao',
+                    },
+                    {
+                        model: SituacaoCadastro,
+                        as: 'SituacaoCadastroApoiador',
+                        foreignKey: 'Situacao',
+                    },
+                ],
+            });
+
+           return (aniversariantes);
+
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de aniversariantes do dia: ${error}`);
+            return 'Erro ao buscar a lista de aniversariantes do dia';
+        }
+    },
+
+
 
     findById: async (req,res) => {
 

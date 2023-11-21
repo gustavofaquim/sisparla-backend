@@ -20,5 +20,9 @@ router
     .route("/send")
     .post(upload.array("arquivos"), (req, res) => mensagemController.send(req, res)); 
 
+router
+    .route("/mensagem-aniversario")
+    .get((req,res) => mensagemController.BirthDayMessages(req,res));
+
 
 export default router;

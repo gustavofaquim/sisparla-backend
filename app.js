@@ -1,6 +1,7 @@
 import express  from "express";
 import cors  from "cors";
 import bodyParser from 'body-parser';
+import cronService from './services/cronService.js'; // Importe o agendador cron
 
 const app = express();
 
