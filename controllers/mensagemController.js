@@ -77,7 +77,7 @@ const mensagemController = {
 
     },
 
-    BirthDayMessages: async(req,res) => {
+    BirthDayMessages: async() => {
 
         // Envia mensagem para os aniversariantes do dia
         try {
@@ -91,10 +91,12 @@ const mensagemController = {
     
             const client = twilio(accountSid, authToken);
     
+            const msg = 'Feliz aniversário, espero que tudo dê muito certo. É isso ai :) ';
+            const apoiadores = await  apoiadorController.findByDayBirthday();
 
-            const msg = req.body.texto;
-            const apoiadores = JSON.parse(req.body?.apoiadores);
-            const arquivos = req.files;
+           
+
+           // const arquivos = req.files;
 
             const numerosApoiadores = apoiadores.map(apoiador => {
                 if (!(apoiador?.TelefoneApoiador?.Numero)) {
@@ -102,16 +104,16 @@ const mensagemController = {
                     return undefined;
                 }
             
-                let apoiadorNumero = aniversariantesDia?.TelefoneApoiador?.Numero;
+                let apoiadorNumero = apoiador?.TelefoneApoiador?.Numero;
                 return `whatsapp:+55${apoiadorNumero}`
             }).filter(numero => numero !== undefined);
 
-            const urls = arquivos.map(arquivo => {
+            /*const urls = arquivos.map(arquivo => {
 
                 return arquivo.path
-            })
+            })*/
 
-            const mediaUrls = ['link'];
+            const mediaUrls = ['https://cdn.awsli.com.br/600x450/2371/2371577/produto/152944414/d196c59442.jpg'];
 
             client.messages
             .create({
@@ -124,15 +126,11 @@ const mensagemController = {
             .then(message => {
                 console.log(`Mensagem enviada para ${numerosApoiadores}`);
                 
-                urls.forEach(url => {
-                    fs.unlinkSync(url);
-                });
-                
-                return res.status(200).json(message.sid);
+                return message.sid;
             })
             .catch(err => {
                 console.error(`Erro ao enviar mensagem para ${numerosApoiadores}: ${err}`);
-                return res.status(500).json('Houve um erro ao enviar a mensagem');
+                return 'Houve um erro ao enviar a mensagem';
             });
 
            }
@@ -140,7 +138,7 @@ const mensagemController = {
             
         } catch (error) {
             console.log(`Houve um erro ao enviar a mensagem: ${error}`);
-            return res.status(500).json('Houve um erro ao enviar a mensagem');
+            return 'Houve um erro ao enviar a mensagem';
         }
 
     }
