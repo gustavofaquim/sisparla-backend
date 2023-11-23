@@ -796,9 +796,6 @@ const apoiadorController = {
 
 
 
-    
-
-
     deleteById: async (req,res) => {
 
         const { id } = req.params;
@@ -822,6 +819,58 @@ const apoiadorController = {
             res.status(500).json({msg: 'Erro ao deletar apoiador'});
         }
     },
+
+    viewApoiadores: async(req,res) => {
+        try {
+            
+            const apoiadores = await apoiadorModel.findAll({
+                include: [
+                    {
+                        model: classificacaoModel,
+                        as: 'ClassificacaoApoiador',
+                        foreignKey: 'Classificacao',
+
+                    },
+                    {
+                        model: SituacaoCadastro,
+                        as: 'SituacaoCadastroApoiador',
+                        foreignKey: 'Situacao',
+
+                    }
+                ]
+            })
+
+
+            const apoiadoresClassificacao = apoiadores.reduce((contagem, apoiador) => {
+                const tipo = apoiador.ClassificacaoApoiador.Descricao; // Substitua 'nome' pelo campo correto da categoria
+                contagem[tipo] = (contagem[tipo] || 0) + 1;
+                return contagem;
+            }, {});
+
+
+            // Construir um array com a contagem por tipo
+            const contagemApoiadoresClassificacao = Object.entries(apoiadoresClassificacao).map(([tipo, quantidade]) => ({ tipo, quantidade }));
+
+
+            const apoiadoresSituacao = apoiadores.reduce((contagem, apoiador) => {
+                const tipo = apoiador.SituacaoCadastroApoiador.Descricao; // Substitua 'nome' pelo campo correto da categoria
+                contagem[tipo] = (contagem[tipo] || 0) + 1;
+                return contagem;
+            }, {});
+
+
+            // Construir um array com a contagem por tipo
+            const contagemApoiadoresSituacao = Object.entries(apoiadoresSituacao).map(([tipo, quantidade]) => ({ tipo, quantidade }));
+
+            res.status(200).json([{'ApoiadoresClassificacao' : contagemApoiadoresClassificacao},{'ApoiadoresSituacao' : contagemApoiadoresSituacao}]);
+
+
+        } catch (error) {
+            console.log(`Não foi possível exibir os dados de apoiadores: ${error}`);
+            res.status(500).json({msg: 'Não foi possível exibir os dados de apoiadores'});
+        }
+    },
+
 
 
 }

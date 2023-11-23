@@ -108,18 +108,20 @@ const mensagemController = {
                 return `whatsapp:+55${apoiadorNumero}`
             }).filter(numero => numero !== undefined);
 
+            console.log(numerosApoiadores)
+
             /*const urls = arquivos.map(arquivo => {
 
                 return arquivo.path
             })*/
 
             const mediaUrls = ['https://cdn.awsli.com.br/600x450/2371/2371577/produto/152944414/d196c59442.jpg'];
-
+            return
             client.messages
             .create({
                 body: msg,
                 from: 'whatsapp:+14155238886', // Número do Twilio (não seu número pessoal)
-                to: numerosApoiadores, // Número do destinatário
+                to: [numerosApoiadores], // Número do destinatário
                 //mediaUrl: urls
                 mediaUrl: mediaUrls
             })

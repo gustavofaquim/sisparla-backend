@@ -47,7 +47,6 @@ import usuarioRouter from "./usuario.js";
 router.use("/", usuarioRouter);
 
 
-
 // religioes
 import religiaoRouter from "./religiao.js";
 router.use("/", religiaoRouter);
@@ -56,7 +55,6 @@ router.use("/", religiaoRouter);
 // partidos
 import partidoRouter from "./partido.js";
 router.use("/", partidoRouter);
-
 
 
 // Categoria de Demandas
@@ -81,5 +79,7 @@ router.use("/", eventoRouter);
 // tTwilio
 import twilioRouter from "./twilio.js";
 router.use("/", twilioRouter);
+
+
 
 export default router;

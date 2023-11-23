@@ -9,6 +9,11 @@ router
     .route("/apoiadores")
     .get((req,res) => apoiadorController.findAll(req,res));
 
+
+router
+    .route("/view-apoiadores")
+    .get((req,res) => apoiadorController.viewApoiadores(req,res));
+
 router
     .route("/apoiadores/:id")
     .get((req,res) => apoiadorController.findById(req,res));

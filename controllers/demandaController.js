@@ -260,7 +260,57 @@ const demandaController = {
             console.log('Erro ao excluir demanda: ' + error);
             res.status(500).json({msg: 'Erro ao excluir demanda: '});
         }
-    }
+    },
+
+    viewDemandas: async(req,res) => {
+
+        try {
+            
+            const demandas = await demandaModel.findAll({
+                include: [
+                    {
+                        model: SituacaoDemanda,
+                        as: 'DemandaSituaco',
+                        foreignKey: 'Situacao'
+                    },
+                    {
+                        model: CategoriaDemanda,
+                        as: 'DemandaCategoria',
+                        foreignKey: 'Demanda'
+                    },
+                ],
+               
+            })
+
+            const demandaPorTipo = demandas.reduce((contagem, demanda) => {
+                const tipo = demanda.DemandaCategoria.Descricao;
+                contagem[tipo] = (contagem[tipo] || 0) + 1;
+                return contagem;
+            }, {});
+
+     
+             // Construir um array com a contagem por tipo
+            const contagemDemanda = Object.entries(demandaPorTipo).map(([tipo, quantidade]) => ({ tipo, quantidade }));
+
+
+            const demandaPorSituacao = demandas.reduce((contagem, demanda) => {
+                const tipo = demanda.DemandaSituaco.Descricao; // Substitua 'nome' pelo campo correto da categoria
+                contagem[tipo] = (contagem[tipo] || 0) + 1;
+                return contagem;
+            }, {});
+
+             // Construir um array com a contagem por tipo
+             const contagemDemandaSit = Object.entries(demandaPorSituacao).map(([tipo, quantidade]) => ({ tipo, quantidade }));
+
+             res.status(200).json([{'DemandasSituacao' : contagemDemandaSit},{'DemandasCateogira' : contagemDemanda}]);
+
+
+        } catch (error) {
+            console.log(`Não foi possível exibir os dados de demandas: ${error}`);
+            res.status(500).json({msg: 'Não foi possível exibir os dados de demandas'});
+        }
+
+    },
 }
 
 export default demandaController;
