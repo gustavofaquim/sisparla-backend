@@ -31,9 +31,12 @@ const apoiadorController = {
       
         try {
             
-            const { termoBusca } = req.query;
+            const termoBusca = req.query.termoBusca;
+            const filtroProfissao = req.query.profissao;
+            const filtroPartido = req.query.partido;
 
-
+          
+            
             const whereClause = {};
 
             if (termoBusca) {
@@ -53,8 +56,21 @@ const apoiadorController = {
                     }
                 ]
             }
+
+            if (filtroProfissao && filtroProfissao != 'todas') {
+                whereClause['$Profissao$'] = {
+                  [Op.like]: `%${filtroProfissao}%`,
+                };
+            }
+
+            if(filtroPartido && filtroPartido != 'todos'){
+                whereClause['$FiliacaoPartidaria.PartidoFiliacao.Nome$'] = {
+                    [Op.like]: `%${filtroPartido}%`
+                }
+            }
+              
     
-            
+           
             const apoiadores = await apoiadorModel.findAll({
                 include: [
                     {
@@ -83,10 +99,21 @@ const apoiadorController = {
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
 
+                    },
+                    {
+                        model: FiliacaoModel,
+                        as: 'FiliacaoPartidaria',
+                        foreignKey: 'Filiacao',
+                        include:{
+                            model: PartidoModel,
+                            as: 'PartidoFiliacao',
+                            foreignKey: 'Partido',
+                        }
                     }
                 ],
                 where: whereClause
             });
+
            
             res.json(apoiadores);
         
