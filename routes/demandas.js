@@ -10,6 +10,10 @@ router
     .get((req,res) => demandaController.findAll(req,res));
 
 router
+    .route("/userDemands/:id")
+    .get((req,res) => demandaController.userDemands(req,res));
+
+router
     .route("/view-demandas")
     .get((req,res) => demandaController.viewDemandas(req,res));
 

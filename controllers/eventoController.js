@@ -1,4 +1,5 @@
 import { Sequelize, Op } from 'sequelize';
+import sequelize from "../db/conn.js";
 
 import eventoModel from "../models/Evento.js";
 
@@ -12,6 +13,31 @@ const eventoController = {
 
         } catch (error) {
             console.log(`Erro ao buscar evento: ${error}`);
+            return res.status(500).json({msg: 'Erro ao buscar evento'});
+        }
+    },
+
+    findEventsDay: async(req,res) => {
+
+        try {
+            
+            const whereClause = {};
+
+            const data = new Date();
+            
+            const diaAual = data.getDate();
+
+
+            whereClause.DataHorario = sequelize.literal(`DAY(DataHorario) = ${diaAual}`);
+
+            const eventos = await eventoModel.findAll({
+                where: whereClause
+            })
+
+            return res.json(eventos);
+
+        } catch (error) {
+            console.log(`Erro ao buscar os evento do dia: ${error}`);
             return res.status(500).json({msg: 'Erro ao buscar evento'});
         }
     },

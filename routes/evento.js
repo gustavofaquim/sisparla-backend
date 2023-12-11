@@ -12,7 +12,10 @@ router
     .route("/eventos/:id")
     .get((req,res) => eventoController.findById(req,res));
 
- 
+router 
+    .route("/eventos-do-dia")
+    .get((req,res) => eventoController.findEventsDay(req,res));
+
 router 
     .route("/eventos")
     .post((req,res) => eventoController.create(req,res));

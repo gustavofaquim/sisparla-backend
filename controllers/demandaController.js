@@ -1,4 +1,5 @@
 import { Sequelize, Op, where } from 'sequelize';
+import sequelize from "../db/conn.js";
 
 
 import demandaModel from "../models/Demanda.js";
@@ -61,6 +62,47 @@ const demandaController = {
         } catch (error) {
             console.log(`Erro ao buscar a lista de demandas ${error}`);
             res.status(500).json({msg: 'Erro ao buscar a lista de demandas'});
+        }
+    },
+
+    userDemands: async(req,res) => {
+
+        try {
+                const { id } = req.params;
+
+                const whereClause = {
+                '$DemandaResponsavel.IdUsuario$': id,
+                '$DemandaSituaco.Descricao$': 'Aberta',};
+
+              
+
+                const demandas = await demandaModel.findAll({
+                    include: [
+                        {
+                            model: SituacaoDemanda,
+                            as: 'DemandaSituaco',
+                            foreignKey: 'Situacao'
+                        },
+                        {
+                            model: CategoriaDemanda,
+                            as: 'DemandaCategoria',
+                            foreignKey: 'Demanda'
+                        },
+                        {
+                            model: DemandaResponsavel,
+                            as: 'DemandaResponsavel',
+                            foreignKey: 'Responsavel'
+                        }
+                    ],
+                    where: whereClause
+                });
+                
+                res.json(demandas);
+
+
+        } catch (error) {
+            console.log(`Erro ao buscar as demandas do usuário ${error}`);
+            res.status(500).json({msg: 'Erro ao buscar as demandas do usuário'});
         }
     },
 
