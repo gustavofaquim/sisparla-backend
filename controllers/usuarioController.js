@@ -57,8 +57,10 @@ const usuarioController = {
                 return;
             }
 
+
+
             // Gerar token JWT
-            const token = jwt.sign({ usuario: usuario.NomeUsuario, regra: usuario.RegraAcesso }, 'secreto', { expiresIn: '1h' });
+            const token = jwt.sign({ usuario: usuario.NomeUsuario, nome: usuario.Nome,  regra: usuario.RegraAcesso }, 'secreto', { expiresIn: '1h' });
 
             res.json({ token });
 
