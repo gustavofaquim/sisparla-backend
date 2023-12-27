@@ -1,8 +1,13 @@
 import express from 'express';
+import verificarToken from '../middlewares/verificarToken.js';
+import apoiadorController from '../controllers/apoiadorController.js';
+
 
 const router = express.Router();
 
-import apoiadorController from '../controllers/apoiadorController.js';
+
+// Rota protegida com verificação de token
+router.use('/apoiadores', verificarToken);
 
 
 router

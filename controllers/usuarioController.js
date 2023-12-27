@@ -32,9 +32,6 @@ const usuarioController = {
     find: async(req,res) => {
 
         const {nomeUsuario, senha} = req.body
-        
-
-        //const senha2 = usuarioController.encrypt(senha);
 
         try {
             const usuario = await usuarioModel.findOne({
@@ -58,11 +55,22 @@ const usuarioController = {
             }
 
 
+            const secret = 'secreto';
 
             // Gerar token JWT
-            const token = jwt.sign({ usuario: usuario.NomeUsuario, nome: usuario.Nome,  regra: usuario.RegraAcesso }, 'secreto', { expiresIn: '1h' });
-
-            res.json({ token });
+            const token = jwt.sign(
+                { 
+                    usuario: usuario.NomeUsuario,
+                    nome: usuario.Nome,  
+                    regra: usuario.RegraAcesso,
+                    sistema: usuario.Sistema 
+                }, secret , { expiresIn: '1h' }
+            );
+          
+            
+            //res.json({ token });
+            res.setHeader('Authorization', `Bearer ${token}`);
+            res.status(200).json({token});
 
         } catch (error) {
             console.log(`Erro buscar usuario: ${error}`);
