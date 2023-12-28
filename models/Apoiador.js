@@ -84,6 +84,10 @@ const Apoiador = sequelize.define('Apoiador', {
     InformacaoAdicional:{
         type: DataTypes.STRING,
         allowNull: true
+    },
+    Sistema:{
+        type: DataTypes.STRING,
+        allowNull: false
     }  
 
 }, { 

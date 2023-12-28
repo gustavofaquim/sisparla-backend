@@ -6,44 +6,42 @@ import apoiadorController from '../controllers/apoiadorController.js';
 const router = express.Router();
 
 
-// Rota protegida com verificação de token
-router.use('/apoiadores', verificarToken);
 
 
 router
     .route("/apoiadores")
-    .get((req,res) => apoiadorController.findAll(req,res));
+    .get(verificarToken, (req,res) => apoiadorController.findAll(req,res));
 
 
 router
     .route("/view-apoiadores")
-    .get((req,res) => apoiadorController.viewApoiadores(req,res));
+    .get(verificarToken,(req,res) => apoiadorController.viewApoiadores(req,res));
 
 router
     .route("/apoiadores/:id")
-    .get((req,res) => apoiadorController.findById(req,res));
+    .get(verificarToken,(req,res) => apoiadorController.findById(req,res));
 
 
 
 router
     .route("/aniversariantes")
-    .get((req,res) => apoiadorController.findByBirthday(req,res));
+    .get(verificarToken,(req,res) => apoiadorController.findByBirthday(req,res));
 
 
 
 router
     .route("/apoiadores/:id")
-    .delete((req,res) => apoiadorController.deleteById(req,res));
+    .delete(verificarToken, (req,res) => apoiadorController.deleteById(req,res));
 
 
 router
     .route("/apoiadores")
-    .post((req,res) => apoiadorController.create(req,res));
+    .post(verificarToken,(req,res) => apoiadorController.create(req,res));
 
 
 router
     .route("/apoiadores/:id")
-    .put((req,res) => apoiadorController.updateById(req,res));
+    .put(verificarToken, (req,res) => apoiadorController.updateById(req,res));
 
 
 

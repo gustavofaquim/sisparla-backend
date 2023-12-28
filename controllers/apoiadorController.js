@@ -24,6 +24,9 @@ import vinculacaoController from './vinculacaoController.js';
 import DemandaModel from "../models/Demanda.js";
 
 
+import verificarToken from '../middlewares/verificarToken.js';
+
+
 const apoiadorController = {
 
 
@@ -35,9 +38,11 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
 
-          
+            const sistema = req.usuario.sistema;
             
             const whereClause = {};
+
+            whereClause['Sistema'] = sistema;
 
             if (termoBusca) {
                 whereClause[Op.or] = [
@@ -132,7 +137,11 @@ const apoiadorController = {
             //const periodo = id;
            
 
+            const sistema = req.usuario.sistema;
+            
             const whereClause = {};
+
+            whereClause['Sistema'] = sistema;
             
             const data = new Date();
             const mesAtual = data.getMonth() + 1;
@@ -211,7 +220,11 @@ const apoiadorController = {
 
         try {
             
+            const sistema = req.usuario.sistema;
+            
             const whereClause = {};
+
+            whereClause['Sistema'] = sistema;
 
             const data = new Date();
             
@@ -268,8 +281,16 @@ const apoiadorController = {
 
         const { id } = req.params;
 
+        const sistema = req.usuario.sistema;
+            
+        const whereClause = {};
+
+        whereClause['Sistema'] = sistema;
+        whereClause['IdApoiador'] = id;
+        
+
         try {
-            const apoiador = await apoiadorModel.findByPk(id, {
+            const apoiador = await apoiadorModel.findOne({where: whereClause,
                 include: [
                     
                      {
@@ -356,7 +377,7 @@ const apoiadorController = {
             const religiao = apoiador?.Religiao;
             const email = apoiador?.Email;
             const informacaoAdicional = apoiador?.InformacaoAdicional;
-            
+
             
             const idClassificacao = apoiador?.Classificacao;
             const idSituacao = apoiador?.Situacao;
@@ -438,10 +459,17 @@ const apoiadorController = {
     updateById: async(req, res) => {
 
         const { id } = req.params;
+        
+        const sistema = req.usuario.sistema;
+            
+        const whereClause = {};
+
+        whereClause['Sistema'] = sistema;
+        whereClause['IdApoiador'] = id;
        
         try {
             
-            const apoiador = await apoiadorModel.findByPk(id);
+            const apoiador = await apoiadorModel.findOne({where: whereClause});
 
             if(!apoiador){
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
@@ -451,6 +479,8 @@ const apoiadorController = {
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
+
+            const user = req.usuario;
             
         
             //let dadosEntidade;
@@ -542,6 +572,7 @@ const apoiadorController = {
                 Situacao: idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacaoAdicional,
+                Sistema: user.sistema
             };
 
             
@@ -559,8 +590,6 @@ const apoiadorController = {
 
 
     atualizarApoiadorComVinculacao: async(dadosApoiador, dadosEntidade, dadosTelefone) => {
-
-        console.log(dadosTelefone)
        
         // Inicia a transação
         const t = await sequelize.transaction();
@@ -682,6 +711,8 @@ const apoiadorController = {
                 informacoesAdicionais 
             } = req.body
 
+            const user = req.usuario;
+
             let dadosEntidade;
             let filiacao;
             let dadosTelefone;
@@ -690,11 +721,9 @@ const apoiadorController = {
        
             if(cidade != null && estado != null){
                 const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia};
-
                 endereco = await enderecoController.createIfNotExists(enderecoCompleto);
             }
           
-           
 
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
@@ -740,7 +769,6 @@ const apoiadorController = {
 
             
             
-            
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
         
@@ -758,6 +786,7 @@ const apoiadorController = {
                 Situacao: sit.idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
+                Sistema: user.sistema
             };
 
             

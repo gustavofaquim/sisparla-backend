@@ -22,8 +22,6 @@ const verificarToken = (req, res, next) => {
       console.log('Erro ao verificar o token:', err.message);
       return res.status(401).json({ msg: 'Token inválido' });
     }
-
-    console.log('Token verificado com sucesso:', decoded);
     
     req.usuario = decoded;
     next();
