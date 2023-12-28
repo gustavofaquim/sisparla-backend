@@ -289,8 +289,8 @@ const apoiadorController = {
         whereClause['IdApoiador'] = id;
         
 
-        try {
-            const apoiador = await apoiadorModel.findOne({where: whereClause,
+        try {  
+            const apoiador = await apoiadorModel.findOne({whereClause,
                 include: [
                     
                      {
@@ -351,7 +351,10 @@ const apoiadorController = {
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
 
+            
             const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
+            console.log('Apoiador do back-end')
+            console.log(apoiadorD);
            
 
            // res.json(apoiador); //-> objeto original
@@ -515,10 +518,8 @@ const apoiadorController = {
                     Sigla: entidadeSigla,
                     Lideranca: entidadeLideranca || 'n',
                 };
-
-
-                vinculacao = await vinculacaoController.updateOrCreateIfNotExists(dadosVinculacao);
                 
+                vinculacao = await vinculacaoController.updateOrCreateIfNotExists(dadosVinculacao);
                 
             }
             
