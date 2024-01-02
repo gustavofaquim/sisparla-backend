@@ -33,10 +33,6 @@ const Usuario = sequelize.define('Usuario', {
     Status: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    Sistema:{
-        type: DataTypes.STRING,
-        allowNull: false
     }
     
 },{ 

@@ -38,11 +38,9 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
 
-            const sistema = req.usuario.sistema;
             
             const whereClause = {};
 
-            whereClause['Sistema'] = sistema;
 
             if (termoBusca) {
                 whereClause[Op.or] = [
@@ -136,12 +134,9 @@ const apoiadorController = {
             const { periodo } = req.query;
             //const periodo = id;
            
-
-            const sistema = req.usuario.sistema;
             
             const whereClause = {};
 
-            whereClause['Sistema'] = sistema;
             
             const data = new Date();
             const mesAtual = data.getMonth() + 1;
@@ -220,11 +215,8 @@ const apoiadorController = {
 
         try {
             
-            const sistema = req.usuario.sistema;
-            
+        
             const whereClause = {};
-
-            whereClause['Sistema'] = sistema;
 
             const data = new Date();
             
@@ -280,12 +272,10 @@ const apoiadorController = {
     findById: async (req,res) => {
 
         const { id } = req.params;
-
-        const sistema = req.usuario.sistema;
             
         const whereClause = {};
 
-        whereClause['Sistema'] = sistema;
+
         whereClause['IdApoiador'] = id;
         
 
@@ -463,11 +453,9 @@ const apoiadorController = {
 
         const { id } = req.params;
         
-        const sistema = req.usuario.sistema;
             
         const whereClause = {};
 
-        whereClause['Sistema'] = sistema;
         whereClause['IdApoiador'] = id;
        
         try {
@@ -483,8 +471,7 @@ const apoiadorController = {
             idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
 
-            const user = req.usuario;
-            
+
         
             //let dadosEntidade;
             let vinculacao;
@@ -572,8 +559,7 @@ const apoiadorController = {
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
-                InformacaoAdicional: informacaoAdicional,
-                Sistema: user.sistema
+                InformacaoAdicional: informacaoAdicional
             };
 
             
@@ -787,7 +773,6 @@ const apoiadorController = {
                 Situacao: sit.idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
-                Sistema: user.sistema
             };
 
             
