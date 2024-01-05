@@ -27,15 +27,11 @@ const Endereco = sequelize.define('Endereco', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    Numero:{
+    Complemento:{
         type: DataTypes.STRING,
         allowNull: true,
     },
     Lagradouro:{
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    Quadra: {
         type: DataTypes.STRING,
         allowNull: true
     },
