@@ -42,8 +42,6 @@ const enderecoController = {
         
         try {
 
-            console.log('EnderecoController');
-            console.log(endereco);
            // const estado = await estadoController.findByName(endereco.estado);
             //const estado = await estadoController.findByName(endereco.estado);
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
@@ -61,16 +59,13 @@ const enderecoController = {
                 whereClause.CEP = endereco.cep;
             }
             
-            if (endereco.numero) {
-                whereClause.numero = endereco.numero;
-            }
             
             if (endereco.lagradouro) {
                 whereClause.lagradouro = endereco.lagradouro;
             }
             
-            if (endereco.quadra) {
-                whereClause.quadra = endereco.quadra;
+            if (endereco.complemento) {
+                whereClause.complemento = endereco.complemento;
             }
             
             if (endereco.pontoReferencia) {
@@ -114,9 +109,8 @@ const enderecoController = {
                Cidade: cidade.IdCidade,
                CEP: endereco.CEP,
                Bairro: endereco.bairro,
-               Numero: endereco.numero,
                Lagradouro: endereco.lagradouro,
-               Quadra: endereco.quadra,
+               Complemento: endereco.Complemento,
                PontoReferencia: endereco.pontoReferencia
             });
 
@@ -132,7 +126,7 @@ const enderecoController = {
 
     create: async (req,res) => {
 
-        const { cidade, nome, cep, numero, lagradouro, quadra, pontoReferencia } = req.body;
+        const { cidade, nome, cep, numero, lagradouro, complemento, pontoReferencia } = req.body;
 
         try {
             
@@ -140,7 +134,7 @@ const enderecoController = {
            const novoEndereco = await enderecoModel.create({
                 Numero: numero,
                 Lagradouro: lagradouro,
-                Quadra: quadra,
+                Complemento: complemento,
                 PontoReferencia: pontoReferencia
               });
 
@@ -170,9 +164,8 @@ const enderecoController = {
                 Cidade: cidade.IdCidade,
                 CEP: enderecoCompleto.cep,
                 Bairro: enderecoCompleto.bairro,
-                Numero: endereco.numero,
                 Lagradouro: enderecoCompleto.lagradouro,
-                Quadra: enderecoCompleto.quadra,
+                Complemento: enderecoCompleto.complemento,
                 PontoReferencia: enderecoCompleto.pontoReferencia
             }, { where: {IdEndereco: id }});
 
@@ -184,7 +177,6 @@ const enderecoController = {
             console.log(`Erro ao atualizar o endereco: ${error}`);
             return({msg: 'Erro ao atualizar o endereco'});
         }
-
 
     }
 
