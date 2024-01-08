@@ -253,6 +253,7 @@ const demandaController = {
     updateSituacaoById: async(req,res) => {
 
         const { id } = req.params;
+        
 
         try {
             
