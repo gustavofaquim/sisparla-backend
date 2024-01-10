@@ -2,7 +2,6 @@ import { Sequelize, DataTypes } from "sequelize";
 
 import sequelize from "../db/conn.js";
 
-import Apoiador from "./Apoiador.js";
 import CategoriaDemanda from "./CategoriaDemanda.js";
 import SituacaoDemanda from "./SituacaoDemanda.js";
 import Responsavel from "./Usuario.js";

@@ -343,10 +343,7 @@ const apoiadorController = {
 
             
             const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
-            console.log('Apoiador do back-end')
-            console.log(apoiadorD);
            
-
            // res.json(apoiador); //-> objeto original
             res.json(apoiadorD); // -> objeto desestruturado...
 
@@ -592,7 +589,7 @@ const apoiadorController = {
             
            
             if(dadosEntidade){
-                console.log(dadosEntidade);
+               
                 const [vinculacaoInstanceEntidade, createdEntidade] = await Vinculacao.findOrCreate({
                     where: { Entidade: dadosEntidade.Entidade, Apoiador: dadosApoiador.IdApoiador },
                     defaults: {
