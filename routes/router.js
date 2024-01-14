@@ -76,9 +76,15 @@ import eventoRouter from "./evento.js";
 router.use("/", eventoRouter);
 
 
+// Despesas
+import despesaRouter from "./despesas.js";
+router.use("/", despesaRouter);
+
+
 // tTwilio
 import twilioRouter from "./twilio.js";
 router.use("/", twilioRouter);
+
 
 
 
