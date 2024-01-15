@@ -9,7 +9,9 @@ router
     .get((req,res) => despesaController.findAll(req,res));
 
 
-
+router
+    .route("/despesas/:id")
+    .get((req,res) => despesaController.findById(req,res));
 
 
 export default router;

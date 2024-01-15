@@ -28,6 +28,10 @@ const Despesa = sequelize.define('Despesa', {
         type: DataTypes.DOUBLE,
         allowNull: false
     },
+    Data: {
+       type: DataTypes.DATE,
+       allowNull: false 
+    },
     PessoaJuridicaFisica: {
         type: DataTypes.DOUBLE,
         references: {
