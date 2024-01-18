@@ -41,4 +41,9 @@ const PessoaJuridicaFisica = sequelize.define('PessoaJuridicaFisica', {
     timestamps: false
 });
 
+PessoaJuridicaFisica.belongsTo(Endereco, {
+    foreignKey: 'Endereco',
+    as: 'EnderecoPessoa'
+});
+
 export default PessoaJuridicaFisica;

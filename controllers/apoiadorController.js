@@ -82,7 +82,7 @@ const apoiadorController = {
                         foreignKey: 'Endereco',
                         include:{
                             model: cidadeModel,
-                            as: 'CidadeApoiador',
+                            as: 'CidadeEndereco',
                             foreignKey: 'Cidade',
                         }
                     },

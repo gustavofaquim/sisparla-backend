@@ -47,7 +47,7 @@ const Endereco = sequelize.define('Endereco', {
 
 Endereco.belongsTo(Cidade, {
     foreignKey: 'Cidade',
-    as: 'CidadeApoiador'
+    as: 'CidadeEndereco'
 });
 
 export default Endereco;

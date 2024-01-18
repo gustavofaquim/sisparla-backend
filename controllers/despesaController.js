@@ -73,6 +73,32 @@ const DespesaController = {
         } catch (error) {
             
         }
+    },
+
+
+    create: async(req,res) => {
+
+        try {
+            
+            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, idPessoa} = req.body;
+            
+
+            const novaDespesa = await despesaModel.create({
+                Descricao: descricao,
+                Detalhamento: detalhamento,
+                Valor: valor,
+                Data: dataDespesa,
+                Tipo: idTipo,
+                Origem: idOrigem,
+                PessoaJuridicaFisica: idPessoa
+            })
+
+            return res.status(200).json({novaDespesa});
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({msg: 'Erro ao cadastrar a despesa'});
+        }
     }
 };
 
