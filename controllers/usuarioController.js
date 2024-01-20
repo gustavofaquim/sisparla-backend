@@ -32,19 +32,24 @@ const usuarioController = {
     find: async(req,res) => {
 
         const {nomeUsuario, senha} = req.body
+      
 
         try {
+
             const usuario = await usuarioModel.findOne({
                 where: {
                     NomeUsuario: nomeUsuario,
                 }
             });
 
+            console.log('entrouuuu aqui');
             
             if(!usuario){
                 res.status(401).json({msg: 'Nome de Usuário inválido'});
                 return;
             }
+
+          
       
 
             const password = await bcrypt.compare(senha, usuario.Senha);

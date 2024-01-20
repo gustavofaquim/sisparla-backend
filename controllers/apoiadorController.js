@@ -48,7 +48,7 @@ const apoiadorController = {
                     { Apelido: { [Op.like]: `%${termoBusca}%` } },
                     { Email: { [Op.like]: `%${termoBusca}%` } },
                     {
-                        '$EnderecoApoiador.CidadeApoiador.Nome$': {
+                        '$EnderecoApoiador.CidadeEndereco.Nome$': {
                             [Op.like]: `%${termoBusca}%`,
                         },
                     },
@@ -179,7 +179,7 @@ const apoiadorController = {
                         foreignKey: 'Endereco',
                         include: {
                             model: cidadeModel,
-                            as: 'CidadeApoiador',
+                            as: 'CidadeEndereco',
                             foreignKey: 'Cidade',
                         },
                     },
@@ -236,7 +236,7 @@ const apoiadorController = {
                         foreignKey: 'Endereco',
                         include: {
                             model: cidadeModel,
-                            as: 'CidadeApoiador',
+                            as: 'CidadeEndereco',
                             foreignKey: 'Cidade',
                         },
                     },
@@ -272,15 +272,11 @@ const apoiadorController = {
     findById: async (req,res) => {
 
         const { id } = req.params;
-            
-        const whereClause = {};
-
-
-        whereClause['IdApoiador'] = id;
-        
+             
 
         try {  
-            const apoiador = await apoiadorModel.findOne({whereClause,
+            const apoiador = await apoiadorModel.findOne({
+                where: {IdApoiador: id},
                 include: [
                     
                      {
@@ -289,7 +285,7 @@ const apoiadorController = {
                         foreignKey: 'Endereco',
                         include:{
                             model: cidadeModel,
-                            as: 'CidadeApoiador',
+                            as: 'CidadeEndereco',
                             foreignKey: 'Cidade',
                         }
                      },
@@ -344,6 +340,7 @@ const apoiadorController = {
             
             const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
            
+           
            // res.json(apoiador); //-> objeto original
             res.json(apoiadorD); // -> objeto desestruturado...
 
@@ -379,14 +376,14 @@ const apoiadorController = {
             
             
             const cep = apoiador?.EnderecoApoiador?.CEP;
-            const cidade = apoiador?.EnderecoApoiador?.CidadeApoiador?.Nome;
-            const estado = apoiador?.EnderecoApoiador?.CidadeApoiador?.Estado;
+            const cidade = apoiador?.EnderecoApoiador?.CidadeEndereco?.Nome;
+            const estado = apoiador?.EnderecoApoiador?.CidadeEndereco?.Estado;
 
             
             const idEndereco = apoiador?.EnderecoApoiador?.idEndereco;
             const bairro = apoiador?.EnderecoApoiador?.Bairro;
             const lagradouro = apoiador?.EnderecoApoiador?.Lagradouro;
-            const quadra = apoiador?.EnderecoApoiador?.Quadra;
+            const complemento = apoiador?.EnderecoApoiador?.Complemento;
             const numeroEndereco = apoiador?.EnderecoApoiador?.Numero;
             const pontoReferencia = apoiador?.EnderecoApoiador?.PontoReferencia;
 
@@ -431,7 +428,7 @@ const apoiadorController = {
         
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
-                cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, 
+                cep, cidade, estado, bairro, lagradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas
             };
@@ -465,10 +462,10 @@ const apoiadorController = {
 
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
-            idEndereco, cep, cidade, estado, bairro, lagradouro, quadra, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
+            idEndereco, cep, cidade, estado, bairro, complemento, lagradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
-
-
+          
+            
         
             //let dadosEntidade;
             let vinculacao;
@@ -477,8 +474,10 @@ const apoiadorController = {
             let endereco;
 
             
+            
             if(cidade != null && estado != null){
-                const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, quadra, pontoReferencia};
+                const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, complemento, pontoReferencia};
+               
                 if(!idEndereco){
                     endereco = await enderecoController.createIfNotExists(enderecoCompleto);
                 }else{
@@ -702,11 +701,13 @@ const apoiadorController = {
             let dadosTelefone;
             let endereco;
 
-       
+
             if(cidade != null && estado != null){
                 const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia};
                 endereco = await enderecoController.createIfNotExists(enderecoCompleto);
             }
+
+
           
 
              // Verifica se existe entidade
