@@ -1,13 +1,20 @@
-// verificarToken.js
+
 import jwt from "jsonwebtoken";
+import revokedTokens from "./revokedTokens.js";
 
 const verificarToken = (req, res, next) => {
+
   const tokenObtido = req.headers.authorization;
-  
   const token = tokenObtido.replace('Bearer ', '');
   
- if (!token) {
+  if (!token) {
     return res.status(401).json({ msg: 'Token não fornecido' });
+  }
+
+  // Verifica se o token foi revogado
+  if (revokedTokens.has(token)) {
+    //console.log('Toke revogado');
+    return res.status(401).json({ msg: 'Token revogado' });
   }
 
 

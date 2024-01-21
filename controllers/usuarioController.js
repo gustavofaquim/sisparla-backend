@@ -3,6 +3,8 @@ import usuarioModel from "../models/Usuario.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import revokedTokens from "../middlewares/revokedTokens.js";
+
 const usuarioController = {
 
     encrypt: (senha) => {
@@ -22,7 +24,7 @@ const usuarioController = {
             }
 
             // Agora 'hash' contém a senha encriptada
-            console.log('Senha Encriptada:', hash);
+            //console.log('Senha Encriptada:', hash);
         });
         });
 
@@ -41,16 +43,11 @@ const usuarioController = {
                     NomeUsuario: nomeUsuario,
                 }
             });
-
-            console.log('entrouuuu aqui');
             
             if(!usuario){
                 res.status(401).json({msg: 'Nome de Usuário inválido'});
                 return;
             }
-
-          
-      
 
             const password = await bcrypt.compare(senha, usuario.Senha);
 
@@ -69,7 +66,7 @@ const usuarioController = {
                     nome: usuario.Nome,  
                     regra: usuario.RegraAcesso,
                     sistema: usuario.Sistema 
-                }, secret , { expiresIn: '1h' }
+                }, secret , //{ expiresIn: '1h' }
             );
           
             
@@ -97,7 +94,29 @@ const usuarioController = {
             console.log(`Erro buscar usuarios: ${error}`);
             res.status(500).json({msg: 'Erro ao buscar usuarios'})
         }
-    }
+    },
+
+    removeToken: async (req, res) => {
+        
+        try {
+          const tokenObtido = req.headers.authorization;
+          const token = tokenObtido.replace('Bearer ', '');
+      
+          if (!token) {
+            return res.status(401).json({ msg: 'Token não fornecido' });
+          }
+      
+          // Adicione o token à lista de tokens revogados
+          revokedTokens.add(token);
+          
+          return res.status(200).json({ msg: 'Token removido com sucesso' });
+
+        } catch (error) {
+          console.error('Erro ao remover o token:', error);
+          return res.status(500).json({ msg: 'Erro ao remover o token' });
+        }
+      }
+      
 
     
 
