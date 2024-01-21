@@ -5,7 +5,7 @@ const router = express.Router();
 import despesaController from '../controllers/despesaController.js';
 import tipoDespesaController from '../controllers/tipoDespesa.js';
 import origemDespesaController from "../controllers/origemDespesa.js";
-import pessoaFisicaJuridicaController from '../controllers/pessoaJuridicaFisicaController.js';
+import credorController from '../controllers/credorController.js';
 
 router
     .route("/despesas")
@@ -30,7 +30,11 @@ router
     .get((req,res) => origemDespesaController.findAll(req,res));
 
 router
-    .route("/pessoas-despesas")
-    .get((req,res) => pessoaFisicaJuridicaController.findAll(req,res));
+    .route("/credores")
+    .get((req,res) => credorController.findAll(req,res));
+
+router
+    .route("/credores")
+    .post((req,res) => credorController.create(req,res));
 
 export default router;

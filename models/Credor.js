@@ -4,8 +4,8 @@ import sequelize from "../db/conn.js";
 
 import Endereco from "./Endereco.js";
 
-const PessoaJuridicaFisica = sequelize.define('PessoaJuridicaFisica', {
-    IdPessoaJuridicaFisica:{
+const Credor = sequelize.define('Credor', {
+    IdCredor:{
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: true,
@@ -37,13 +37,13 @@ const PessoaJuridicaFisica = sequelize.define('PessoaJuridicaFisica', {
     },
 
 },{
-    tableName: 'PessoaJuridicaFisica',
+    tableName: 'CREDOR',
     timestamps: false
 });
 
-PessoaJuridicaFisica.belongsTo(Endereco, {
+Credor.belongsTo(Endereco, {
     foreignKey: 'Endereco',
     as: 'EnderecoPessoa'
 });
 
-export default PessoaJuridicaFisica;
+export default Credor;

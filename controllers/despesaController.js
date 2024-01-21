@@ -2,7 +2,7 @@
 
 import despesaModel from "../models/Despesa.js";
 import OrigemDespesa from "../models/OrigemDespesa.js";
-import PessoaJuridicaFisica from "../models/PessoaJuridicaFisica.js";
+import credorModel from "../models/Credor.js";
 import TipoDespesa from "../models/TipoDespesa.js";
 
 const DespesaController = {
@@ -14,9 +14,9 @@ const DespesaController = {
             const despesas = await despesaModel.findAll({
                 include: [
                     {
-                        model: PessoaJuridicaFisica,
-                        as: 'PessoaFisicaJuridica',
-                        foreignKey: 'PessoaJuridicaFisica'
+                        model: credorModel,
+                        as: 'Credor',
+                        foreignKey: 'Credor'
                     },
                     {
                         model: OrigemDespesa,
@@ -48,9 +48,9 @@ const DespesaController = {
             const despesa = await despesaModel.findByPk(id, {
                 include: [
                     {
-                        model: PessoaJuridicaFisica,
-                        as: 'PessoaFisicaJuridica',
-                        foreignKey: 'PessoaJuridicaFisica'
+                        model: credorModel,
+                        as: 'Credor',
+                        foreignKey: 'Credor'
                     },
                     {
                         model: OrigemDespesa,

@@ -4,7 +4,7 @@ import Sequelize from "sequelize";
 
 import sequelize from "../db/conn.js";
 
-import PessoaJuridicaFisica from "./PessoaJuridicaFisica.js";
+import Credor from "./Credor.js";
 import OrigemDespesa from "./OrigemDespesa.js";
 import TipoDespesa from "./TipoDespesa.js";
 
@@ -32,11 +32,11 @@ const Despesa = sequelize.define('Despesa', {
        type: DataTypes.DATE,
        allowNull: false 
     },
-    PessoaJuridicaFisica: {
+    Credor: {
         type: DataTypes.DOUBLE,
         references: {
-            model: 'PessoaJuridicaFisica',
-            key: 'IdPessoaJuridicaFisica'
+            model: 'Credor',
+            key: 'IdCredor'
         }
     },
     Origem: {
@@ -58,9 +58,9 @@ const Despesa = sequelize.define('Despesa', {
     timestamps: false
 });
 
-Despesa.belongsTo(PessoaJuridicaFisica, {
-    foreignKey: 'PessoaJuridicaFisica',
-    as: 'PessoaFisicaJuridica'
+Despesa.belongsTo(Credor, {
+    foreignKey: 'Credor',
+    as: 'CredorDespesa'
 });
 
 Despesa.belongsTo(OrigemDespesa, {
