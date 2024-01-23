@@ -8,7 +8,7 @@ const credorController = {
     findAll: async(req,res) => {
         try {
             
-            const pessoas = await credorModel.findAll({
+            const credores = await credorModel.findAll({
                 include: [
                     {
                         model: enderecoModel,
@@ -23,7 +23,7 @@ const credorController = {
                 ]
             });
 
-            res.status(200).json(pessoas);
+            res.status(200).json(credores);
 
         } catch (error) {
             console.log(error);
@@ -34,10 +34,13 @@ const credorController = {
     create: async(req,res) => {
         try {
             
-            const {nome, endereco, tipo, documento} = req.body;
+            const {nome, estado, cidade,  bairro, logradouro, complemento, pontoReferencia, telefone, tipo, documento} = req.body;
+
+            
 
             const novoCredor = await credorModel.create({
                 Nome: nome,
+                Telefone: telefone,
                 Endereco: endereco,
                 Tipo: tipo,
                 Documento: documento

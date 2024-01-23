@@ -34,7 +34,7 @@ router
     .get((req,res) => credorController.findAll(req,res));
 
 router
-    .route("/credores")
+    .route("/credor")
     .post((req,res) => credorController.create(req,res));
 
 export default router;
