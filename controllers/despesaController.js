@@ -8,14 +8,14 @@ import TipoDespesa from "../models/TipoDespesa.js";
 const DespesaController = {
 
     findAll: async(req,res) => {
+        
         try {
-
             
             const despesas = await despesaModel.findAll({
                 include: [
                     {
                         model: credorModel,
-                        as: 'Credor',
+                        as: 'CredorDespesa',
                         foreignKey: 'Credor'
                     },
                     {
@@ -30,11 +30,11 @@ const DespesaController = {
                     }
                 ]
             });
-
+            
             res.json(despesas);
 
         } catch (error) {
-            //console.log(error);
+            console.log(error);
             res.status(500).json({msg: 'Erro ao buscar a lista de despesas'});
         }
     },
@@ -80,7 +80,7 @@ const DespesaController = {
 
         try {
             
-            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, idPessoa} = req.body;
+            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, idCredor, credor} = req.body;
             
 
             const novaDespesa = await despesaModel.create({
@@ -90,7 +90,7 @@ const DespesaController = {
                 Data: dataDespesa,
                 Tipo: idTipo,
                 Origem: idOrigem,
-                PessoaJuridicaFisica: idPessoa
+                Credor: idCredor
             })
 
             return res.status(200).json({novaDespesa});
