@@ -29,6 +29,7 @@ router
     .route("/origens-despesas")
     .get((req,res) => origemDespesaController.findAll(req,res));
 
+
 router
     .route("/credores")
     .get((req,res) => credorController.findAll(req,res));
@@ -36,5 +37,16 @@ router
 router
     .route("/credor")
     .post((req,res) => credorController.create(req,res));
+
+router
+    .route("/credor/:id")
+    .get((req,res) => credorController.findById(req,res));
+
+
+router
+    .route("/credor/:id")
+    .put((req,res) => credorController.updateById(req,res));
+
+
 
 export default router;

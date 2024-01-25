@@ -20,8 +20,47 @@ const cidadeController = {
         }
     },
 
+    findById: async(req,res) => {
+        
+        try {
+
+            const {IdCidade, IdEstado} = req.body;
+            
+            const cidade = await cidadeModel.findOne({
+                where: {
+                    IdCidade: IdCidade,
+                    Estado: IdEstado
+                }
+            });
+
+            res.status(200).json({cidade});
+        } catch (error) {
+            console.log(`Erro ao buscar a cidade ${error}`);
+            res.status(500).json({msg: 'Erro ao buscar a cidade'})
+        }
+    },
+    
+    findByUF: async(req,res) =>{
+        try {
+            
+            const { estado } = req.body;
+
+            const cidade = await cidadeModel.findOne({
+                where: {
+                    Estado: estado
+                }
+            })
+
+            res.status(200).json({cidade});
+        } catch (error) {
+            res.status(500).json({msg: 'Erro ao buscar a cidade'})
+        }
+
+    },
+
     createIfNotExists: async(city, IdEstado) => {
         try {
+
             
             const cidade = await cidadeController.find(city, IdEstado);
             

@@ -36,6 +36,10 @@ router.use("/", tipoEntidadeRouter);
 import estadoRouter from "./estado.js";
 router.use("/", estadoRouter);
 
+// Codades
+import cidadeRouter from "./cidade.js";
+router.use("/", cidadeRouter);
+
 
 // Entidades
 import entidadeRouter from "./entidade.js";

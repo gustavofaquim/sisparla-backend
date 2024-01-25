@@ -42,9 +42,10 @@ const enderecoController = {
         
         try {
 
-           // const estado = await estadoController.findByName(endereco.estado);
-            //const estado = await estadoController.findByName(endereco.estado);
+           
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
+
+        
 
             let whereClause = {
                 Cidade: cidade.IdCidade
@@ -57,7 +58,6 @@ const enderecoController = {
             if (endereco.cep) {
                 whereClause.CEP = endereco.cep;
             }
-            
             
             if (endereco.lagradouro) {
                 whereClause.lagradouro = endereco.lagradouro;
@@ -76,7 +76,7 @@ const enderecoController = {
                 where: whereClause
             });
 
-            
+           
             return end;
 
         } catch (error) {
@@ -92,18 +92,22 @@ const enderecoController = {
     createIfNotExists: async (endereco) => {
 
         try {
-
+            
+           
             let novoEndereco = await enderecoController.find(endereco);
+           
+            
             
             if(novoEndereco){
                 return novoEndereco;
             }
             
+            
             //const estado = await estadoController.findByName(endereco.estado);
             
             
             const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
-        
+            
           
             novoEndereco = await enderecoModel.create({
                Cidade: cidade.IdCidade,
@@ -114,6 +118,7 @@ const enderecoController = {
                PontoReferencia: endereco.pontoReferencia
             });
 
+            
             return novoEndereco;
             
         } catch (error) {
@@ -171,6 +176,7 @@ const enderecoController = {
 
             const enderecoAtualizado = await enderecoModel.findByPk(id);
 
+        
             return enderecoAtualizado;
 
         } catch (error) {

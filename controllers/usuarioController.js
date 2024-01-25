@@ -115,10 +115,8 @@ const usuarioController = {
           console.error('Erro ao remover o token:', error);
           return res.status(500).json({ msg: 'Erro ao remover o token' });
         }
-      }
+    }
       
-
-    
 
 }
 
