@@ -682,17 +682,22 @@ const apoiadorController = {
 
 
 
-    create: async (req,res) => {
+    create: async(req,res) => {
          
         try {
 
+
             const {
-                nome, apelido, profissao, cpf, religiao, nascimento, classificacao, email, telefone, situacao, 
-                cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia, 
+                nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
+                cepSemMascara, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF,
                 informacoesAdicionais 
             } = req.body
+
+            const cpf = cpfSemMascara;
+            const cep = cepSemMascara;
+            const telefone = telefoneSemMascara;
 
             const user = req.usuario;
 
@@ -777,11 +782,11 @@ const apoiadorController = {
             
             const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
 
-            res.json(novoApoiador);
+            return res.json(novoApoiador);
 
         } catch (error) {
             console.log(`Erro ao cadastrar o apoiador: ${error}`);
-            res.status(500).json({msg: 'Erro ao cadastrar o apoiador'})
+            return res.status(500).json({msg: 'Erro ao cadastrar o apoiador'})
         }
     },
 

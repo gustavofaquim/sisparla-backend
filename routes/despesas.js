@@ -11,7 +11,6 @@ router
     .route("/despesas")
     .get((req,res) => despesaController.findAll(req,res));
 
-
 router
     .route("/despesas/:id")
     .get((req,res) => despesaController.findById(req,res));
@@ -19,6 +18,14 @@ router
 router
     .route("/despesa")
     .post((req,res) => despesaController.create(req,res));
+
+router
+    .route("/despesa/:id")
+    .put((req,res) => despesaController.updateById(req,res));
+
+router
+    .route("/despesa/:id")
+    .delete((req,res) => despesaController.deleteByid(req,res));
 
 router
     .route("/tipos-despesas")
@@ -46,6 +53,10 @@ router
 router
     .route("/credor/:id")
     .put((req,res) => credorController.updateById(req,res));
+
+router
+    .route("/credor/:id")
+    .delete((req,res) => credorController.deleteByid(req,res));
 
 
 

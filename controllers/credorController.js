@@ -39,11 +39,11 @@ const credorController = {
             });
             
 
-            res.status(200).json(credores);
+           return res.status(200).json(credores);
 
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg: 'Erro ao buscar a lista de credores'});
+            return res.status(500).json({msg: 'Erro ao buscar a lista de credores'});
         }
     },
 
@@ -84,8 +84,9 @@ const credorController = {
     create: async(req,res) => {
         try {
             
-            const {nome, estado, cidade, cep,  bairro, logradouro, complemento, pontoReferencia, telefone, tipo, documento} = req.body;
+            const {nome, estado, cidade, cepSemMascara,  bairro, logradouro, complemento, pontoReferencia, telefone, tipo, documento} = req.body;
 
+            const cep = cepSemMascara;
 
             // Inicia a transação
             const t = await sequelize.transaction();
@@ -114,8 +115,7 @@ const credorController = {
             return res.status(200).json({novoCredor});
 
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg: 'Erro ao cadastrar o novo credor'});
+            return res.status(500).json({msg: 'Erro ao cadastrar o novo credor'});
         }
     },
 
@@ -176,8 +176,28 @@ const credorController = {
 
             
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg: 'Erro ao cadastrar o novo credor'});
+            return res.status(500).json({msg: 'Erro ao cadastrar o novo credor'});
+        }
+    },
+
+    deleteByid: async(req,res) => {
+
+        const { id } = req.params;
+    
+        try {
+            if(!id){
+                return res.status(500).json({msg: 'Credor não encontrada'});
+            }
+
+            const credorExcluido = await credorModel.destroy({
+                where: {IdCredor: id},
+            })
+
+            return res.status(200).json({credorExcluido});
+
+        } catch (error) {
+            
+            return res.status(404).json({msg: error});
         }
     }
 }

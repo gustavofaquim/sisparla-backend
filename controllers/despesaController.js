@@ -49,7 +49,7 @@ const DespesaController = {
                 include: [
                     {
                         model: credorModel,
-                        as: 'Credor',
+                        as: 'CredorDespesa',
                         foreignKey: 'Credor'
                     },
                     {
@@ -70,8 +70,9 @@ const DespesaController = {
             }
 
             return res.json(despesa);
+
         } catch (error) {
-            
+            return res.status(500).json({msg: 'Error: ' + error});
         }
     },
 
@@ -80,8 +81,7 @@ const DespesaController = {
 
         try {
             
-            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, idCredor, credor} = req.body;
-            
+            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, Credor} = req.body;
 
             const novaDespesa = await despesaModel.create({
                 Descricao: descricao,
@@ -90,7 +90,7 @@ const DespesaController = {
                 Data: dataDespesa,
                 Tipo: idTipo,
                 Origem: idOrigem,
-                Credor: idCredor
+                Credor: Credor
             })
 
             return res.status(200).json({novaDespesa});
@@ -98,6 +98,62 @@ const DespesaController = {
         } catch (error) {
             console.log(error);
             res.status(500).json({msg: 'Erro ao cadastrar a despesa'});
+        }
+    },
+
+    updateById: async(req,res) => {
+        
+        const { id } = req.params;
+        try {
+            
+            const despesa = await despesaModel.findByPk(id);
+
+
+            if(!despesa){
+                return res.status(404).json({msg: 'Despesa não encontrada'});
+            }
+
+            const {Descricao, Detalhamento, Valor, Data, Tipo, Origem, Credor} = req.body;
+
+
+            const despesaAtualizada = await despesaModel.update({
+                Descricao: Descricao,
+                Detalhamento: Detalhamento,
+                Valor: Valor,
+                Data: Data,
+                Tipo: Tipo,
+                Origem: Origem,
+                Credor: Credor  
+            }, {
+                where: {IdDespesa: id}
+            });
+
+            return res.status(200).json({despesaAtualizada});
+
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+
+    deleteByid: async(req,res) => {
+
+        const { id } = req.params;
+        try {
+            
+            if(!id){
+                return res.status(500).json({msg: 'Despesa não encontrada'});
+            }
+
+            const despesaExcluida = await despesaModel.destroy({
+                where: {IdDespesa: id}
+            });
+
+            return res.status(200).json({despesaExcluida});
+            
+
+        } catch (error) {
+            res.status(404).json({msg: error});
         }
     }
 };

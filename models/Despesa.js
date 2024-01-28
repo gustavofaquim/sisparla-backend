@@ -14,6 +14,7 @@ const Despesa = sequelize.define('Despesa', {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: true,
+        autoIncrement: true,
         unique: true
     },
     Descricao:{
