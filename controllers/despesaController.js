@@ -153,7 +153,7 @@ const DespesaController = {
             
 
         } catch (error) {
-            res.status(404).json({msg: error});
+           return res.status(404).json({msg: error});
         }
     }
 };

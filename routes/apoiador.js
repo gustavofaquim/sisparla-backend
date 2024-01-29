@@ -17,10 +17,10 @@ router
     .route("/view-apoiadores")
     .get(verificarToken,(req,res) => apoiadorController.viewApoiadores(req,res));
 
+
 router
     .route("/apoiadores/:id")
     .get(verificarToken,(req,res) => apoiadorController.findById(req,res));
-
 
 
 router
@@ -28,9 +28,8 @@ router
     .get(verificarToken,(req,res) => apoiadorController.findByBirthday(req,res));
 
 
-
 router
-    .route("/apoiadores/:id")
+    .route("/apoiador/:id")
     .delete(verificarToken, (req,res) => apoiadorController.deleteById(req,res));
 
 

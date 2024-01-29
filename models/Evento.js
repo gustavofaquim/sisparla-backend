@@ -15,7 +15,7 @@ const Evento = sequelize.define("Evento", {
     },
     Descricao:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     Responsavel:{
         type: DataTypes.STRING,

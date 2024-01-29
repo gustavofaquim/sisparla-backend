@@ -25,5 +25,9 @@ router
     .route("/eventos/:id")
     .put((req,res) => eventoController.updateById(req,res));
 
+router 
+    .route("/evento/:id")
+    .delete((req,res) => eventoController.deleteById(req,res));
+
     
 export default router;

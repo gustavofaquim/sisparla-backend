@@ -109,6 +109,28 @@ const eventoController = {
             console.log(`Erro ao atualizar o evento: ${error}`);
             res.status(500).json({msg: 'Erro ao atualizar o evento'});
         }
+    },
+
+
+    deleteById: async(req,res) => {
+
+        const { id } = req.params;
+
+        try {
+            
+            if(!id){
+                return res.status(500).json({msg: 'Evento não encontrado'});
+            }
+
+            const eventoExcluido = await eventoModel.destroy({
+                where: {IdEvento: id}
+            });
+
+            return res.status(200).json({eventoExcluido});
+
+        } catch (error) {
+            return res.status(404).json({msg: error});
+        }
     }
 }
 
