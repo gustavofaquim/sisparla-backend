@@ -1,5 +1,5 @@
 
-
+import { Sequelize, Op } from 'sequelize';
 import despesaModel from "../models/Despesa.js";
 import OrigemDespesa from "../models/OrigemDespesa.js";
 import credorModel from "../models/Credor.js";
@@ -10,6 +10,23 @@ const DespesaController = {
     findAll: async(req,res) => {
         
         try {
+
+            const {termoBusca} = req.query;
+
+            const whereClause = {};
+
+            if(termoBusca){
+
+                whereClause[Op.or] = [
+                    { Descricao: { [Op.like]: `%${termoBusca}%` } }, 
+                    { Valor: { [Op.like]: `%${termoBusca}%` } }, 
+                    {
+                        '$CredorDespesa.Nome$': {
+                            [Op.like]: `%${termoBusca}%`,
+                        },
+                    },
+                ]
+            }
             
             const despesas = await despesaModel.findAll({
                 include: [
@@ -28,7 +45,7 @@ const DespesaController = {
                         as: 'TipoDespesa',
                         foreignKey: 'Tipo'
                     }
-                ]
+                ], where: whereClause
             });
             
             res.json(despesas);

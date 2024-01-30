@@ -13,12 +13,16 @@ const credorController = {
     findAll: async(req,res) => {
         try {
             
-            const termoBusca = req.query.inputValue;
+            const {termoBusca} = req.query;
 
-            let whereCondition;
+            const whereClause = {};
             
             if(termoBusca){
-                whereCondition = {Nome: { [Op.like]: `%${termoBusca}%` }};
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } }, 
+                    { Documento: { [Op.like]: `%${termoBusca}%` } }, 
+                    { Tipo: { [Op.like]: `%${termoBusca}%` }}
+                ]
             }   
 
             
@@ -35,7 +39,7 @@ const credorController = {
                         }
                     }
                 ],
-                where: whereCondition,
+                where: whereClause,
             });
             
 
