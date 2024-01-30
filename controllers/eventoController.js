@@ -8,7 +8,21 @@ const eventoController = {
     findAll: async(req,res) => {
         try {
             
-            const eventos = await eventoModel.findAll();
+            const {termoBusca} = req.query;
+            
+            const whereClause = {};
+
+            if(termoBusca){
+                whereClause[Op.or] = [
+                    {Nome: {[Op.like]: `%${termoBusca}%`} },
+                    {Responsavel: {[Op.like]: `%${termoBusca}%`} },
+                    {Local: {[Op.like]: `%${termoBusca}%`} },
+                    {Relacao: {[Op.like]: `%${termoBusca}%`} },
+                ]
+            }
+
+
+            const eventos = await eventoModel.findAll({ where: whereClause});
             return res.json(eventos);
 
         } catch (error) {
