@@ -278,8 +278,12 @@ const apoiadorController = {
             const apoiador = await apoiadorModel.findOne({
                 where: {IdApoiador: id},
                 include: [
-                    
-                     {
+                    {
+                        model: profissaoModel,
+                        as: 'ProfissaoApoiador',
+                        foreignKey: 'Profissao',
+                    },
+                    {
                         model: enderecoModel,
                         as: 'EnderecoApoiador',
                         foreignKey: 'Endereco',
@@ -288,23 +292,23 @@ const apoiadorController = {
                             as: 'CidadeEndereco',
                             foreignKey: 'Cidade',
                         }
-                     },
-                     {
+                    },
+                    {
                         model: classificacaoModel,
                         as: 'ClassificacaoApoiador',
                         foreignKey: 'Classificacao',
  
-                     },
-                     {
+                    },
+                    {
                         model: SituacaoCadastro,
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
-                     }, 
-                     {
+                    }, 
+                    {
                         model: TelefoneModel,
                         as: 'TelefoneApoiador',
                         foreignKey: 'IdApoiador'
-                     }, 
+                    }, 
                      {
                         model: FiliacaoModel,
                         as: 'FiliacaoPartidaria',
@@ -325,11 +329,11 @@ const apoiadorController = {
                             foreignKey: 'Entidade',
                         }
                      },
-                     {
+                    {
                         model: DemandaModel,
                         as: 'Demanda',
                         foreignKey: 'Apoiador'
-                     }, 
+                    }, 
                  ]
             });
 
@@ -360,7 +364,8 @@ const apoiadorController = {
             const apelido = apoiador?.Apelido;
             const cpf = apoiador?.CPF;
             const dataNascimento = apoiador?.DataNascimento;
-            const profissao = apoiador?.Profissao;
+            const idProfissao = apoiador?.ProfissaoApoiador?.IdProfissao;
+            const profissao = apoiador?.ProfissaoApoiador.Nome;
             const religiao = apoiador?.Religiao;
             const email = apoiador?.Email;
             const informacaoAdicional = apoiador?.InformacaoAdicional;
@@ -426,7 +431,7 @@ const apoiadorController = {
             });
             
         
-            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, profissao, religiao, email, 
+            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento,idProfissao, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, lagradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
@@ -695,6 +700,7 @@ const apoiadorController = {
                 informacoesAdicionais 
             } = req.body
 
+
             const cpf = cpfSemMascara;
             const cep = cepSemMascara;
             const telefone = telefoneSemMascara;
@@ -769,7 +775,7 @@ const apoiadorController = {
                 Apelido: apelido,
                 DataNascimento: nascimento,
                 Email: email,
-                Profsissao: profissao,
+                Profissao: profissao,
                 Religiao: religiao,
                 Endereco: endereco?.dataValues?.idEndereco,
                 Classificacao: classif.idClassificacao,
@@ -778,8 +784,7 @@ const apoiadorController = {
                 InformacaoAdicional: informacoesAdicionais,
             };
 
-            
-            
+           
             const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
 
             return res.json(novoApoiador);
@@ -800,6 +805,7 @@ const apoiadorController = {
         
         try {
             // Cria o Apoiador
+           
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
 
 

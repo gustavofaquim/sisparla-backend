@@ -43,8 +43,11 @@ const Apoiador = sequelize.define('Apoiador', {
         unique: true, // Garante que o email seja único
     },
     Profissao:{
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.INTEGER,
+        references:{
+            model: Profissao,
+            key: 'IdProfissao'
+        }
        
     },
     Religiao:{
@@ -92,6 +95,10 @@ const Apoiador = sequelize.define('Apoiador', {
     }
 );
 
+Apoiador.belongsTo(Profissao, {
+    foreignKey: 'Profissao',
+    as: 'ProfissaoApoiador'
+});
 
 Apoiador.belongsTo(Endereco, {
     foreignKey: 'Endereco',
