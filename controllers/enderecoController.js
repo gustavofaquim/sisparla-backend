@@ -59,8 +59,8 @@ const enderecoController = {
                 whereClause.CEP = endereco.cep;
             }
             
-            if (endereco.lagradouro) {
-                whereClause.lagradouro = endereco.lagradouro;
+            if (endereco.logradouro) {
+                whereClause.logradouro = endereco.logradouro;
             }
             
             if (endereco.complemento) {
@@ -97,7 +97,6 @@ const enderecoController = {
             let novoEndereco = await enderecoController.find(endereco);
            
             
-            
             if(novoEndereco){
                 return novoEndereco;
             }
@@ -113,7 +112,7 @@ const enderecoController = {
                Cidade: cidade.IdCidade,
                CEP: endereco.cep,
                Bairro: endereco.bairro,
-               Lagradouro: endereco.lagradouro,
+               Logradouro: endereco.logradouro,
                Complemento: endereco.complemento,
                PontoReferencia: endereco.pontoReferencia
             });
@@ -131,14 +130,14 @@ const enderecoController = {
 
     create: async (req,res) => {
 
-        const { cidade, nome, cep, numero, lagradouro, complemento, pontoReferencia } = req.body;
+        const { cidade, nome, cep, numero, logradouro, complemento, pontoReferencia } = req.body;
 
         try {
             
             
            const novoEndereco = await enderecoModel.create({
                 Numero: numero,
-                Lagradouro: lagradouro,
+                Logradouro: logradouro,
                 Complemento: complemento,
                 PontoReferencia: pontoReferencia
               });
@@ -169,7 +168,7 @@ const enderecoController = {
                 Cidade: cidade.IdCidade,
                 CEP: enderecoCompleto.cep,
                 Bairro: enderecoCompleto.bairro,
-                Lagradouro: enderecoCompleto.lagradouro,
+                Logradouro: enderecoCompleto.logradouro,
                 Complemento: enderecoCompleto.complemento,
                 PontoReferencia: enderecoCompleto.pontoReferencia
             }, { where: {IdEndereco: id }});

@@ -365,7 +365,7 @@ const apoiadorController = {
             const cpf = apoiador?.CPF;
             const dataNascimento = apoiador?.DataNascimento;
             const idProfissao = apoiador?.ProfissaoApoiador?.IdProfissao;
-            const profissao = apoiador?.ProfissaoApoiador.Nome;
+            const profissao = apoiador?.ProfissaoApoiador?.Nome;
             const religiao = apoiador?.Religiao;
             const email = apoiador?.Email;
             const informacaoAdicional = apoiador?.InformacaoAdicional;
@@ -387,7 +387,7 @@ const apoiadorController = {
             
             const idEndereco = apoiador?.EnderecoApoiador?.idEndereco;
             const bairro = apoiador?.EnderecoApoiador?.Bairro;
-            const lagradouro = apoiador?.EnderecoApoiador?.Lagradouro;
+            const logradouro = apoiador?.EnderecoApoiador?.Logradouro;
             const complemento = apoiador?.EnderecoApoiador?.Complemento;
             const numeroEndereco = apoiador?.EnderecoApoiador?.Numero;
             const pontoReferencia = apoiador?.EnderecoApoiador?.PontoReferencia;
@@ -431,9 +431,9 @@ const apoiadorController = {
             });
             
         
-            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento,idProfissao, profissao, religiao, email, 
+            const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
-                cep, cidade, estado, bairro, lagradouro, complemento, numeroEndereco, pontoReferencia, 
+                cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas
             };
@@ -451,8 +451,8 @@ const apoiadorController = {
     updateById: async(req, res) => {
 
         const { id } = req.params;
-        
-            
+
+          
         const whereClause = {};
 
         whereClause['IdApoiador'] = id;
@@ -467,7 +467,7 @@ const apoiadorController = {
 
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
-            idEndereco, cep, cidade, estado, bairro, complemento, lagradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
+            idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
           
             
@@ -481,7 +481,7 @@ const apoiadorController = {
             
             
             if(cidade != null && estado != null){
-                const enderecoCompleto = {cep, cidade, estado, lagradouro, numeroEndereco, bairro, complemento, pontoReferencia};
+                const enderecoCompleto = {cep, cidade, estado, logradouro, numeroEndereco, bairro, complemento, pontoReferencia};
                
                 if(!idEndereco){
                     endereco = await enderecoController.createIfNotExists(enderecoCompleto);
@@ -511,7 +511,6 @@ const apoiadorController = {
                 
             }
             
-
             
             // Verifica se existe partido
             if(partidoId != null && partidoId >= 1){
@@ -694,7 +693,7 @@ const apoiadorController = {
 
             const {
                 nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
-                cepSemMascara, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia, 
+                cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF,
                 informacoesAdicionais 
@@ -714,12 +713,11 @@ const apoiadorController = {
 
 
             if(cidade != null && estado != null){
-                const enderecoCompleto = {cep, cidade, estado, lagradouro, numero, bairro, quadra, pontoReferencia};
+                const enderecoCompleto = {cep, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia};
                 endereco = await enderecoController.createIfNotExists(enderecoCompleto);
             }
 
 
-          
 
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
@@ -797,7 +795,6 @@ const apoiadorController = {
 
 
     criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosTelefone) => {
-        
         
        
         // Inicia a transação

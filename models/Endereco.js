@@ -31,7 +31,7 @@ const Endereco = sequelize.define('Endereco', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    Lagradouro:{
+    Logradouro:{
         type: DataTypes.STRING,
         allowNull: true
     },
