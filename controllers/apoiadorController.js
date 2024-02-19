@@ -409,7 +409,7 @@ const apoiadorController = {
             const diretorioUF = apoiador?.FiliacaoPartidaria?.DiretorioUF;
 
 
-            apoiador.Vinculacao.forEach((e, index) => {
+            apoiador?.Vinculacao?.forEach((e, index) => {
                 entidadeTipo = e.VinculacaoEntidade.Tipo;
                
                 if (entidadeTipo !== 'Partido Político' && entidadeTipo) {
@@ -564,9 +564,12 @@ const apoiadorController = {
 
             
             
-            const apoiadorAtualizado = await  apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, null, dadosTelefone);
+            const apoiadorAtualizado = await apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, null, dadosTelefone);
             
-            res.json(apoiadorAtualizado);
+            
+            const apoiadorD = apoiadorController.destructuringApoiador(apoiadorAtualizado);
+           
+            return res.status(200).json(apoiadorD);
 
 
         } catch (error) {
@@ -578,6 +581,7 @@ const apoiadorController = {
 
     atualizarApoiadorComVinculacao: async(dadosApoiador, dadosEntidade, dadosTelefone) => {
        
+
         // Inicia a transação
         const t = await sequelize.transaction();
 
@@ -668,12 +672,9 @@ const apoiadorController = {
                 }
     
             }
-    
-            
-            
+
             // Confirma a transação
             await t.commit();
-
             return attApoiador;
         
         } catch (error) {
