@@ -100,7 +100,7 @@ const usuarioController = {
         
         try {
           const tokenObtido = req.headers.authorization;
-          const token = tokenObtido.replace('Bearer ', '');
+          const token = tokenObtido?.replace('Bearer ', '');
       
           if (!token) {
             return res.status(401).json({ msg: 'Token não fornecido' });
