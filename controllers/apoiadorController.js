@@ -344,7 +344,6 @@ const apoiadorController = {
             
             const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
            
-           
            // res.json(apoiador); //-> objeto original
             res.json(apoiadorD); // -> objeto desestruturado...
 
@@ -355,7 +354,6 @@ const apoiadorController = {
     },
 
     destructuringApoiador: (apoiador) => {
-
 
         try {
             
@@ -374,7 +372,7 @@ const apoiadorController = {
             const idClassificacao = apoiador?.Classificacao;
             const idSituacao = apoiador?.Situacao;
             
-            
+            const idTelefone = apoiador?.TelefoneApoiador?.idTelefone;
             const numeroTelefone = apoiador?.TelefoneApoiador?.Numero;
             const numeroWhatsapp = apoiador?.TelefoneApoiador?.WhatsApp;
             const numeroAntigo =  apoiador?.TelefoneApoiador?.Numero;
@@ -419,7 +417,6 @@ const apoiadorController = {
                     entidadeSigla = e.VinculacaoEntidade.Sigla;
                     entidadeLideranca = e.Lideranca;
                     entidadeCargo = e.Cargo;
-
                 }
             });
             
@@ -432,7 +429,7 @@ const apoiadorController = {
             
         
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, profissao, religiao, email, 
-                informacaoAdicional, idClassificacao, idSituacao, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
+                informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas
@@ -457,21 +454,24 @@ const apoiadorController = {
 
         whereClause['IdApoiador'] = id;
        
+       
         try {
             
             const apoiador = await apoiadorModel.findOne({where: whereClause});
+
+
+
 
             if(!apoiador){
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
 
 
-            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao, religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
+            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
-          
-            
-        
+
+           
             //let dadosEntidade;
             let vinculacao;
             let dadosTelefone;
@@ -529,20 +529,21 @@ const apoiadorController = {
             }
 
             
-    
             // Verifica se existe número de telefone
             if(numeroTelefone != null && numeroTelefone.length > 6){
-
+               
+                if(numeroAntigo != numeroTelefone){
+                    const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
                 
-                const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
+                    dadosTelefone = {
+                        IdTelefone: tel.idTelefone,
+                        Numero: numeroTelefone,
+                        WhatsApp: numeroWhatsapp || 's',
+                        Principal: 's' 
+                    };
+                }
+               
                 
-             
-                dadosTelefone = {
-                    IdTelefone: tel.idTelefone,
-                    Numero: numeroTelefone,
-                    WhatsApp: numeroWhatsapp || 's',
-                    Principal: 's' 
-                };
             }
 
             
@@ -786,7 +787,7 @@ const apoiadorController = {
            
             const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
 
-            return res.json(novoApoiador);
+            return res.status(200).json(novoApoiador);
 
         } catch (error) {
             console.log(`Erro ao cadastrar o apoiador: ${error}`);

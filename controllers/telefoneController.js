@@ -3,7 +3,6 @@ import telefoneModel from "../models/Telefone.js";
 const telefoneController = {
 
     findByNumber: async(num, idApoiador) => {
-
         try {
             const telefone = await telefoneModel.findOne({
                 where: {
