@@ -38,9 +38,6 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
 
-
-
-            
             const whereClause = {};
 
 
@@ -63,7 +60,6 @@ const apoiadorController = {
             }
 
             if (filtroProfissao && filtroProfissao != 'todas') {
-                console.log(filtroProfissao)
                 whereClause['$Profissao$'] = filtroProfissao
             }
 
