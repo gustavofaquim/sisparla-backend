@@ -38,6 +38,8 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
 
+
+
             
             const whereClause = {};
 
@@ -61,9 +63,8 @@ const apoiadorController = {
             }
 
             if (filtroProfissao && filtroProfissao != 'todas') {
-                whereClause['$Profissao$'] = {
-                  [Op.like]: `%${filtroProfissao}%`,
-                };
+                console.log(filtroProfissao)
+                whereClause['$Profissao$'] = filtroProfissao
             }
 
             if(filtroPartido && filtroPartido != 'todos'){
@@ -96,6 +97,11 @@ const apoiadorController = {
                         as: 'ClassificacaoApoiador',
                         foreignKey: 'Classificacao',
 
+                    },
+                    {
+                        model: profissaoModel,
+                        as: 'ProfissaoApoiador',
+                        foreignKey: 'Profissao',
                     },
                     {
                         model: SituacaoCadastro,

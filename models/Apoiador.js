@@ -127,6 +127,7 @@ Apoiador.belongsTo(Classificacao, {
     as: 'ClassificacaoApoiador'
 });
 
+
 Apoiador.belongsTo(SituacaoCadastro, {
     foreignKey: 'Situacao',
     as: 'SituacaoCadastroApoiador'
