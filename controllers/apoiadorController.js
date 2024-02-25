@@ -37,6 +37,7 @@ const apoiadorController = {
             const termoBusca = req.query.termoBusca;
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
+            const filtroCidade = req.query.cidade;
 
             const whereClause = {};
 
@@ -67,6 +68,10 @@ const apoiadorController = {
                 whereClause['$FiliacaoPartidaria.PartidoFiliacao.Nome$'] = {
                     [Op.like]: `%${filtroPartido}%`
                 }
+            }
+
+            if(filtroCidade && filtroCidade != 'todas'){
+                whereClause['$EnderecoApoiador.CidadeEndereco.IdCidade$'] = filtroCidade;
             }
               
     
