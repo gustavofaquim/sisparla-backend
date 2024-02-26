@@ -15,7 +15,9 @@ const profissaoController = {
             console.log(`Erro ao buscar a lista de profissoes: ${error}`);
             res.status(500).json({msg: 'Erro ao buscar a lista de profissoes'});
         }
-    }
+    },
+
+    
 };
 
 export default profissaoController;

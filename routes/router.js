@@ -85,6 +85,9 @@ import despesaRouter from "./despesas.js";
 router.use("/", despesaRouter);
 
 
+// Filtros
+import filtroRouter from "./filtro.js";
+router.use("/", filtroRouter);
 
 
 // tTwilio

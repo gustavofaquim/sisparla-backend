@@ -1,6 +1,7 @@
 import cidadeModel from "../models/Cidade.js";
 import apoiadorModel from "../models/Apoiador.js";
 import enderecoModel from "../models/Endereco.js";
+import profissaoModel from "../models/Profissao.js";
 
 const cidadeController = {
 
@@ -58,46 +59,6 @@ const cidadeController = {
             res.status(500).json({msg: 'Erro ao buscar a cidade'})
         }
 
-    },
-
-    cidadesApoiadores: async (req, res) => {
-        try {
-            const apoiadores = await apoiadorModel.findAll({
-                include: [
-                    {
-                        model: enderecoModel,
-                        as: 'EnderecoApoiador',
-                        include: {
-                            model: cidadeModel,
-                            as: 'CidadeEndereco',
-                        },
-                    },
-                ],
-            });
-    
-            const cidadesUnicas = new Set();
-    
-            // Iterar sobre apoiadores e coletar cidades únicas
-            apoiadores.forEach((apoiador) => {
-                const enderecoApoiador = apoiador.EnderecoApoiador;
-                if (enderecoApoiador && enderecoApoiador.CidadeEndereco) {
-                    const cidade = enderecoApoiador.CidadeEndereco;
-                    const cidadeInfo = {
-                        IdCidade: cidade.IdCidade,
-                        Nome: cidade.Nome,
-                        Estado: cidade.Estado, 
-                    };
-                    cidadesUnicas.add(JSON.stringify(cidadeInfo));
-                }
-            });
-    
-            const cidadesArray = Array.from(cidadesUnicas).map((cidadeStr) => JSON.parse(cidadeStr));
-            res.status(200).json(cidadesArray);
-
-        } catch (error) {
-            console.log(`Erro ao buscar cidades de apoiadores: ${error}`);
-            res.status(500).json({ msg: 'Erro ao buscar cidades de apoiadores' });
-        }
     },
 
     createIfNotExists: async(city, IdEstado) => {
