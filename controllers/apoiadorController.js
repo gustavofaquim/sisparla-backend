@@ -869,12 +869,26 @@ const apoiadorController = {
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
 
-            res.json({msg: 'Appoiador deletado com sucesso'});
+            return res.json({msg: 'Appoiador deletado com sucesso'});
 
         } catch (error) {
             console.log(`Erro ao deletar apoiador: ${error}`);
-            res.status(500).json({msg: 'Erro ao deletar apoiador'});
+            return res.status(500).json({msg: 'Erro ao deletar apoiador'});
         }
+    },
+
+
+    count: async(req,res) => {
+        
+        try {
+            
+            const countApoiadores = await apoiadorModel.count();
+            return res.status(200).json(countApoiadores);
+
+        } catch (error) {
+            return res.status(500).json({msg: 'Não foi possível exibir a quantidade de apoiadores'});
+        }
+    
     },
 
     viewApoiadores: async(req,res) => {

@@ -1,4 +1,5 @@
 import express from 'express';
+import verificarToken from '../middlewares/verificarToken.js';
 
 const router = express.Router();
 
@@ -9,54 +10,54 @@ import credorController from '../controllers/credorController.js';
 
 router
     .route("/despesas")
-    .get((req,res) => despesaController.findAll(req,res));
+    .get(verificarToken,(req,res) => despesaController.findAll(req,res));
 
 router
     .route("/despesas/:id")
-    .get((req,res) => despesaController.findById(req,res));
+    .get(verificarToken,(req,res) => despesaController.findById(req,res));
 
 router
     .route("/despesa")
-    .post((req,res) => despesaController.create(req,res));
+    .post(verificarToken,(req,res) => despesaController.create(req,res));
 
 router
     .route("/despesa/:id")
-    .put((req,res) => despesaController.updateById(req,res));
+    .put(verificarToken,(req,res) => despesaController.updateById(req,res));
 
 router
     .route("/despesa/:id")
-    .delete((req,res) => despesaController.deleteByid(req,res));
+    .delete(verificarToken,(req,res) => despesaController.deleteByid(req,res));
 
 router
     .route("/tipos-despesas")
-    .get((req,res) => tipoDespesaController.findAll(req,res));
+    .get(verificarToken,(req,res) => tipoDespesaController.findAll(req,res));
 
 
 router
     .route("/origens-despesas")
-    .get((req,res) => origemDespesaController.findAll(req,res));
+    .get(verificarToken,(req,res) => origemDespesaController.findAll(req,res));
 
 
 router
     .route("/credores")
-    .get((req,res) => credorController.findAll(req,res));
+    .get(verificarToken,(req,res) => credorController.findAll(req,res));
 
 router
     .route("/credor")
-    .post((req,res) => credorController.create(req,res));
+    .post(verificarToken,(req,res) => credorController.create(req,res));
 
 router
     .route("/credor/:id")
-    .get((req,res) => credorController.findById(req,res));
+    .get(verificarToken,(req,res) => credorController.findById(req,res));
 
 
 router
     .route("/credor/:id")
-    .put((req,res) => credorController.updateById(req,res));
+    .put(verificarToken,(req,res) => credorController.updateById(req,res));
 
 router
     .route("/credor/:id")
-    .delete((req,res) => credorController.deleteByid(req,res));
+    .delete(verificarToken,(req,res) => credorController.deleteByid(req,res));
 
 
 

@@ -7,7 +7,6 @@ const router = express.Router();
 
 
 
-
 router
     .route("/apoiadores")
     .get(verificarToken, (req,res) => apoiadorController.findAll(req,res));
@@ -16,6 +15,10 @@ router
 router
     .route("/view-apoiadores")
     .get(verificarToken,(req,res) => apoiadorController.viewApoiadores(req,res));
+
+router
+    .route("/count-apoiadores")
+    .get(verificarToken, (req,res) => apoiadorController.count(req,res));
 
 
 router

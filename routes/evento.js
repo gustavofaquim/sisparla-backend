@@ -1,4 +1,5 @@
 import express from 'express';
+import verificarToken from '../middlewares/verificarToken.js';
 
 const router = express.Router();
 
@@ -6,28 +7,28 @@ import eventoController from '../controllers/eventoController.js';
 
 router
     .route("/eventos")
-    .get((req, res) => eventoController.findAll(req,res));
+    .get(verificarToken,(req, res) => eventoController.findAll(req,res));
 
 router 
     .route("/eventos/:id")
-    .get((req,res) => eventoController.findById(req,res));
+    .get(verificarToken,(req,res) => eventoController.findById(req,res));
 
 router 
     .route("/eventos-do-dia")
-    .get((req,res) => eventoController.findEventsDay(req,res));
+    .get(verificarToken,(req,res) => eventoController.findEventsDay(req,res));
 
 router 
     .route("/eventos")
-    .post((req,res) => eventoController.create(req,res));
+    .post(verificarToken,(req,res) => eventoController.create(req,res));
 
 
 router 
     .route("/eventos/:id")
-    .put((req,res) => eventoController.updateById(req,res));
+    .put(verificarToken,(req,res) => eventoController.updateById(req,res));
 
 router 
     .route("/evento/:id")
-    .delete((req,res) => eventoController.deleteById(req,res));
+    .delete(verificarToken,(req,res) => eventoController.deleteById(req,res));
 
     
 export default router;

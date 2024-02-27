@@ -65,6 +65,16 @@ const demandaController = {
         }
     },
 
+    countDemandas: async(req,res) => {
+        try {
+            const countDemandas = await demandaModel.count();
+
+            return res.status(200).json(countDemandas);
+        } catch (error) {
+            return res.status(500).json({msg: 'Erro ao exibir a quantidade de demandas.'});
+        }
+    },
+
     userDemands: async(req,res) => {
 
         try {

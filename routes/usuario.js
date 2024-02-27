@@ -1,4 +1,5 @@
 import express from 'express';
+import verificarToken from '../middlewares/verificarToken.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router
 
 router
     .route('/lista-usuarios')
-    .get((req,res) => usuarioController.findAssets(req,res));
+    .get(verificarToken,(req,res) => usuarioController.findAssets(req,res));
 
 
 export default router;
