@@ -52,12 +52,14 @@ const demandaController = {
                         foreignKey: 'Responsavel'
                     }
                 ],
-                where: whereClause
+                where: whereClause,
+                order: [
+                    // Adicione as condições de ordenação aqui
+                    ['Data', 'DESC'], // Exemplo de ordenação por data de criação em ordem decrescente
+                ]
             });
             
             res.json(demandas);
-
-
 
         } catch (error) {
             console.log(`Erro ao buscar a lista de demandas ${error}`);

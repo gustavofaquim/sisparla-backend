@@ -22,7 +22,7 @@ const eventoController = {
             }
 
 
-            const eventos = await eventoModel.findAll({ where: whereClause});
+            const eventos = await eventoModel.findAll({ where: whereClause,  order: [['DataHorario', 'DESC'], ]});
             return res.json(eventos);
 
         } catch (error) {

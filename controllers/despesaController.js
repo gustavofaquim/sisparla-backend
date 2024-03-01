@@ -45,7 +45,7 @@ const DespesaController = {
                         as: 'TipoDespesa',
                         foreignKey: 'Tipo'
                     }
-                ], where: whereClause
+                ], where: whereClause, order: [['Data', 'DESC'], ]
             });
             
             res.json(despesas);
