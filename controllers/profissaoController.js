@@ -7,7 +7,7 @@ const profissaoController = {
 
         try {
             
-            const profissao = await profissaoModel.findAll();
+            const profissao = await profissaoModel.findAll({order: [['Nome', 'ASC'], ]});
 
             res.json(profissao);
 
