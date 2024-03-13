@@ -1,0 +1,9 @@
+###
+POST http://localhost:3000/api/enviar
+Content-Type: application/json
+
+{   
+    "msg": "Teste de mensagem a ser enviada pelo novo sistema de mensagens",
+    "telefones": ["5562996828796"],
+    "media": "https://uploaddeimagens.com.br/images/004/726/327/full/anuncio_GZAPPY_IMAGENS.jpg?1706576404"
+}

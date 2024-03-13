@@ -3,6 +3,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import twilio from 'twilio';
+import axios from 'axios';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -13,6 +14,55 @@ import apoiadorController from './apoiadorController.js';
 
 
 const mensagemController = {
+
+    enviar: async(req,res) => {
+        try {
+            
+            
+            const msg = req.body?.msg;
+            const telefones = req.body?.telefones;
+            const media = req.body?.media;
+            
+            if(!telefones){
+                return res.status(500).json('Não foram informados telefones para o envio de mensagens.');
+            }
+            if(!msg){
+                return res.status(500).json('Não foram informados mensagens para serem enviadas.');
+            }
+
+
+            const user_token_id = process.env.USER_TOKEN_ID;
+            const instance_id = process.env.INSTANCE_ID;
+            const instance_token = process.env.instance_token
+            const api_url = "https://api.gzappy.com/v1/message/send-media";
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'user_token_id': user_token_id
+            }
+
+            const body = {
+                instance_id: instance_id,
+                instance_token: instance_token,
+                message: msg,
+                phone: telefones,
+                mediaUrl: media,
+            }
+
+           const response = await fetch(api_url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            return res.status(200).json(`Mensagem enviada com sucesso para ${telefones.length} contatos`)
+
+        } catch (error) {
+            console.error(`Houve um erro ao enviar a mensagem: ${error}`);
+            return res.status(500).json('Houve um erro ao enviar a mensagem');
+        }
+
+    },
 
     send: async (req, res) => {
         try {
