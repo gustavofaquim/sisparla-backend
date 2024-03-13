@@ -1,5 +1,5 @@
 <h1 align="center">SisParla</h1>
-<h3 align="center">Sistema de Apoio à Atividade Parlamentar</h3>
+<h2 align="center">Sistema de Apoio à Atividade Parlamentar</h2>
 
 
 ## 📋 Resumo do Projeto
@@ -10,7 +10,7 @@ O SisParla é um software de código aberto desenvolvido para oferecer apoio com
 ## 🛠️ Tecnologias Utilizadas  
 
 - ``JavaScript``
-- ``Node JS``
+- ``NodeJS``
 - ``React``
 - ``MySQL``
 
