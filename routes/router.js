@@ -90,6 +90,9 @@ router.use("/", despesaRouter);
 import filtroRouter from "./filtro.js";
 router.use("/", filtroRouter);
 
+import grupoRouter from "./grupo.js";
+router.use("/", grupoRouter);
+
 
 // tTwilio
 //import twilioRouter from "./twilio.js";
