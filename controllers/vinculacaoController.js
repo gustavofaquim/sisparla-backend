@@ -67,8 +67,6 @@ const vinculacaoController = {
     update: async(dadosVinculacao, idVinculacao) => {
 
         try {
-
-            console.log(dadosVinculacao.Entidade, idVinculacao);
             
             const vinculacaoAtualizada = await vinculacaoModel.update(
                 {
@@ -82,9 +80,6 @@ const vinculacaoController = {
                     }
                 }
             )
-
-            console.log('Vinculacao Atualizada');
-            console.log(vinculacaoAtualizada);
 
             return vinculacaoAtualizada;
 

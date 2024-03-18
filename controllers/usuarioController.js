@@ -2,6 +2,7 @@ import usuarioModel from "../models/Usuario.js";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Op } from 'sequelize';
 
 import revokedTokens from "../middlewares/revokedTokens.js";
 
@@ -83,10 +84,17 @@ const usuarioController = {
 
     findAssets: async(req,res) => {
         try {
-            
+
+            const busca = req?.query?.inputValue
+        
             const usuarios = await usuarioModel.findAll({
-                where: {Status: 1}
-            })
+                where: {
+                  Status: 1,
+                  Nome: {
+                    [Op.like]: `%${busca}%` // Usando Op.like para comparar substrings
+                  }
+                }
+            });
 
             res.json(usuarios);
 

@@ -2,6 +2,8 @@ import { DataTypes } from "sequelize";
 
 import sequelize from "../db/conn.js";
 
+import Usuario from "../models/Usuario.js";
+
 
 const Grupo = sequelize.define('Gruop', {
 
@@ -15,10 +17,21 @@ const Grupo = sequelize.define('Gruop', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    Responsavel:{
+        type: DataTypes.INTEGER,
+        references:{
+            model: Usuario,
+            key: 'IdUsuario'
+        }
+    },
 },{ 
     tableName: 'GRUPO',
     timestamps: false,
     }
 );
+Grupo.belongsTo(Usuario, {
+    foreignKey: 'Responsavel',
+    as: 'ResponsavelGrupo'
+});
 
 export default Grupo;

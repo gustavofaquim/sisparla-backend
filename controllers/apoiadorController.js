@@ -758,7 +758,6 @@ const apoiadorController = {
 
             }
 
-             
 
             // Verifica se existe número de telefone
             if(telefone != null && telefone.length > 6){

@@ -9,4 +9,12 @@ router
     .route("/grupos")
     .get(verificarToken,(req,res) => grupoController.findAll(req,res));
 
+router
+    .route("/grupo")
+    .post(verificarToken,(req,res) => grupoController.create(req,res));
+
+router
+    .route("/grupo/:id")
+    .get(verificarToken,(req,res) => grupoController.findById(req,res));
+
 export default router;
