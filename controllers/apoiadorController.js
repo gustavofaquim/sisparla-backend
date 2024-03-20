@@ -25,6 +25,7 @@ import DemandaModel from "../models/Demanda.js";
 
 
 import verificarToken from '../middlewares/verificarToken.js';
+import Grupo from '../models/Grupo.js';
 
 
 const apoiadorController = {
@@ -108,6 +109,12 @@ const apoiadorController = {
                         model: SituacaoCadastro,
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
+
+                    },
+                    {
+                        model: Grupo,
+                        as: 'GrupoApoiador',
+                        foreignKey: 'Grupo',
 
                     },
                     {
@@ -199,6 +206,12 @@ const apoiadorController = {
                         model: classificacaoModel,
                         as: 'ClassificacaoApoiador',
                         foreignKey: 'Classificacao',
+                    },
+                    {
+                        model: Grupo,
+                        as: 'GrupoApoiador',
+                        foreignKey: 'Grupo',
+
                     },
                     {
                         model: SituacaoCadastro,
@@ -336,6 +349,12 @@ const apoiadorController = {
                             foreignKey: 'Entidade',
                         }
                      },
+                     {
+                        model: Grupo,
+                        as: 'GrupoApoiador',
+                        foreignKey: 'Grupo',
+
+                    },
                     {
                         model: DemandaModel,
                         as: 'Demanda',
@@ -350,7 +369,8 @@ const apoiadorController = {
 
             
             const apoiadorD = apoiadorController.destructuringApoiador(apoiador);
-           
+            
+          
            // res.json(apoiador); //-> objeto original
             res.json(apoiadorD); // -> objeto desestruturado...
 
@@ -374,6 +394,8 @@ const apoiadorController = {
             const religiao = apoiador?.Religiao;
             const email = apoiador?.Email;
             const informacaoAdicional = apoiador?.InformacaoAdicional;
+            const grupoId = apoiador?.GrupoApoiador?.IdGrupo;
+            const grupoNome = apoiador?.GrupoApoiador?.Nome;
 
             
             const idClassificacao = apoiador?.Classificacao;
@@ -439,7 +461,7 @@ const apoiadorController = {
                 informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas
+                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, grupoId, grupoNome
             };
 
             return apoiadorD;
@@ -704,7 +726,7 @@ const apoiadorController = {
                 nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
-                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF,
+                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo,
                 informacoesAdicionais 
             } = req.body
 
@@ -788,6 +810,7 @@ const apoiadorController = {
                 Situacao: sit.idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
+                Grupo: grupo
             };
 
            

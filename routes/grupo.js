@@ -17,4 +17,12 @@ router
     .route("/grupo/:id")
     .get(verificarToken,(req,res) => grupoController.findById(req,res));
 
+router
+    .route("/grupo/:id")
+    .put(verificarToken,(req,res) => grupoController.updateById(req,res));
+
+router
+    .route("/grupo/:id")
+    .delete(verificarToken,(req,res) => grupoController.deleteByid(req,res));
+
 export default router;
