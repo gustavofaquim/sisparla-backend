@@ -1,6 +1,7 @@
 
 import jwt from "jsonwebtoken";
 import revokedTokens from "./revokedTokens.js";
+import verificarPermissao from "./verificarPermissao.js";
 
 const verificarToken = (req, res, next) => {
 
@@ -15,7 +16,6 @@ const verificarToken = (req, res, next) => {
 
     // Verifica se o token foi revogado
     if (revokedTokens.has(token)) {
-      //console.log('Toke revogado');
       return res.status(401).json({ msg: 'Token revogado' });
     }
 
@@ -42,4 +42,4 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-export default verificarToken;
+export { verificarToken, verificarPermissao };

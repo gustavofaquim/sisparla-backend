@@ -35,9 +35,9 @@ const usuarioController = {
     find: async(req,res) => {
 
         const {nomeUsuario, senha} = req.body
-      
 
         try {
+
 
             const usuario = await usuarioModel.findOne({
                 where: {
@@ -49,6 +49,7 @@ const usuarioController = {
                 res.status(401).json({msg: 'Nome de Usuário inválido'});
                 return;
             }
+            
 
             const password = await bcrypt.compare(senha, usuario.Senha);
 
@@ -69,7 +70,8 @@ const usuarioController = {
                     sistema: usuario.Sistema 
                 }, secret , //{ expiresIn: '1h' }
             );
-          
+
+
             
             //res.json({ token });
             res.setHeader('Authorization', `Bearer ${token}`);

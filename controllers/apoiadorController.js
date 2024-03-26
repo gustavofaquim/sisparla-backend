@@ -24,7 +24,7 @@ import vinculacaoController from './vinculacaoController.js';
 import DemandaModel from "../models/Demanda.js";
 
 
-import verificarToken from '../middlewares/verificarToken.js';
+import {verificarToken} from '../middlewares/verificarToken.js';
 import Grupo from '../models/Grupo.js';
 
 

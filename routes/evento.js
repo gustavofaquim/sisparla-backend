@@ -1,13 +1,12 @@
 import express from 'express';
-import verificarToken from '../middlewares/verificarToken.js';
-
+import {verificarToken, verificarPermissao} from '../middlewares/verificarToken.js';
 const router = express.Router();
 
 import eventoController from '../controllers/eventoController.js';
 
 router
     .route("/eventos")
-    .get(verificarToken,(req, res) => eventoController.findAll(req,res));
+    .get(verificarToken, (req, res) => eventoController.findAll(req,res));
 
 router 
     .route("/eventos/:id")

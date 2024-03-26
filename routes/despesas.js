@@ -1,5 +1,5 @@
 import express from 'express';
-import verificarToken from '../middlewares/verificarToken.js';
+import {verificarToken, verificarPermissao} from '../middlewares/verificarToken.js';
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ import credorController from '../controllers/credorController.js';
 
 router
     .route("/despesas")
-    .get(verificarToken,(req,res) => despesaController.findAll(req,res));
+    .get(verificarToken, verificarPermissao('1'),(req,res) => despesaController.findAll(req,res));
 
 router
     .route("/despesas/:id")
