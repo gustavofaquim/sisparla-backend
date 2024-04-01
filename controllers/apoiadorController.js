@@ -22,6 +22,7 @@ import entidadeController from "./entidadeController.js";
 import filiacaoController from './filiacaoController.js';
 import vinculacaoController from './vinculacaoController.js';
 import DemandaModel from "../models/Demanda.js";
+import Usuario from '../models/Usuario.js';
 
 
 import {verificarToken} from '../middlewares/verificarToken.js';
@@ -110,6 +111,11 @@ const apoiadorController = {
                         as: 'SituacaoCadastroApoiador',
                         foreignKey: 'Situacao',
 
+                    },
+                    {
+                        model: Usuario,
+                        as: 'ResponsavelCadastro',
+                        foreignKey: 'Responsavel'
                     },
                     {
                         model: Grupo,
@@ -206,6 +212,11 @@ const apoiadorController = {
                         model: classificacaoModel,
                         as: 'ClassificacaoApoiador',
                         foreignKey: 'Classificacao',
+                    },
+                    {
+                        model: Usuario,
+                        as: 'ResponsavelCadastro',
+                        foreignKey: 'Responsavel'
                     },
                     {
                         model: Grupo,
@@ -350,6 +361,11 @@ const apoiadorController = {
                         }
                      },
                      {
+                        model: Usuario,
+                        as: 'ResponsavelCadastro',
+                        foreignKey: 'Responsavel'
+                     },
+                     {
                         model: Grupo,
                         as: 'GrupoApoiador',
                         foreignKey: 'Grupo',
@@ -396,6 +412,8 @@ const apoiadorController = {
             const informacaoAdicional = apoiador?.InformacaoAdicional;
             const grupoId = apoiador?.GrupoApoiador?.IdGrupo;
             const grupoNome = apoiador?.GrupoApoiador?.Nome;
+            const responsavelId = apoiador?.ResponsavelCadastro?.idUsuario;
+            const responsavelNome = apoiador?.ResponsavelCadastro?.Nome;
 
             
             const idClassificacao = apoiador?.Classificacao;
@@ -455,13 +473,13 @@ const apoiadorController = {
             apoiador.Demanda?.forEach((e, index) => {
                 demandas.push({ 'demandaId': e.IdDemanda, 'assunto': e.Assunto });
             });
-            
+
         
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, profissao, religiao, email, 
                 informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, grupoId, grupoNome
+                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, grupoId, grupoNome, responsavelId, responsavelNome
             };
 
             return apoiadorD;
@@ -726,7 +744,7 @@ const apoiadorController = {
                 nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
-                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo,
+                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome,
                 informacoesAdicionais 
             } = req.body
 
@@ -735,7 +753,6 @@ const apoiadorController = {
             const cep = cepSemMascara;
             const telefone = telefoneSemMascara;
 
-            const user = req.usuario;
 
             let dadosEntidade;
             let filiacao;
@@ -810,6 +827,7 @@ const apoiadorController = {
                 Situacao: sit.idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
+                Responsavel: responsavelId,
                 Grupo: grupo
             };
 

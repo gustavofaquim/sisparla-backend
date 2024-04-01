@@ -64,6 +64,7 @@ const usuarioController = {
             // Gerar token JWT
             const token = jwt.sign(
                 { 
+                    id: usuario.IdUsuario,
                     usuario: usuario.NomeUsuario,
                     nome: usuario.Nome,  
                     regra: usuario.RegraAcesso,

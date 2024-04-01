@@ -12,6 +12,7 @@ import Vinculacao from "./Vinculacao.js";
 import FiliacaoPartidaria from "./FiliacaoPartidaria.js";
 import Demanda from "./Demanda.js";
 import Grupo from './Grupo.js';
+import Usuario from "./Usuario.js";
 
 const Apoiador = sequelize.define('Apoiador', {
 
@@ -89,6 +90,13 @@ const Apoiador = sequelize.define('Apoiador', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    Responsavel: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Usuario,
+            key: 'IdUsuario'
+        }
+    },
     Grupo: {
         type: DataTypes.INTEGER,
         references: {
@@ -134,6 +142,12 @@ Apoiador.belongsTo(Classificacao, {
     foreignKey: 'Classificacao',
     as: 'ClassificacaoApoiador'
 });
+
+Apoiador.belongsTo(Usuario, {
+    foreignKey: 'Responsavel',
+    as: 'ResponsavelCadastro'
+});
+
 
 Apoiador.belongsTo(Grupo, {
     foreignKey: 'Grupo',
