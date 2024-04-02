@@ -27,6 +27,7 @@ import Usuario from '../models/Usuario.js';
 
 import {verificarToken} from '../middlewares/verificarToken.js';
 import Grupo from '../models/Grupo.js';
+import OrigemCadastro from '../models/OrigemCadastro.js';
 
 
 const apoiadorController = {
@@ -122,6 +123,11 @@ const apoiadorController = {
                         as: 'GrupoApoiador',
                         foreignKey: 'Grupo',
 
+                    },
+                    {
+                        model: OrigemCadastro,
+                        as: 'OrigemApoiador',
+                        foreignKey: 'Origem'
                     },
                     {
                         model: FiliacaoModel,
@@ -372,6 +378,11 @@ const apoiadorController = {
 
                     },
                     {
+                        model: OrigemCadastro,
+                        as: 'OrigemApoiador',
+                        foreignKey: 'Origem'
+                    },
+                    {
                         model: DemandaModel,
                         as: 'Demanda',
                         foreignKey: 'Apoiador'
@@ -414,6 +425,9 @@ const apoiadorController = {
             const grupoNome = apoiador?.GrupoApoiador?.Nome;
             const responsavelId = apoiador?.ResponsavelCadastro?.idUsuario;
             const responsavelNome = apoiador?.ResponsavelCadastro?.Nome;
+            const origemId = apoiador?.OrigemApoiador?.IdOrigem;
+            const origemNome = apoiador?.OrigemApoiador?.Descricao;
+
 
             
             const idClassificacao = apoiador?.Classificacao;
@@ -479,7 +493,8 @@ const apoiadorController = {
                 informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
-                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, grupoId, grupoNome, responsavelId, responsavelNome
+                partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, 
+                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome
             };
 
             return apoiadorD;
@@ -516,7 +531,7 @@ const apoiadorController = {
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
-            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo} = req.body;
+            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId} = req.body;
 
            
             //let dadosEntidade;
@@ -607,7 +622,9 @@ const apoiadorController = {
                 Classificacao: idClassificacao,
                 Situacao: idSituacao,
                 Filiacao: filiacao?.IdFiliacao,
-                InformacaoAdicional: informacaoAdicional
+                InformacaoAdicional: informacaoAdicional,
+                Grupo: grupo,
+                Origem: origemId
             };
 
             
@@ -744,7 +761,7 @@ const apoiadorController = {
                 nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
-                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome,
+                partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome, origem,
                 informacoesAdicionais 
             } = req.body
 
@@ -828,7 +845,8 @@ const apoiadorController = {
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
                 Responsavel: responsavelId,
-                Grupo: grupo
+                Grupo: grupo,
+                Origem: origem
             };
 
            

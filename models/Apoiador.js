@@ -13,6 +13,7 @@ import FiliacaoPartidaria from "./FiliacaoPartidaria.js";
 import Demanda from "./Demanda.js";
 import Grupo from './Grupo.js';
 import Usuario from "./Usuario.js";
+import OrigemCadastro from "./OrigemCadastro.js";
 
 const Apoiador = sequelize.define('Apoiador', {
 
@@ -103,6 +104,13 @@ const Apoiador = sequelize.define('Apoiador', {
             model: Grupo,
             key: 'IdGrupo'
         }
+    },
+    Origem: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: OrigemCadastro,
+            key: 'IdOrigem'
+        } 
     } 
 
 }, { 
@@ -159,6 +167,12 @@ Apoiador.belongsTo(SituacaoCadastro, {
     foreignKey: 'Situacao',
     as: 'SituacaoCadastroApoiador'
 });
+
+Apoiador.belongsTo(OrigemCadastro, {
+    foreignKey: 'Origem',
+    as: 'OrigemApoiador'
+});
+
 
 
 Apoiador.hasMany(Demanda, {
