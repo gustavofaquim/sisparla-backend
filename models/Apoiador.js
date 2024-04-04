@@ -111,7 +111,12 @@ const Apoiador = sequelize.define('Apoiador', {
             model: OrigemCadastro,
             key: 'IdOrigem'
         } 
-    } 
+    },
+    DataInsercao: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
+ 
 
 }, { 
     tableName: 'APOIADOR',
@@ -129,10 +134,6 @@ Apoiador.belongsTo(Endereco, {
     as: 'EnderecoApoiador'
 });
 
-Apoiador.belongsTo(Telefone, {
-    foreignKey: 'IdApoiador',
-    as: 'TelefoneApoiador'
-});
 
 Apoiador.hasMany(Vinculacao, {
     foreignKey: 'Apoiador',
@@ -178,6 +179,12 @@ Apoiador.belongsTo(OrigemCadastro, {
 Apoiador.hasMany(Demanda, {
     foreignKey: 'Apoiador',
     as: 'Demanda'
+});
+
+
+Apoiador.hasMany(Telefone, {
+    foreignKey: 'Apoiador',
+    as: 'TelefoneApoiador'
 });
 
 /* Apoiador.belongsTo(Vinculacao, {

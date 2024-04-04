@@ -168,27 +168,16 @@ const apoiadorController = {
             const startIndex = parseInt(req.query.startIndex) || (page - 1) * itemsPerPage; // Índice de início, padrão é calculado com base na página atual
             const endIndex = parseInt(req.query.endIndex) || startIndex + itemsPerPage; // Índice final, padrão é calculado com base no índice de início e itens por página
 
-            console.log(startIndex);
-            console.log(endIndex);
-
             const whereClause = {};
 
 
             if (termoBusca) {
                 whereClause[Op.or] = [
-                    { Nome: { [Op.like]: `%${termoBusca}%` } },
-                    { Apelido: { [Op.like]: `%${termoBusca}%` } },
+                    { Nome: { [Op.like]: `${termoBusca}%` } },
+                    { Apelido: { [Op.like]: `${termoBusca}%` } },
                     { Email: { [Op.like]: `%${termoBusca}%` } },
-                    {
-                        '$EnderecoApoiador.CidadeEndereco.Nome$': {
-                            [Op.like]: `%${termoBusca}%`,
-                        },
-                    },
-                    {
-                        '$SituacaoCadastroApoiador.Descricao$':{
-                            [Op.like]: `%${termoBusca}%`,
-                        }
-                    }
+                    
+                   
                 ]
             }
 
@@ -274,7 +263,7 @@ const apoiadorController = {
                 offset: startIndex, // Ignorar os resultados anteriores ao índice de início
             });
 
-           
+            
             res.json(apoiadores);
         
 
@@ -565,9 +554,9 @@ const apoiadorController = {
             const idSituacao = apoiador?.Situacao;
             
             const idTelefone = apoiador?.TelefoneApoiador?.idTelefone;
-            const numeroTelefone = apoiador?.TelefoneApoiador?.Numero;
-            const numeroWhatsapp = apoiador?.TelefoneApoiador?.WhatsApp;
-            const numeroAntigo =  apoiador?.TelefoneApoiador?.Numero;
+            const numeroTelefone = apoiador?.TelefoneApoiador?.[0]?.Numero;
+            const numeroWhatsapp = apoiador?.TelefoneApoiador?.[0]?.WhatsApp;
+            const numeroAntigo =  apoiador?.TelefoneApoiador?.[0]?.Numero;
             
             
             const cep = apoiador?.EnderecoApoiador?.CEP;
@@ -896,11 +885,13 @@ const apoiadorController = {
                 informacoesAdicionais 
             } = req.body
 
+           
 
             const cpf = cpfSemMascara;
             const cep = cepSemMascara;
             const telefone = telefoneSemMascara;
 
+    
 
             let dadosEntidade;
             let filiacao;
@@ -957,11 +948,12 @@ const apoiadorController = {
             }
 
             
-            
+
+        
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
         
-            
+           
             const dadosApoiador = {
                 Nome: nome,
                 CPF: cpf || null,
@@ -977,8 +969,10 @@ const apoiadorController = {
                 InformacaoAdicional: informacoesAdicionais,
                 Responsavel: responsavelId,
                 Grupo: grupo,
-                Origem: origem
+                Origem: origem,
             };
+
+          
 
            
             const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
@@ -994,13 +988,15 @@ const apoiadorController = {
 
     criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosTelefone) => {
         
-       
+  
         // Inicia a transação
         const t = await sequelize.transaction();
         
         try {
             // Cria o Apoiador
            
+            
+
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
 
 
@@ -1021,11 +1017,14 @@ const apoiadorController = {
             }*/
 
             if(dadosTelefone){
-                await TelefoneModel.create({
+                const telefoneCriado = await TelefoneModel.create({
                     Apoiador: novoApoiador.IdApoiador,
                     ...dadosTelefone
                 },{ transaction: t })
+
             }
+
+            
             
     
             // Confirma a transação

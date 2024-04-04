@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequlize from "../db/conn.js";
+import { Sequelize, DataTypes } from "sequelize";
 
-const Telefone = sequlize.define('Telefone', {
+let Apoiador;
 
+const Telefone = sequelize.define('Telefone', {
     idTelefone:{
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -16,7 +16,12 @@ const Telefone = sequlize.define('Telefone', {
     Apoiador:{
         type: DataTypes.INTEGER,
         references:{
-            model: 'Apoiador',
+            get() {
+                return Apoiador === undefined ? undefined : Apoiador.IdApoiador;
+            },
+            model() {
+                return Apoiador === undefined ? undefined : Apoiador;
+            },
             key: 'IdApoiador'
         }
     },
@@ -34,3 +39,11 @@ const Telefone = sequlize.define('Telefone', {
 });
 
 export default Telefone;
+
+import sequelize from "../db/conn.js";
+
+// Importação tardia do modelo Apoiador
+(async () => {
+    const module = await import("./Apoiador.js");
+    Apoiador = module.default;
+})();

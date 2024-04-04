@@ -1,6 +1,16 @@
 ###
 GET http://localhost:3000/api/apoiadores
 
+###
+GET http://62.72.63.93:3000/api/cidade
+
+###
+POST https://api.adrianaaccrosi.sisparla.com.br/api/logar
+Content-Type: application/json
+{
+    "nomeUsuario":"gustavofaquim",
+    "senha": "sistema@123"
+}
 
 ###
 GET http://localhost:3000/api/apoiadores/5
