@@ -11,6 +11,10 @@ router
     .route("/apoiadores")
     .get(verificarToken, (req,res) => apoiadorController.findAll(req,res));
 
+router
+    .route("/apoiadores-total")
+    .get(verificarToken, (req,res) => apoiadorController.countFindAll(req,res));
+
 
 router
     .route("/view-apoiadores")

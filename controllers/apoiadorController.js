@@ -33,6 +33,125 @@ import OrigemCadastro from '../models/OrigemCadastro.js';
 const apoiadorController = {
 
 
+
+    countFindAll: async(req,res) => {
+        try {
+            
+            const termoBusca = req.query.termoBusca;
+            const filtroProfissao = req.query.profissao;
+            const filtroPartido = req.query.partido;
+            const filtroCidade = req.query.cidade;
+
+            const whereClause = {};
+
+
+            if (termoBusca) {
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } },
+                    { Apelido: { [Op.like]: `%${termoBusca}%` } },
+                    { Email: { [Op.like]: `%${termoBusca}%` } },
+                    {
+                        '$EnderecoApoiador.CidadeEndereco.Nome$': {
+                            [Op.like]: `%${termoBusca}%`,
+                        },
+                    },
+                    {
+                        '$SituacaoCadastroApoiador.Descricao$':{
+                            [Op.like]: `%${termoBusca}%`,
+                        }
+                    }
+                ]
+            }
+
+            if (filtroProfissao && filtroProfissao != 'todas') {
+                whereClause['$Profissao$'] = filtroProfissao
+            }
+
+            if(filtroPartido && filtroPartido != 'todos'){
+                whereClause['$FiliacaoPartidaria.PartidoFiliacao.Nome$'] = {
+                    [Op.like]: `%${filtroPartido}%`
+                }
+            }
+
+            if(filtroCidade && filtroCidade != 'todas'){
+                whereClause['$EnderecoApoiador.CidadeEndereco.IdCidade$'] = filtroCidade;
+            }
+              
+    
+           
+            const totalApoiadores = await apoiadorModel.count({
+                include: [
+                    {
+                        model: enderecoModel,
+                        as: 'EnderecoApoiador',
+                        foreignKey: 'Endereco',
+                        include:{
+                            model: cidadeModel,
+                            as: 'CidadeEndereco',
+                            foreignKey: 'Cidade',
+                        }
+                    },
+                    {
+                        model: TelefoneModel,
+                        as: 'TelefoneApoiador',
+                        foreignKey: 'IdApoiador'
+                     }, 
+                    {
+                        model: classificacaoModel,
+                        as: 'ClassificacaoApoiador',
+                        foreignKey: 'Classificacao',
+
+                    },
+                    {
+                        model: profissaoModel,
+                        as: 'ProfissaoApoiador',
+                        foreignKey: 'Profissao',
+                    },
+                    {
+                        model: SituacaoCadastro,
+                        as: 'SituacaoCadastroApoiador',
+                        foreignKey: 'Situacao',
+
+                    },
+                    {
+                        model: Usuario,
+                        as: 'ResponsavelCadastro',
+                        foreignKey: 'Responsavel'
+                    },
+                    {
+                        model: Grupo,
+                        as: 'GrupoApoiador',
+                        foreignKey: 'Grupo',
+
+                    },
+                    {
+                        model: OrigemCadastro,
+                        as: 'OrigemApoiador',
+                        foreignKey: 'Origem'
+                    },
+                    {
+                        model: FiliacaoModel,
+                        as: 'FiliacaoPartidaria',
+                        foreignKey: 'Filiacao',
+                        include:{
+                            model: PartidoModel,
+                            as: 'PartidoFiliacao',
+                            foreignKey: 'Partido',
+                        }
+                    }
+                ],
+                where: whereClause
+            });
+
+           
+            return res.json(totalApoiadores);
+        
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de dados: ${error}`);
+        }
+    },
+
     findAll: async(req,res) => {
       
         try {
@@ -41,6 +160,16 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
             const filtroCidade = req.query.cidade;
+
+
+            const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
+            const itemsPerPage = parseInt(req.query.itemsPerPage) || 30; // Itens por página, padrão é 30
+    
+            const startIndex = parseInt(req.query.startIndex) || (page - 1) * itemsPerPage; // Índice de início, padrão é calculado com base na página atual
+            const endIndex = parseInt(req.query.endIndex) || startIndex + itemsPerPage; // Índice final, padrão é calculado com base no índice de início e itens por página
+
+            console.log(startIndex);
+            console.log(endIndex);
 
             const whereClause = {};
 
@@ -140,7 +269,9 @@ const apoiadorController = {
                         }
                     }
                 ],
-                where: whereClause
+                where: whereClause,
+                limit: endIndex - startIndex, // Limitar o número de resultados com base no índice de início e fim
+                offset: startIndex, // Ignorar os resultados anteriores ao índice de início
             });
 
            
