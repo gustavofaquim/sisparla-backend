@@ -2,6 +2,7 @@ import cidadeModel from "../models/Cidade.js";
 import apoiadorModel from "../models/Apoiador.js";
 import enderecoModel from "../models/Endereco.js";
 import profissaoModel from "../models/Profissao.js";
+import SituacaoCadastro from "../models/SituacaoCadastro.js";
 
 const filtrosController = {
 
@@ -22,16 +23,24 @@ const filtrosController = {
                         as: 'ProfissaoApoiador',
                         foreignKey: 'Profissao',
                     },
+                    {
+                        model: SituacaoCadastro,
+                        as: 'SituacaoCadastroApoiador',
+                        foreignKey: 'Situacao',
+
+                    },
                 ],
             });
-    
+
             const cidadesUnicas = new Set();
             const profissoesUnicas = new Set();
+            const statusUnicos = new Set();
     
             // Iterar sobre apoiadores e coletar cidades e profissões únicas
             apoiadores.forEach((apoiador) => {
                 const enderecoApoiador = apoiador.EnderecoApoiador;
                 const profissaoApoiador = apoiador.ProfissaoApoiador;
+                const situacaoApoiador = apoiador.SituacaoCadastroApoiador;
     
                 if (enderecoApoiador && enderecoApoiador.CidadeEndereco) {
                     const cidade = enderecoApoiador.CidadeEndereco;
@@ -51,16 +60,26 @@ const filtrosController = {
                     };
                     profissoesUnicas.add(JSON.stringify(profissaoInfo));
                 }
+
+                if(situacaoApoiador){
+                   
+                    const statusInfo = {
+                        IdSituacao: situacaoApoiador.idSituacao,
+                        Descricao: situacaoApoiador.Descricao
+                    };
+                    statusUnicos.add(JSON.stringify(statusInfo));
+                }
             });
     
             const cidadesArray = Array.from(cidadesUnicas).map((cidadeStr) => JSON.parse(cidadeStr));
             const profissoesArray = Array.from(profissoesUnicas).map((profissaoStr) => JSON.parse(profissaoStr));
+            const situacoesArray = Array.from(statusUnicos).map((situacoesStr) => JSON.parse(situacoesStr));
     
-            res.json({ cidades: cidadesArray, profissoes: profissoesArray });
+            res.json({ cidades: cidadesArray, profissoes: profissoesArray, situacoes: situacoesArray});
             
         } catch (error) {
-            console.log(`Erro ao buscar cidades e profissões de apoiadores: ${error}`);
-            res.status(500).json({ msg: 'Erro ao buscar cidades e profissões de apoiadores' });
+            console.log(`Erro ao buscar cidades, profissões e status de apoiadores: ${error}`);
+            res.status(500).json({ msg: '`Erro ao buscar cidades, profissões e status de apoiadores' });
         }
     },
 }

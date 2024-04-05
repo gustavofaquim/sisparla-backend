@@ -160,6 +160,7 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
             const filtroCidade = req.query.cidade;
+            const filtroSituacao = req.query.situacao;
 
 
             const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
@@ -168,16 +169,38 @@ const apoiadorController = {
             const startIndex = parseInt(req.query.startIndex) || (page - 1) * itemsPerPage; // Índice de início, padrão é calculado com base na página atual
             const endIndex = parseInt(req.query.endIndex) || startIndex + itemsPerPage; // Índice final, padrão é calculado com base no índice de início e itens por página
 
+            
             const whereClause = {};
 
 
             if (termoBusca) {
                 whereClause[Op.or] = [
-                    { Nome: { [Op.like]: `${termoBusca}%` } },
-                    { Apelido: { [Op.like]: `${termoBusca}%` } },
+                    { Nome: { [Op.like]: `%${termoBusca}%` } },
+                    { Apelido: { [Op.like]: `%${termoBusca}%` } },
                     { Email: { [Op.like]: `%${termoBusca}%` } },
                     
-                   
+                    // Busca textual por cidade
+                    /*sequelize.literal(`(
+                        SELECT
+                            1
+                        FROM
+                            ENDERECO AS EnderecoApoiador
+                            INNER JOIN CIDADE AS CidadeEndereco ON EnderecoApoiador.Cidade = CidadeEndereco.IdCidade
+                        WHERE
+                            CidadeEndereco.Nome LIKE '%${termoBusca}%'
+                            AND EnderecoApoiador.idEndereco = Apoiador.Endereco
+                    ) IS NOT NULL`)*/
+                    
+                    /*{
+                        '$EnderecoApoiador.CidadeEndereco.Nome$': {
+                            [Op.like]: `%${termoBusca}%`,
+                        },
+                    },*/
+                   /* {
+                        '$SituacaoCadastroApoiador.Descricao$':{
+                            [Op.like]: `%${termoBusca}%`,
+                        }
+                    }*/
                 ]
             }
 
@@ -185,16 +208,33 @@ const apoiadorController = {
                 whereClause['$Profissao$'] = filtroProfissao
             }
 
-            if(filtroPartido && filtroPartido != 'todos'){
-                whereClause['$FiliacaoPartidaria.PartidoFiliacao.Nome$'] = {
-                    [Op.like]: `%${filtroPartido}%`
-                }
+        
+            if(filtroSituacao && filtroSituacao != 'todas'){
+                whereClause['$Situacao$'] = filtroSituacao;
+            }else if(!filtroSituacao){
+                whereClause['$Situacao$'] = 1;
             }
 
-            if(filtroCidade && filtroCidade != 'todas'){
+            /*if(filtroCidade && filtroCidade != 'todas'){
                 whereClause['$EnderecoApoiador.CidadeEndereco.IdCidade$'] = filtroCidade;
+            }*/
+
+            if (filtroCidade && filtroCidade !== 'todas') {
+                whereClause[Op.and] = [
+                    whereClause[Op.and] || {}, // Garanta que o array whereClause[Op.and] exista
+                    sequelize.literal(`(
+                        SELECT
+                            1
+                        FROM
+                            ENDERECO AS EnderecoApoiador
+                            INNER JOIN CIDADE AS CidadeEndereco ON EnderecoApoiador.Cidade = CidadeEndereco.IdCidade
+                        WHERE
+                            CidadeEndereco.IdCidade = ${filtroCidade}
+                            AND EnderecoApoiador.idEndereco = Apoiador.Endereco
+                    ) IS NOT NULL`)
+                ];
             }
-              
+    
     
            
             const apoiadores = await apoiadorModel.findAll({
@@ -263,7 +303,7 @@ const apoiadorController = {
                 offset: startIndex, // Ignorar os resultados anteriores ao índice de início
             });
 
-            
+           
             res.json(apoiadores);
         
 
@@ -552,8 +592,8 @@ const apoiadorController = {
             
             const idClassificacao = apoiador?.Classificacao;
             const idSituacao = apoiador?.Situacao;
-            
-            const idTelefone = apoiador?.TelefoneApoiador?.idTelefone;
+           
+            const idTelefone = apoiador?.TelefoneApoiador?.[0]?.idTelefone;
             const numeroTelefone = apoiador?.TelefoneApoiador?.[0]?.Numero;
             const numeroWhatsapp = apoiador?.TelefoneApoiador?.[0]?.WhatsApp;
             const numeroAntigo =  apoiador?.TelefoneApoiador?.[0]?.Numero;
@@ -641,9 +681,6 @@ const apoiadorController = {
             
             const apoiador = await apoiadorModel.findOne({where: whereClause});
 
-
-
-
             if(!apoiador){
                 return res.status(404).json({msg: 'Apoiador não encontrado'});
             }
@@ -713,7 +750,9 @@ const apoiadorController = {
             
             // Verifica se existe número de telefone
             if(numeroTelefone != null && numeroTelefone.length > 6){
-               
+              
+                
+               if(numeroAntigo){
                 if(numeroAntigo != numeroTelefone){
                     const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
                 
@@ -724,6 +763,13 @@ const apoiadorController = {
                         Principal: 's' 
                     };
                 }
+               }else{
+                    dadosTelefone = {
+                        Numero: numeroTelefone,
+                        WhatsApp: numeroWhatsapp || 's',
+                        Principal: 's' 
+                    };
+               }
                
                 
             }
@@ -834,28 +880,37 @@ const apoiadorController = {
            
           
             if(dadosTelefone){
-                const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
-                    where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
-                    defaults: {
+
+                if(dadosTelefone.IdTelefone){
+                    const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
+                        where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
+                        defaults: {
+                            Apoiador: dadosApoiador.IdApoiador,
+                            Numero: dadosTelefone.Numero,
+                            WhatsApp: dadosTelefone.WhatsApp,
+                            Principal: dadosTelefone.Principal
+                        },
+                        transaction: t
+                    });
+
+                    if(!createdTelefone){
+                        console.log(createdTelefone);
+                        await telefoneInstance.update({
+                            Apoiador: dadosApoiador.IdApoiador,
+                            Numero: dadosTelefone.Numero,
+                            WhatsApp: dadosTelefone.WhatsApp,
+                            Principal: dadosTelefone.Principal
+                        },{ transaction: t })
+                    }
+
+                }else{
+                    const createdTelefone = await TelefoneModel.create({
                         Apoiador: dadosApoiador.IdApoiador,
-                        Numero: dadosTelefone.Numero,
-                        WhatsApp: dadosTelefone.WhatsApp,
-                        Principal: dadosTelefone.Principal
-                    },
-                    transaction: t
-                });
-    
-                
-                if(!createdTelefone){
-                    
-                    await telefoneInstance.update({
-                        Apoiador: dadosApoiador.IdApoiador,
-                        Numero: dadosTelefone.Numero,
-                        WhatsApp: dadosTelefone.WhatsApp,
-                        Principal: dadosTelefone.Principal
+                        ...dadosTelefone
                     },{ transaction: t })
+
                 }
-    
+
             }
 
             // Confirma a transação
@@ -882,16 +937,14 @@ const apoiadorController = {
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome, origem,
-                informacoesAdicionais 
+                informacoesAdicionais, dataInsercao 
             } = req.body
 
-           
 
             const cpf = cpfSemMascara;
             const cep = cepSemMascara;
             const telefone = telefoneSemMascara;
 
-    
 
             let dadosEntidade;
             let filiacao;
@@ -948,12 +1001,12 @@ const apoiadorController = {
             }
 
             
-
-        
+            
             const classif = await classificacaoController.findByName(classificacao);
             const sit = await situacaoCadastroController.findByName(situacao);
         
-           
+
+
             const dadosApoiador = {
                 Nome: nome,
                 CPF: cpf || null,
@@ -970,11 +1023,12 @@ const apoiadorController = {
                 Responsavel: responsavelId,
                 Grupo: grupo,
                 Origem: origem,
+                DataInsercao: dataInsercao
             };
 
-          
+            
 
-           
+
             const novoApoiador = await  apoiadorController.criarApoiadorComVinculacao(dadosApoiador, dadosEntidade, dadosTelefone);
 
             return res.status(200).json(novoApoiador);
@@ -988,15 +1042,15 @@ const apoiadorController = {
 
     criarApoiadorComVinculacao: async (dadosApoiador, dadosEntidade, dadosTelefone) => {
         
-  
+       
+
+        
         // Inicia a transação
         const t = await sequelize.transaction();
         
         try {
             // Cria o Apoiador
            
-            
-
             const novoApoiador = await apoiadorModel.create(dadosApoiador, { transaction: t });
 
 
@@ -1017,14 +1071,11 @@ const apoiadorController = {
             }*/
 
             if(dadosTelefone){
-                const telefoneCriado = await TelefoneModel.create({
+                await TelefoneModel.create({
                     Apoiador: novoApoiador.IdApoiador,
                     ...dadosTelefone
                 },{ transaction: t })
-
             }
-
-            
             
     
             // Confirma a transação
