@@ -113,11 +113,10 @@ const Apoiador = sequelize.define('Apoiador', {
         } 
     },
     DataInsercao: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: true
     }
  
-
 }, { 
     tableName: 'APOIADOR',
     timestamps: false,
