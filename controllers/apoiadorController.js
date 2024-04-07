@@ -211,8 +211,6 @@ const apoiadorController = {
         
             if(filtroSituacao && filtroSituacao != 'todas'){
                 whereClause['$Situacao$'] = filtroSituacao;
-            }else if(!filtroSituacao){
-                whereClause['$Situacao$'] = 1;
             }
 
             /*if(filtroCidade && filtroCidade != 'todas'){
@@ -894,7 +892,7 @@ const apoiadorController = {
                     });
 
                     if(!createdTelefone){
-                        console.log(createdTelefone);
+                       
                         await telefoneInstance.update({
                             Apoiador: dadosApoiador.IdApoiador,
                             Numero: dadosTelefone.Numero,
