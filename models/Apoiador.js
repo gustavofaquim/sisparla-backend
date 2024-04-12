@@ -115,6 +115,10 @@ const Apoiador = sequelize.define('Apoiador', {
     DataInsercao: {
         type: DataTypes.DATE,
         allowNull: true
+    },
+    
+    ApoiadorVinculado:{
+        type: DataTypes.INTEGER,
     }
  
 }, { 
@@ -185,6 +189,12 @@ Apoiador.hasMany(Telefone, {
     foreignKey: 'Apoiador',
     as: 'TelefoneApoiador'
 });
+
+/* -- Relação ntre apoiaores
+Apoiador.belongsTo(Apoiador, {
+    foreignKey: 'ApoiadorVinculado', // Coluna que faz referência ao ID do Apoiador
+    as: 'VinculacaoApoiador' // Alias para a relação
+});*/
 
 /* Apoiador.belongsTo(Vinculacao, {
     foreignKey: 'Apoiador',

@@ -28,6 +28,7 @@ import Usuario from '../models/Usuario.js';
 import {verificarToken} from '../middlewares/verificarToken.js';
 import Grupo from '../models/Grupo.js';
 import OrigemCadastro from '../models/OrigemCadastro.js';
+import Apoiador from '../models/Apoiador.js';
 
 
 const apoiadorController = {
@@ -294,7 +295,12 @@ const apoiadorController = {
                             as: 'PartidoFiliacao',
                             foreignKey: 'Partido',
                         }
-                    }
+                    },
+                    /*{
+                        model: Apoiador,
+                        as: 'VinculacaoApoiador',
+                       
+                    }*/
                 ],
                 where: whereClause,
                 limit: endIndex - startIndex, // Limitar o número de resultados com base no índice de início e fim
@@ -585,7 +591,9 @@ const apoiadorController = {
             const responsavelNome = apoiador?.ResponsavelCadastro?.Nome;
             const origemId = apoiador?.OrigemApoiador?.IdOrigem;
             const origemNome = apoiador?.OrigemApoiador?.Descricao;
+            const dataInsercao = apoiador?.DataInsercao;
 
+            const apoiadorVinculado = apoiador?.ApoiadorVinculado;
 
             
             const idClassificacao = apoiador?.Classificacao;
@@ -652,7 +660,7 @@ const apoiadorController = {
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, 
-                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome
+                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome, dataInsercao, apoiadorVinculado
             };
 
             return apoiadorD;
@@ -686,7 +694,7 @@ const apoiadorController = {
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
-            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId} = req.body;
+            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado} = req.body;
 
            
             //let dadosEntidade;
@@ -788,13 +796,14 @@ const apoiadorController = {
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacaoAdicional,
                 Grupo: grupo,
-                Origem: origemId
+                Origem: origemId,
+                DataInsercao: dataInsercao,
+                ApoiadorVinculado: apoiadorVinculado
             };
 
             
             
             const apoiadorAtualizado = await apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, null, dadosTelefone);
-            
             
             const apoiadorD = apoiadorController.destructuringApoiador(apoiadorAtualizado);
            
@@ -1021,7 +1030,8 @@ const apoiadorController = {
                 Responsavel: responsavelId,
                 Grupo: grupo,
                 Origem: origem,
-                DataInsercao: dataInsercao
+                DataInsercao: dataInsercao,
+                ApoiadorVinculado: apoiadorVinculado
             };
 
             
