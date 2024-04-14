@@ -35,12 +35,14 @@ const filtrosController = {
             const cidadesUnicas = new Set();
             const profissoesUnicas = new Set();
             const statusUnicos = new Set();
+            const religioesUnicas = new Set();
     
             // Iterar sobre apoiadores e coletar cidades e profissões únicas
             apoiadores.forEach((apoiador) => {
                 const enderecoApoiador = apoiador.EnderecoApoiador;
                 const profissaoApoiador = apoiador.ProfissaoApoiador;
                 const situacaoApoiador = apoiador.SituacaoCadastroApoiador;
+                const religiaoApoiador = apoiador.Religiao;
     
                 if (enderecoApoiador && enderecoApoiador.CidadeEndereco) {
                     const cidade = enderecoApoiador.CidadeEndereco;
@@ -69,13 +71,21 @@ const filtrosController = {
                     };
                     statusUnicos.add(JSON.stringify(statusInfo));
                 }
+
+                if(religiaoApoiador){
+                    const religiaoInfo = {
+                        Nome: religiaoApoiador
+                    };
+                    religioesUnicas.add(JSON.stringify(religiaoInfo));
+                }
             });
     
             const cidadesArray = Array.from(cidadesUnicas).map((cidadeStr) => JSON.parse(cidadeStr));
             const profissoesArray = Array.from(profissoesUnicas).map((profissaoStr) => JSON.parse(profissaoStr));
             const situacoesArray = Array.from(statusUnicos).map((situacoesStr) => JSON.parse(situacoesStr));
+            const religiaoArray = Array.from(religioesUnicas).map((religioesStr) => JSON.parse(religioesStr));
     
-            res.json({ cidades: cidadesArray, profissoes: profissoesArray, situacoes: situacoesArray});
+            res.json({ cidades: cidadesArray, profissoes: profissoesArray, situacoes: situacoesArray, religioes: religiaoArray});
             
         } catch (error) {
             console.log(`Erro ao buscar cidades, profissões e status de apoiadores: ${error}`);

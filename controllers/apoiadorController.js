@@ -42,6 +42,7 @@ const apoiadorController = {
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
             const filtroCidade = req.query.cidade;
+            const filtroReligiao = req.query.religiao;
 
             const whereClause = {};
 
@@ -77,7 +78,8 @@ const apoiadorController = {
             if(filtroCidade && filtroCidade != 'todas'){
                 whereClause['$EnderecoApoiador.CidadeEndereco.IdCidade$'] = filtroCidade;
             }
-              
+
+          
     
            
             const totalApoiadores = await apoiadorModel.count({
@@ -156,12 +158,14 @@ const apoiadorController = {
     findAll: async(req,res) => {
       
         try {
+
             
             const termoBusca = req.query.termoBusca;
             const filtroProfissao = req.query.profissao;
             const filtroPartido = req.query.partido;
             const filtroCidade = req.query.cidade;
             const filtroSituacao = req.query.situacao;
+            const filtroReligiao = req.query.religiao;
 
 
             const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
@@ -212,6 +216,10 @@ const apoiadorController = {
         
             if(filtroSituacao && filtroSituacao != 'todas'){
                 whereClause['$Situacao$'] = filtroSituacao;
+            }
+
+            if(filtroReligiao && filtroReligiao != 'todas'){
+                whereClause['$Religiao$'] = filtroReligiao;
             }
 
             /*if(filtroCidade && filtroCidade != 'todas'){
@@ -317,13 +325,46 @@ const apoiadorController = {
 
     },
 
+
+    filterAll: async(req,res) => {
+      
+        try {
+
+            
+            const termoBusca = req.query.termoBusca;
+            
+            const whereClause = {};
+
+
+            if (termoBusca) {
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } },
+                    
+                ]
+            }
+
+           
+            const apoiadores = await apoiadorModel.findAll({
+                where: whereClause,
+            });
+
+           
+            res.json(apoiadores);
+        
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de dados: ${error}`);
+        }
+
+    },
+
     findByBirthday: async(req,res) => {
     
         try {
             
-            const { periodo } = req.query;
+            const { periodo, dia } = req.query;
             //const periodo = id;
-           
+
             
             const whereClause = {};
 
@@ -331,34 +372,53 @@ const apoiadorController = {
             const data = new Date();
             const mesAtual = data.getMonth() + 1;
 
-            if(periodo != null && (periodo === 'semana' || periodo === 'mes') ){
+            if(dia != null && dia.length > 1){
+
+                const dataEscolhida = new Date(dia + ' UTC');
+
+                const diaEscolhida = dataEscolhida.getDate() + 1;
+                const mesEscolhido = dataEscolhida.getMonth() + 1;
+
+                whereClause.DataNascimento = {
+                    [Op.and]: [
+                        sequelize.literal(`DAY(DataNascimento) = ${diaEscolhida} AND MONTH(DataNascimento) = ${mesEscolhido}`),
+                    ],
+                };
+
+            }else{
+
+                // Somente verifica os aniversários por período caso uma data não tenha sido fornecida
+                if(periodo != null && (periodo === 'semana' || periodo === 'mes') ){
                
          
 
-                if (periodo === 'semana') {
-                    
-                    const primeiro = data.getDate() - data.getDay(); 
- 
-                    const primeiroDia = new Date(data.setDate(primeiro));
-                    const ultimoDia = new Date(data.setDate(data.getDate()+6));
-
-
-                    whereClause.DataNascimento = {
-                        [Op.and]: [
-                            sequelize.literal(`WEEK(DataNascimento) BETWEEN WEEK('${primeiroDia.toISOString()}') AND WEEK('${ultimoDia.toISOString()}')`),
-                        ],
-                    };
-
-                } else if (periodo === 'mes') {
-
-                    whereClause.DataNascimento = sequelize.literal(`MONTH(DataNascimento) = ${mesAtual}`);
+                    if (periodo === 'semana') {
+                        
+                        const primeiro = data.getDate() - data.getDay(); 
+     
+                        const primeiroDia = new Date(data.setDate(primeiro));
+                        const ultimoDia = new Date(data.setDate(data.getDate()+6));
+    
+    
+                        whereClause.DataNascimento = {
+                            [Op.and]: [
+                                sequelize.literal(`WEEK(DataNascimento) BETWEEN WEEK('${primeiroDia.toISOString()}') AND WEEK('${ultimoDia.toISOString()}')`),
+                            ],
+                        };
+    
+                    } else if (periodo === 'mes') {
+    
+                        whereClause.DataNascimento = sequelize.literal(`MONTH(DataNascimento) = ${mesAtual}`);
+                    }
+    
+    
+                }else{
+                    const diaAual = data.getDate();
+                    whereClause.DataNascimento = sequelize.literal(`DAY(DataNascimento) = ${diaAual} AND MONTH(DataNascimento) = ${mesAtual}`);
                 }
-
-
-            }else{
-                const diaAual = data.getDate();
-                whereClause.DataNascimento = sequelize.literal(`DAY(DataNascimento) = ${diaAual} AND MONTH(DataNascimento) = ${mesAtual}`);
             }
+
+
 
             const aniversariantes = await apoiadorModel.findAll({
                 where: whereClause,
@@ -694,7 +754,7 @@ const apoiadorController = {
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
-            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado} = req.body;
+            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado, responsavelId} = req.body;
 
            
             //let dadosEntidade;
@@ -798,6 +858,7 @@ const apoiadorController = {
                 Grupo: grupo,
                 Origem: origemId,
                 DataInsercao: dataInsercao,
+                Responsavel: responsavelId,
                 ApoiadorVinculado: apoiadorVinculado
             };
 
@@ -944,7 +1005,7 @@ const apoiadorController = {
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome, origem,
-                informacoesAdicionais, dataInsercao 
+                informacoesAdicionais, dataInsercao, apoiadorVinculado 
             } = req.body
 
 

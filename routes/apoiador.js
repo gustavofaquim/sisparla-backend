@@ -11,6 +11,11 @@ router
     .route("/apoiadores")
     .get(verificarToken, (req,res) => apoiadorController.findAll(req,res));
 
+
+router
+    .route("/filtro-apoiadores")
+    .get(verificarToken, (req,res) => apoiadorController.filterAll(req,res));
+
 router
     .route("/apoiadores-total")
     .get(verificarToken, (req,res) => apoiadorController.countFindAll(req,res));
