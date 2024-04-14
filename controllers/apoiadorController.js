@@ -376,7 +376,7 @@ const apoiadorController = {
 
                 const dataEscolhida = new Date(dia + ' UTC');
 
-                const diaEscolhida = dataEscolhida.getDate() + 1;
+                const diaEscolhida = dataEscolhida.getDate();
                 const mesEscolhido = dataEscolhida.getMonth() + 1;
 
                 whereClause.DataNascimento = {
