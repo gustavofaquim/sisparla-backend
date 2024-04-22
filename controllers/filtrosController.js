@@ -84,7 +84,8 @@ const filtrosController = {
             const profissoesArray = Array.from(profissoesUnicas).map((profissaoStr) => JSON.parse(profissaoStr));
             const situacoesArray = Array.from(statusUnicos).map((situacoesStr) => JSON.parse(situacoesStr));
             const religiaoArray = Array.from(religioesUnicas).map((religioesStr) => JSON.parse(religioesStr));
-    
+
+        
             res.json({ cidades: cidadesArray, profissoes: profissoesArray, situacoes: situacoesArray, religioes: religiaoArray});
             
         } catch (error) {

@@ -570,7 +570,7 @@ const apoiadorController = {
                         as: 'TelefoneApoiador',
                         foreignKey: 'IdApoiador'
                     }, 
-                     {
+                    {
                         model: FiliacaoModel,
                         as: 'FiliacaoPartidaria',
                         foreignKey: 'IdFiliacao',
@@ -579,8 +579,8 @@ const apoiadorController = {
                             as: 'PartidoFiliacao',
                             foreignKey: 'Partido'
                         }
-                     },
-                     {
+                    },
+                    {
                         model: Vinculacao,
                         as: 'Vinculacao',
                         foreignKey: 'Apoiador',
@@ -589,13 +589,13 @@ const apoiadorController = {
                             as: 'VinculacaoEntidade',
                             foreignKey: 'Entidade',
                         }
-                     },
-                     {
+                    },
+                    {
                         model: Usuario,
                         as: 'ResponsavelCadastro',
                         foreignKey: 'Responsavel'
-                     },
-                     {
+                    },
+                    {
                         model: Grupo,
                         as: 'GrupoApoiador',
                         foreignKey: 'Grupo',

@@ -118,7 +118,8 @@ const Apoiador = sequelize.define('Apoiador', {
     },
     
     ApoiadorVinculado:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
+        allowNull: true
     }
  
 }, { 
