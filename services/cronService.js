@@ -4,10 +4,12 @@ import mensagemController from '../controllers/mensagemController.js';
 
 
 // Esta função será chamada automaticamente todos os dias às 00:00 (meia-noite)
-cron.schedule('53 16 * * *', async () => {
+cron.schedule('26 10 * * *', async () => {
     try {
         console.log('Executando a função de aniversário automaticamente...');
-        const aniversariantesDia = await mensagemController.BirthDayMessages();
+        return
+        //const aniversariantesDia = await mensagemController.BirthDayMessages();
+        const aniversariantesDia = await mensagemController.sendImagem();
 
         if (aniversariantesDia) {
             console.log('Aniversariantes do dia:', aniversariantesDia);

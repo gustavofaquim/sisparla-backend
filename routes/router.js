@@ -98,6 +98,10 @@ router.use("/", grupoRouter);
 import origemRouter from "./origemCadastro.js";
 router.use("/", origemRouter);
 
+// Origem de Cadastros
+import dashboardRouter from "./dashboard.js";
+router.use("/", dashboardRouter);
+
 
 // tTwilio
 //import twilioRouter from "./twilio.js";
