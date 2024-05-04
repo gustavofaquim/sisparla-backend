@@ -76,9 +76,14 @@ const dashboardController = {
 
             const apoiadoresPorCidade = await sequelize.query(consultaSQL, {type: Sequelize.QueryTypes.SELECT})
 
-            
+            // Array para armazenar os valores
+            const data = (apoiadoresPorCidade.map(item => item.QNT));
 
-            return res.status(200).json(apoiadoresPorCidade);
+            // Array para armazenar os labels
+            const categories = (apoiadoresPorCidade.map(item => item.Nome));
+
+
+            return res.status(200).json({ categories, data });
 
             
         } catch (error) {
