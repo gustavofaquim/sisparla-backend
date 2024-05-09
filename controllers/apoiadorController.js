@@ -817,8 +817,15 @@ const apoiadorController = {
             // Verifica se existe número de telefone
             if(numeroTelefone != null && numeroTelefone.length > 6){
               
+                dadosTelefone = {
+                    Numero: numeroTelefone,
+                    WhatsApp: numeroWhatsapp || 's',
+                    Principal: 's' 
+                };
                 
-               if(numeroAntigo){
+               
+
+              /* if(numeroAntigo){
                 if(numeroAntigo != numeroTelefone){
                     const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
                 
@@ -835,7 +842,7 @@ const apoiadorController = {
                         WhatsApp: numeroWhatsapp || 's',
                         Principal: 's' 
                     };
-               }
+               }*/
                
                 
             }
@@ -918,38 +925,30 @@ const apoiadorController = {
                     }, { transaction: t });
                 }
             }
-           
-           
-        
-            /*if(dadosPartido){
-                
-                const [vinculacaoInstancePartido, createdPartido] = await Vinculacao.findOrCreate({
-                    where: { Entidade: dadosPartido.Entidade, Apoiador: dadosApoiador.IdApoiador },
-                    defaults: {
-                        Apoiador: dadosApoiador.IdApoiador,
-                        Cargo: dadosPartido.Cargo,
-                        Entidade: dadosPartido.Entidade,
-                        Lideranca: dadosPartido.Lideranca
-                    },
-                    transaction: t
-                });
-            
-               
-                if (!createdPartido) {
-                    // Se não foi criado, significa que já existia, então você pode atualizar os valores
-                    await vinculacaoInstancePartido.update({
-                        Apoiador: dadosApoiador.IdApoiador,
-                        Cargo: dadosPartido.Cargo,
-                        Lideranca: dadosPartido.Lideranca
-                    }, { transaction: t });
-                } *
 
-            }*/
-           
-          
+            
             if(dadosTelefone){
 
-                if(dadosTelefone.IdTelefone){
+                const telefoneExistente = await TelefoneModel.findOne({
+                    where: { Apoiador: dadosApoiador.IdApoiador }
+                });
+
+                if (telefoneExistente) {
+
+                    // Se já houver um registro, atualize o número de telefone
+                    await TelefoneModel.update(
+                        { Numero: dadosTelefone.Numero },
+                        { where: { Apoiador: dadosApoiador.IdApoiador  } }
+                    );
+                }else {
+                    // Se não houver um registro, insira um novo número de telefone
+                    await TelefoneModel.create({
+                        Apoiador: dadosApoiador.IdApoiador,
+                        ...dadosTelefone
+                    }, { transaction: t });
+
+                }
+                /*if(dadosTelefone.IdTelefone){
                     const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
                         where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
                         defaults: {
@@ -977,10 +976,14 @@ const apoiadorController = {
                         ...dadosTelefone
                     },{ transaction: t })
 
-                }
+                }*/
 
             }
 
+
+
+           
+          
             // Confirma a transação
             await t.commit();
             return attApoiador;
