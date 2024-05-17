@@ -11,7 +11,14 @@ const profissaoController = {
 
         try {
 
-            const {termoBusca} = req.query;
+            const termoBusca = req.query.termoBusca;
+
+            const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
+            const itemsPerPage = parseInt(req.query.itemsPerPage) || 15; // Itens por página, padrão é 30
+    
+            const startIndex = parseInt(req.query.startIndex) || (page - 1) * itemsPerPage; // Índice de início, padrão é calculado com base na página atual
+            const endIndex = parseInt(req.query.endIndex) || startIndex + itemsPerPage; // Índice final, padrão é calculado com base no índice de início e itens por página
+
             const whereClause = {};
 
             if(termoBusca){
@@ -21,7 +28,11 @@ const profissaoController = {
                 ]
             }
             
-            const profissao = await profissaoModel.findAll({ where: whereClause, order: [['Nome', 'ASC'], ]});
+            const profissao = await profissaoModel.findAll({ 
+                where: whereClause, 
+                limit: endIndex - startIndex, 
+                offset: startIndex, 
+                order: [['Nome', 'ASC'], ]});
 
             res.json(profissao);
 
@@ -117,6 +128,33 @@ const profissaoController = {
         } catch (error) {
             console.log(`Erro ao buscar profissão: ${error}`);
             return res.status(500).json('Erro ao obter grupo');
+        }
+    },
+
+
+    countFindAll: async(req,res) =>{
+        try {
+            
+            const termoBusca = req.query.termoBusca;
+            const whereClause = {};
+
+            if(termoBusca){
+
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } }, 
+                ]
+            }   
+
+            
+            const profissao = await profissaoModel.count({where: whereClause});
+
+        
+            res.json(profissao);
+
+        } catch (error) {
+            console.log('Erro ao contar as profissões');
+            console.log(error);
+            return res.status(500).json('Erro ao contar as profissoes');
         }
     }
 

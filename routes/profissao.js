@@ -10,6 +10,10 @@ router
     .get(verificarToken,(req,res) => profissaoController.findAll(req,res));
 
 router
+    .route("/profissoes-total")
+    .get(verificarToken,(req,res) => profissaoController.countFindAll(req,res));    
+
+router
     .route("/profissao/:id")
     .get(verificarToken,(req,res) => profissaoController.findById(req,res));
 
