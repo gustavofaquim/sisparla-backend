@@ -677,13 +677,8 @@ const apoiadorController = {
             const numeroEndereco = apoiador?.EnderecoApoiador?.Numero;
             const pontoReferencia = apoiador?.EnderecoApoiador?.PontoReferencia;
 
-            let entidadeTipo = '';
-            let entidadeNome = '';
-            let entidadeNomeAntigo = '';
-            let entidadeSigla = '';
-            let entidadeCargo = '';
-            let entidadeLideranca = '';
-
+           
+            const idFiliacao = apoiador?.FiliacaoPartidaria?.IdFiliacao;
             const partidoId = apoiador?.FiliacaoPartidaria?.Partido;
             const partidoNome = apoiador?.FiliacaoPartidaria?.PartidoFiliacao?.Nome;
             const partidoCargo = apoiador?.FiliacaoPartidaria?.Cargo;
@@ -694,6 +689,13 @@ const apoiadorController = {
             const diretorioUF = apoiador?.FiliacaoPartidaria?.DiretorioUF;
 
 
+            let entidadeTipo = '';
+            let entidadeNome = '';
+            let entidadeNomeAntigo = '';
+            let entidadeSigla = '';
+            let entidadeCargo = '';
+            let entidadeLideranca = '';
+            
             apoiador?.Vinculacao?.forEach((e, index) => {
                 entidadeTipo = e.VinculacaoEntidade.Tipo;
                
@@ -720,7 +722,7 @@ const apoiadorController = {
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, 
-                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome, dataInsercao, apoiadorVinculado
+                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome, dataInsercao, apoiadorVinculado, idFiliacao
             };
 
             return apoiadorD;
@@ -736,7 +738,6 @@ const apoiadorController = {
     updateById: async(req, res) => {
 
         const { id } = req.params;
-
           
         const whereClause = {};
 
@@ -752,11 +753,11 @@ const apoiadorController = {
             }
 
 
-            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, numeroWhatsapp,
+            const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, whats,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
             entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado, responsavelId} = req.body;
 
-           
+
             //let dadosEntidade;
             let vinculacao;
             let dadosTelefone;
@@ -769,7 +770,8 @@ const apoiadorController = {
                 const enderecoCompleto = {cep, cidade, estado, logradouro, numeroEndereco, bairro, complemento, pontoReferencia};
                
                 if(!idEndereco){
-                    endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+                   //endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+                    endereco = await enderecoController.create(enderecoCompleto);
                 }else{
                     endereco = await enderecoController.update(idEndereco, enderecoCompleto)
                 }
@@ -819,31 +821,9 @@ const apoiadorController = {
               
                 dadosTelefone = {
                     Numero: numeroTelefone,
-                    WhatsApp: numeroWhatsapp || 's',
+                    WhatsApp: whats || 'n',
                     Principal: 's' 
                 };
-                
-               
-
-              /* if(numeroAntigo){
-                if(numeroAntigo != numeroTelefone){
-                    const tel = await telefoneController.findByNumber(numeroAntigo, idApoiador); 
-                
-                    dadosTelefone = {
-                        IdTelefone: tel.idTelefone,
-                        Numero: numeroTelefone,
-                        WhatsApp: numeroWhatsapp || 's',
-                        Principal: 's' 
-                    };
-                }
-               }else{
-                    dadosTelefone = {
-                        Numero: numeroTelefone,
-                        WhatsApp: numeroWhatsapp || 's',
-                        Principal: 's' 
-                    };
-               }*/
-               
                 
             }
 
@@ -948,35 +928,6 @@ const apoiadorController = {
                     }, { transaction: t });
 
                 }
-                /*if(dadosTelefone.IdTelefone){
-                    const [telefoneInstance, createdTelefone] = await TelefoneModel.findOrCreate({
-                        where: {IdTelefone: dadosTelefone?.IdTelefone,  Apoiador: dadosApoiador.IdApoiador },
-                        defaults: {
-                            Apoiador: dadosApoiador.IdApoiador,
-                            Numero: dadosTelefone.Numero,
-                            WhatsApp: dadosTelefone.WhatsApp,
-                            Principal: dadosTelefone.Principal
-                        },
-                        transaction: t
-                    });
-
-                    if(!createdTelefone){
-                       
-                        await telefoneInstance.update({
-                            Apoiador: dadosApoiador.IdApoiador,
-                            Numero: dadosTelefone.Numero,
-                            WhatsApp: dadosTelefone.WhatsApp,
-                            Principal: dadosTelefone.Principal
-                        },{ transaction: t })
-                    }
-
-                }else{
-                    const createdTelefone = await TelefoneModel.create({
-                        Apoiador: dadosApoiador.IdApoiador,
-                        ...dadosTelefone
-                    },{ transaction: t })
-
-                }*/
 
             }
 
@@ -1004,7 +955,7 @@ const apoiadorController = {
 
 
             const {
-                nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, situacao, 
+                nome, apelido, profissao, cpfSemMascara, religiao, nascimento, classificacao, email, telefoneSemMascara, whats, situacao, 
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome, origem,
@@ -1025,7 +976,8 @@ const apoiadorController = {
 
             if(cidade != null && estado != null){
                 const enderecoCompleto = {cep, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia};
-                endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+                //endereco = await enderecoController.createIfNotExists(enderecoCompleto);
+                endereco = await enderecoController.create(enderecoCompleto);
             }
 
 
@@ -1066,7 +1018,7 @@ const apoiadorController = {
                 
                 dadosTelefone = {
                     Numero: telefone,
-                    WhatsApp: 's',
+                    WhatsApp: whats || 'n',
                     Principal: 's' 
                 };
             }
@@ -1133,14 +1085,6 @@ const apoiadorController = {
                     ...dadosEntidade,
                 }, { transaction: t });
             }
-
-            /*if(dadosPartido){
-                // Cria a Vinculacao com o IdApoiador
-                await Vinculacao.create({
-                    Apoiador: novoApoiador.IdApoiador,
-                    ...dadosPartido,
-                }, { transaction: t });
-            }*/
 
             if(dadosTelefone){
                 await TelefoneModel.create({

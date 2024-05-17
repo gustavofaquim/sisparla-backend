@@ -128,26 +128,33 @@ const enderecoController = {
     },
 
 
-    create: async (req,res) => {
+    create: async (endereco) => {
 
-        const { cidade, nome, cep, numero, logradouro, complemento, pontoReferencia } = req.body;
 
         try {
             
+            const cidade = await cidadeController.createIfNotExists(endereco.cidade, endereco.estado);
             
+            if(!cidade){
+                console.log('Não foi possível encontrar a cidade informada');
+                return ('Não foi possível encontrar a cidade informada.');
+            }
+
            const novoEndereco = await enderecoModel.create({
-                Numero: numero,
-                Logradouro: logradouro,
-                Complemento: complemento,
-                PontoReferencia: pontoReferencia
-              });
+               Cidade: cidade.IdCidade,
+               CEP: endereco.cep,
+               Bairro: endereco.bairro,
+               Logradouro: endereco.logradouro,
+               Complemento: endereco.complemento,
+               PontoReferencia: endereco.pontoReferencia
+            });
 
-
-            res.json(novoEndereco);
+            
+            return novoEndereco;
 
         } catch (error) {
             console.log(`Erro ao cadastrar o endereco: ${error}`);
-            res.status(500).json({msg: 'Erro ao cadastrar o endereco'})
+            throw new Error('Erro ao criar endereço');
         }
     },
 
