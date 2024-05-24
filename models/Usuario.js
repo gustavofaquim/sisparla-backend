@@ -1,6 +1,8 @@
 import { Sequelize, DataTypes } from "sequelize";
-
 import sequelize from "../db/conn.js";
+
+
+import PerfilAcesso from "./PerfilAcesso.js";
 
 const Usuario = sequelize.define('Usuario', {
     IdUsuario: {
@@ -30,6 +32,13 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    Perfil: {
+        type: DataTypes.STRING,
+        references:{
+            model: PerfilAcesso,
+            key: 'IdPerfil'
+        },
+    },
     Status: {
         type: DataTypes.STRING,
         allowNull: false
@@ -39,5 +48,11 @@ const Usuario = sequelize.define('Usuario', {
     tableName: 'USUARIO',
     timestamps: false,
 })
+
+Usuario.belongsTo(PerfilAcesso, {
+    foreignKey: 'Perfil',
+    as: 'PerfilAcesso'
+});
+
 
 export default Usuario;

@@ -33,6 +33,8 @@ const verificarToken = (req, res, next) => {
       }
       
       req.usuario = decoded;
+
+     
       next();
     });
 

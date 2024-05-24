@@ -1,10 +1,13 @@
-import usuarioModel from "../models/Usuario.js";
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Op } from 'sequelize';
+import { Sequelize, Op, QueryTypes  } from 'sequelize';
+import sequelize from "../db/conn.js";
 
 import revokedTokens from "../middlewares/revokedTokens.js";
+import usuarioModel from "../models/Usuario.js";
+import PerfilAcesso from "../models/PerfilAcesso.js";
+import Permissao from "../models/Permissao.js";
+import PerfilPermissao from "../models/PerfilPermissao.js";
 
 const usuarioController = {
 
@@ -35,21 +38,69 @@ const usuarioController = {
     find: async(req,res) => {
 
         const {nomeUsuario, senha} = req.body
-
+        
         try {
 
 
-            const usuario = await usuarioModel.findOne({
-                where: {
-                    NomeUsuario: nomeUsuario,
+            const query = `
+            SELECT 
+                u.IdUsuario,
+                u.NomeUsuario,
+                u.Nome,
+                u.Senha,
+                u.Perfil AS IdPerfil,
+                pa.Nome as PerfilNome,
+                p.IdPermissao,
+                p.Nome AS PermissaoNome
+            FROM
+                USUARIO u
+                LEFT JOIN PERFIL_ACESSO pa ON u.Perfil = pa.IdPerfil
+                LEFT JOIN PERFIL_PERMISSAO pp ON pa.IdPerfil = pp.IdPerfil
+                LEFT JOIN PERMISSAO p ON pp.IdPermissao = p.IdPermissao
+            WHERE
+                u.NomeUsuario = :nomeUsuario;`;
+                
+            let results = [];
+
+            results = await sequelize.query(query, {
+                replacements: { nomeUsuario },
+                type: sequelize.QueryTypes.SELECT 
+            });
+
+
+
+            if (results.length === 0) {
+                res.status(401).json({ msg: 'Nome de Usuário inválido' });
+                return;
+            }
+    
+           // Agregar os resultados
+            const usuario = {
+                IdUsuario: results[0].IdUsuario,
+                NomeUsuario: results[0].NomeUsuario,
+                Senha: results[0].Senha,
+                Nome: results[0].Nome,
+                RegraAcesso: results[0].RegraAcesso,
+                Sistema: results[0].Sistema,
+                Perfil: {
+                    IdPerfil: results[0].IdPerfil,
+                    Nome: results[0].PerfilNome,
+                    Permissoes: []
+                }
+            };
+            
+             // Iterar sobre os resultados para agregar permissões
+            results.forEach(row => {
+                if (row.IdPermissao && row.PermissaoNome) {
+                    usuario.Perfil.Permissoes.push({
+                        IdPermissao: row.IdPermissao,
+                        Nome: row.PermissaoNome
+                    });
                 }
             });
             
-            if(!usuario){
-                res.status(401).json({msg: 'Nome de Usuário inválido'});
-                return;
-            }
             
+                          
 
             const password = await bcrypt.compare(senha, usuario.Senha);
 
@@ -58,6 +109,10 @@ const usuarioController = {
                 return;
             }
 
+            if(usuario?.Perfil?.Permissoes.length == 0 ){
+                res.status(401).json({msg: 'Você não possui permissão para acessar esse recurso.'});
+                return;
+            }
 
             const secret = 'secreto';
 
@@ -68,11 +123,13 @@ const usuarioController = {
                     usuario: usuario.NomeUsuario,
                     nome: usuario.Nome,  
                     regra: usuario.RegraAcesso,
-                    sistema: usuario.Sistema 
-                }, secret , //{ expiresIn: '1h' }
+                    perfil: usuario.Perfil.IdPerfil,
+                    sistema: usuario.Sistema, 
+                    permissoes: usuario.Perfil.Permissoes
+                }, 
+                secret
             );
-
-
+            
             
             //res.json({ token });
             res.setHeader('Authorization', `Bearer ${token}`);

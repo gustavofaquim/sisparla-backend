@@ -1,5 +1,5 @@
 import express from 'express';
-import {verificarToken} from '../middlewares/verificarToken.js';
+import {verificarToken, verificarPermissao} from '../middlewares/verificarToken.js';
 import apoiadorController from '../controllers/apoiadorController.js';
 
 
@@ -9,50 +9,50 @@ const router = express.Router();
 
 router
     .route("/apoiadores")
-    .get(verificarToken, (req,res) => apoiadorController.findAll(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.findAll(req,res));
 
 
 router
     .route("/filtro-apoiadores")
-    .get(verificarToken, (req,res) => apoiadorController.filterAll(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.filterAll(req,res));
 
 router
     .route("/apoiadores-total")
-    .get(verificarToken, (req,res) => apoiadorController.countFindAll(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.countFindAll(req,res));
 
 
 router
     .route("/view-apoiadores")
-    .get(verificarToken,(req,res) => apoiadorController.viewApoiadores(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.viewApoiadores(req,res));
 
 router
     .route("/count-apoiadores")
-    .get(verificarToken, (req,res) => apoiadorController.count(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.count(req,res));
 
 
 router
     .route("/apoiadores/:id")
-    .get(verificarToken,(req,res) => apoiadorController.findById(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => apoiadorController.findById(req,res));
 
 
 router
     .route("/aniversariantes")
-    .get(verificarToken,(req,res) => apoiadorController.findByBirthday(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => apoiadorController.findByBirthday(req,res));
 
 
 router
     .route("/apoiador/:id")
-    .delete(verificarToken, (req,res) => apoiadorController.deleteById(req,res));
+    .delete(verificarToken, verificarPermissao('Deletar'), (req,res) => apoiadorController.deleteById(req,res));
 
 
 router
     .route("/apoiadores")
-    .post(verificarToken,(req,res) => apoiadorController.create(req,res));
+    .post(verificarToken, verificarPermissao('Criar'),(req,res) => apoiadorController.create(req,res));
 
 
 router
     .route("/apoiadores/:id")
-    .put(verificarToken, (req,res) => apoiadorController.updateById(req,res));
+    .put(verificarToken, verificarPermissao('Atualizar'), (req,res) => apoiadorController.updateById(req,res));
 
 
 

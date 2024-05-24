@@ -10,7 +10,7 @@ import credorController from '../controllers/credorController.js';
 
 router
     .route("/despesas")
-    .get(verificarToken, verificarPermissao('1'),(req,res) => despesaController.findAll(req,res));
+    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => despesaController.findAll(req,res));
 
 router
     .route("/despesas/:id")
