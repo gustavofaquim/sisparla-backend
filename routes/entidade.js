@@ -1,22 +1,22 @@
 import express from 'express';
-import {verificarToken} from '../middlewares/verificarToken.js';
+import {verificarToken, verificarPermissao} from '../middlewares/verificarToken.js';
 const router = express.Router();
 
 import entidadeController from '../controllers/entidadeController.js';
 
 router
     .route("/entidades")
-    .get(verificarToken,(req,res) => entidadeController.findAll(req,res));
+    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findAll(req,res));
 
 
 router
     .route("/entidades/:id")
-    .get(verificarToken,(req,res) => entidadeController.findByType(req,res))
+    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findByType(req,res))
 
 
 router
     .route("/entidadesn/:id")
-    .get(verificarToken,(req,res) => entidadeController.findByNot(req,res))   
+    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findByNot(req,res))   
     
     
 export default router
