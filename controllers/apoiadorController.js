@@ -1040,7 +1040,7 @@ const apoiadorController = {
                 Religiao: religiao,
                 Endereco: endereco?.dataValues?.idEndereco,
                 Classificacao: classif.idClassificacao,
-                Situacao: sit.idSituacao,
+                Situacao: sit.idSituacao || 1,
                 Filiacao: filiacao?.IdFiliacao,
                 InformacaoAdicional: informacoesAdicionais,
                 Responsavel: responsavelId,

@@ -11,11 +11,12 @@ const profissaoController = {
 
         try {
 
-            const termoBusca = req.query.termoBusca;
+            const termoBusca = req.query.inputValueProfissao;
+            const pagAtualizacao = req.query.pagAtualizacao;
 
+            const itemsPerPage = parseInt(req.query.itemsPerPage) || 15;
             const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
-            const itemsPerPage = parseInt(req.query.itemsPerPage) || 15; // Itens por página, padrão é 30
-    
+            
             const startIndex = parseInt(req.query.startIndex) || (page - 1) * itemsPerPage; // Índice de início, padrão é calculado com base na página atual
             const endIndex = parseInt(req.query.endIndex) || startIndex + itemsPerPage; // Índice final, padrão é calculado com base no índice de início e itens por página
 
@@ -32,6 +33,33 @@ const profissaoController = {
                 where: whereClause, 
                 limit: endIndex - startIndex, 
                 offset: startIndex, 
+                order: [['Nome', 'ASC'], ]});
+
+            res.json(profissao);
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de profissoes: ${error}`);
+            res.status(500).json({msg: 'Erro ao buscar a lista de profissoes'});
+        }
+    },
+
+
+    findByList: async(req,res) => {
+        try {
+
+            const termoBusca = req.query.inputValueProfissao;
+          
+            const whereClause = {};
+
+            if(termoBusca){
+
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${termoBusca}%` } }, 
+                ]
+            }
+            
+            const profissao = await profissaoModel.findAll({ 
+                where: whereClause, 
                 order: [['Nome', 'ASC'], ]});
 
             res.json(profissao);
