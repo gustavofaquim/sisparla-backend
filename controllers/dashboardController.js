@@ -72,7 +72,7 @@ const dashboardController = {
             INNER JOIN CIDADE C ON C.IdCidade = E.Cidade
             WHERE C.IdCidade IS NOT NULL
             GROUP BY C.IdCidade
-            ORDER BY QNT DESC;`;
+            ORDER BY QNT DESC LIMIT 10;`;
 
             const apoiadoresPorCidade = await sequelize.query(consultaSQL, {type: Sequelize.QueryTypes.SELECT})
 
