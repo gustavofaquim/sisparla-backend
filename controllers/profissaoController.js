@@ -11,9 +11,9 @@ const profissaoController = {
 
         try {
 
-            const termoBusca = req.query.inputValueProfissao;
-            const pagAtualizacao = req.query.pagAtualizacao;
 
+            const termoBusca = req.query.termoBusca;
+          
             const itemsPerPage = parseInt(req.query.itemsPerPage) || 15;
             const page = parseInt(req.query.page) || 1; // Página atual, padrão é 1
             

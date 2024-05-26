@@ -326,6 +326,39 @@ const apoiadorController = {
     },
 
 
+    findList: async(req,res) => {
+      
+        try {
+
+            
+            const termoBusca = req.query.filtro;
+            
+            const whereClause = {};
+
+            if(termoBusca){
+
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `${termoBusca}%` } }, 
+                ]
+            }
+           
+            const apoiadores = await apoiadorModel.findAll({
+                
+                where: whereClause,
+                order: [['Nome', 'ASC']]
+            });
+
+           
+            res.json(apoiadores);
+        
+
+        } catch (error) {
+            console.log(`Erro ao buscar a lista de dados: ${error}`);
+        }
+
+    },
+
+
     filterAll: async(req,res) => {
       
         try {

@@ -13,6 +13,10 @@ router
 
 
 router
+    .route("/lista-apoiadores")
+    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.findList(req,res));
+
+router
     .route("/filtro-apoiadores")
     .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.filterAll(req,res));
 
