@@ -50,6 +50,10 @@ const demandaController = {
                         model: DemandaResponsavel,
                         as: 'DemandaResponsavel',
                         foreignKey: 'Responsavel'
+                    },{
+                        model: Apoiador,
+                        as: 'DemandaApoiador',
+                        foreignKey: 'Apoiador'
                     }
                 ],
                 where: whereClause,
@@ -128,7 +132,7 @@ const demandaController = {
             const idCategoria = demanda.Categoria;
             const idSituacao = demanda.Situacao;
             const idResponsavel = demanda.Responsavel;
-            const idApoiador = demanda?.Apoiador;
+            const idApoiador = demanda?.DemandaApoiador?.IdApoiador;
             const apoiadorNome = demanda?.DemandaApoiador?.Nome;
             const emendaParlamentar = demanda.EmendaParlamentar;
             const valor = demanda.Valor;
@@ -169,6 +173,10 @@ const demandaController = {
                         model: DemandaResponsavel,
                         as: 'DemandaResponsavel',
                         foreignKey: 'Responsavel'
+                    },{
+                        model: Apoiador,
+                        as: 'DemandaApoiador',
+                        foreignKey: 'Apoiador'
                     }
                 ],
             })

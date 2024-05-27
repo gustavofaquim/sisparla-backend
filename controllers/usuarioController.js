@@ -145,16 +145,23 @@ const usuarioController = {
     findAssets: async(req,res) => {
         try {
 
-            const busca = req?.query?.inputValue
-        
+           // const busca = req?.query?.inputValue
+
             const usuarios = await usuarioModel.findAll({
+                where: {
+                  Status: 1,
+                }
+            });
+
+
+            /*const usuarios = await usuarioModel.findAll({
                 where: {
                   Status: 1,
                   Nome: {
                     [Op.like]: `%${busca}%` // Usando Op.like para comparar substrings
                   }
                 }
-            });
+            });  */
 
             res.json(usuarios);
 
