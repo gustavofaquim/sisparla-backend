@@ -10,7 +10,7 @@ import Classificacao from "./Classificacao.js";
 import SituacaoCadastro from "./SituacaoCadastro.js";
 import Vinculacao from "./Vinculacao.js";
 import FiliacaoPartidaria from "./FiliacaoPartidaria.js";
-import Demanda from "./Demanda.js";
+//import Demanda from "./Demanda.js";
 import Grupo from './Grupo.js';
 import Usuario from "./Usuario.js";
 import OrigemCadastro from "./OrigemCadastro.js";
@@ -179,11 +179,12 @@ Apoiador.belongsTo(OrigemCadastro, {
 });
 
 
-
+/*
 Apoiador.hasMany(Demanda, {
     foreignKey: 'Apoiador',
     as: 'Demanda'
 });
+*/
 
 
 Apoiador.hasMany(Telefone, {

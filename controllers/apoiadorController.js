@@ -639,11 +639,11 @@ const apoiadorController = {
                         as: 'OrigemApoiador',
                         foreignKey: 'Origem'
                     },
-                    {
+                    /*{
                         model: DemandaModel,
                         as: 'Demanda',
                         foreignKey: 'Apoiador'
-                    }, 
+                    },*/ 
                  ]
             });
 

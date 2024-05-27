@@ -5,6 +5,7 @@ import sequelize from "../db/conn.js";
 import CategoriaDemanda from "./CategoriaDemanda.js";
 import SituacaoDemanda from "./SituacaoDemanda.js";
 import Responsavel from "./Usuario.js";
+import Apoiador from "./Apoiador.js";
 
 const Demanda = sequelize.define('Demanda', {
     IdDemanda:{
@@ -68,6 +69,11 @@ const Demanda = sequelize.define('Demanda', {
     timestamps: false
 })
 
+
+Demanda.belongsTo(Apoiador, {
+    foreignKey: 'Apoiador',
+    as: 'DemandaApoiador'
+});
 
 Demanda.belongsTo(CategoriaDemanda, {
     foreignKey: 'Categoria',
