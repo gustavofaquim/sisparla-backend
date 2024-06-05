@@ -11,7 +11,7 @@ router
 
 router
     .route("/lista-profissoes/")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => profissaoController.findByList(req,res));
+    .get((req,res) => profissaoController.findByList(req,res));
     
     
 router

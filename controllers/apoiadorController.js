@@ -29,6 +29,9 @@ import {verificarToken} from '../middlewares/verificarToken.js';
 import Grupo from '../models/Grupo.js';
 import OrigemCadastro from '../models/OrigemCadastro.js';
 import Apoiador from '../models/Apoiador.js';
+import generateToken from '../middlewares/geraTokenApoiador.js';
+
+
 
 
 const apoiadorController = {
@@ -566,7 +569,10 @@ const apoiadorController = {
     findById: async (req,res) => {
 
         const { id } = req.params;
-             
+
+        console.log('Aqui');
+        
+        console.log(generateToken(id));
 
         try {  
             const apoiador = await apoiadorModel.findOne({
@@ -1229,6 +1235,12 @@ const apoiadorController = {
             res.status(500).json({msg: 'Não foi possível exibir os dados de apoiadores'});
         }
     },
+
+
+
+
+    
+    
 
 
 

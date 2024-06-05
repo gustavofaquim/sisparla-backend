@@ -6,6 +6,6 @@ const router = express.Router();
 
 router
     .route("/estados")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => estadoController.findAll(req,res));
+    .get((req,res) => estadoController.findAll(req,res));
 
 export default router;

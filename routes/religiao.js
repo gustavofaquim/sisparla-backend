@@ -7,7 +7,7 @@ import religiaoController from '../controllers/religiaoController.js';
 
 router
     .route("/religioes")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => religiaoController.findAll(req,res));
+    .get((req,res) => religiaoController.findAll(req,res));
 
 router
     .route("/religiao/:id")
