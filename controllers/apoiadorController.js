@@ -728,6 +728,7 @@ const apoiadorController = {
             const diretorioUF = apoiador?.FiliacaoPartidaria?.DiretorioUF;
 
 
+            let IdEntidade = '';
             let entidadeTipo = '';
             let entidadeNome = '';
             let entidadeNomeAntigo = '';
@@ -739,7 +740,7 @@ const apoiadorController = {
                 entidadeTipo = e.VinculacaoEntidade.Tipo;
                
                 if (entidadeTipo !== 'Partido Político' && entidadeTipo) {
-                    
+                    IdEntidade = e.VinculacaoEntidade.IdEntidade;
                     entidadeNome = e.VinculacaoEntidade.Nome;
                     entidadeNomeAntigo = e.VinculacaoEntidade.Nome;
                     entidadeSigla = e.VinculacaoEntidade.Sigla;
@@ -757,7 +758,7 @@ const apoiadorController = {
 
         
             const apoiadorD = {idApoiador, nome, apelido, cpf, dataNascimento, idProfissao, profissao, religiao, email, 
-                informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco,
+                informacaoAdicional, idClassificacao, idSituacao, idTelefone, numeroTelefone, numeroAntigo ,numeroWhatsapp, idEndereco, IdEntidade,
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, 

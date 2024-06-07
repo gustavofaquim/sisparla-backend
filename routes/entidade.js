@@ -17,6 +17,11 @@ router
 router
     .route("/entidadesn/:id")
     .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findByNot(req,res))   
+
+
+router
+    .route("/lista-entidades")
+    .get((req,res) => entidadeController.findAll(req,res));
     
     
 export default router

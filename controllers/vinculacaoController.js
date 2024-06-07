@@ -52,7 +52,6 @@ const vinculacaoController = {
                 Cargo: dadosVinculacao.Cargo,
                 Entidade: dadosVinculacao.Entidade,
                 Lideranca: dadosVinculacao.Lideranca
-
             });
 
             return novaVinculacao;

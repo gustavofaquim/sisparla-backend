@@ -8,7 +8,22 @@ const entidadeController = {
     findAll: async(req,res) => {
         try {
             
-            const entidades = await entidadeModel.findAll();
+            const filtro = req.query.filtro;
+
+            const whereClause = {};
+
+            if(filtro){
+
+                whereClause[Op.or] = [
+                    { Nome: { [Op.like]: `%${filtro}%` } }, 
+                ]
+            }
+
+            const entidades = await entidadeModel.findAll({
+                where: whereClause, 
+                order: [['Nome', 'ASC'], ]
+            });
+
             res.json(entidades);
 
         } catch (error) {

@@ -116,6 +116,10 @@ const Apoiador = sequelize.define('Apoiador', {
         type: DataTypes.DATE,
         allowNull: true
     },
+    Obs: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     
     ApoiadorVinculado:{
         type: DataTypes.STRING,

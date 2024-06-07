@@ -67,5 +67,9 @@ router
     .route("/recadastramento-apoiador/")
     .get((req,res) => apoiadorRecadastramentoController.findByToken(req,res));
 
+router
+    .route("/recadastramento-apoiador/")
+    .put((req,res) => apoiadorRecadastramentoController.updateByToken(req,res));
+
 
 export default router;
