@@ -86,8 +86,36 @@ const vinculacaoController = {
             console.log(`Erro ao atualizar a vinculacao ${error}`);
             throw  new Error('Erro ao atualizar a vinculacao');
         }
-    }
+    },
 
+
+    delete: async(IdApoiador, IdEntidade) => {
+
+        try {
+
+            if(!(IdApoiador && IdEntidade)){
+                return ('Apoiador ou Entidade invalidos');
+            }
+
+            const vinculacaoDeletada = await vinculacaoModel.destroy({
+                where: {
+                    Apoiador: IdApoiador,
+                    Entidade: IdEntidade
+                }
+            })
+
+            if(vinculacaoDeletada === 0){
+                return 'Vinculação não encontrada';
+            }
+
+            return 'Vinculação deletada com sucesso';
+
+            
+        } catch (error) {
+            console.log(`Erro ao deletar a vinculação ${error}`);
+            return 'Erro ao deletar a vinculacao';
+        }
+    }
 }
 
 export default vinculacaoController;

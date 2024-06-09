@@ -1,4 +1,4 @@
-import { Sequelize, Op } from 'sequelize';
+import { Sequelize, Op, where } from 'sequelize';
 import sequelize from "../db/conn.js";
 
 import apoiadorModel from "../models/Apoiador.js";
@@ -970,10 +970,6 @@ const apoiadorController = {
                 }
 
             }
-
-
-
-           
           
             // Confirma a transação
             await t.commit();
@@ -987,7 +983,25 @@ const apoiadorController = {
     },
 
 
+    removeFiliacao: async(IdApoiador) => {
 
+        try {
+
+            
+            const apoiador = await apoiadorModel.update(
+                {Filiacao: null},
+                {where: 
+                    {IdApoiador: IdApoiador}
+                } 
+            )
+
+            return 'Filiacao removida com sucesso';
+            
+        } catch (error) {
+            console.log(`Erro ao remover filiação ${error}`);
+            throw error; 
+        }
+    },
 
     create: async(req,res) => {
          
@@ -1025,7 +1039,7 @@ const apoiadorController = {
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
                 const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
-
+                updateBy
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
 
                 dadosEntidade = {

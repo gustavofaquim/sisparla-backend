@@ -46,6 +46,7 @@ const apoiadorRecadastramentoController = {
            
             const dadosApoiador = decodificaTokenApoiador(token);
 
+
             if(!dadosApoiador.IdApoiador){
                 console.log(`ID do apoidor enviado é inválido.`);
                 return res.status(500).json({msg: 'Erro ao bsucar o apoiador'});
@@ -185,8 +186,12 @@ const apoiadorRecadastramentoController = {
 
             const {idApoiador, nome, cpf, dataNascimento, profissao, entidade, religiao, email, numeroTelefone, whats,
                 idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, 
-                entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, dataInsercao
+                entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, dataInsercao, partidoRemovido, entidadeRemovida, idFiliacao
+                , comunicacao
             } = req.body;
+
+            console.log(comunicacao);
+            return
 
             
 
@@ -214,12 +219,14 @@ const apoiadorRecadastramentoController = {
                 const dadosVinculacao = {
                     Apoiador: idApoiador,
                     Cargo: entidadeCargo || '',
-                    Entidade: enti.IdEntidade, 
+                    Entidade: entidade, 
                     Lideranca: entidadeLideranca || 'n',
                 };
                 
                 vinculacao = await vinculacaoController.updateOrCreateIfNotExists(dadosVinculacao);
                 
+            }else if(entidadeRemovida){
+                vinculacao =- await vinculacaoController.delete(idApoiador, entidadeRemovida);
             }
 
             // Verifica se existe partido
@@ -236,6 +243,11 @@ const apoiadorRecadastramentoController = {
                  }
  
                  filiacao = await filiacaoController.updateOrCreateIfNotExists(idApoiador,dadosFiliacao);
+            }else if(partidoRemovido){
+                
+                const apoiador = await apoiadorController.removeFiliacao(idApoiador);
+
+                const filiacao = await filiacaoController.delete(idFiliacao, partidoRemovido);
             }
 
             // Verifica se existe número de telefone

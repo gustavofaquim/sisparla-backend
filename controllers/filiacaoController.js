@@ -92,6 +92,35 @@ const filiacaoController = {
             console.log(`Erro ao atualizar a filiação ${error}`)
             throw new Error('Erro ao atualizar a filiação');
         }
+    },
+
+
+    delete: async(IdFiliacao, IdPartido) => {
+
+        try {
+            
+            if(!(IdFiliacao && IdPartido)){
+               return ('Apoiador ou Partido invalidos');
+            }
+
+
+
+            const filiacaoDeletada = await filiacaoModel.destroy({
+                where: {
+                    IdFiliacao: IdFiliacao,
+                    Partido: IdPartido
+                }
+            })
+
+
+            return 'Filiação excluída com sucesso';
+
+
+
+        } catch (error) {
+            console.log(`Erro ao deletar a filiação ${error}`)
+            return error;
+        }
     }
 }
 
