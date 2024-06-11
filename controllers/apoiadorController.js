@@ -1039,7 +1039,6 @@ const apoiadorController = {
              // Verifica se existe entidade
             if(entidadeNome != null && entidadeNome.length > 1){
                 const entidadeCompleta = {entidadeNome, entidadeSigla, entidadeTipo};
-                updateBy
                 const enti = await entidadeController.createIfNotExists(entidadeCompleta);
 
                 dadosEntidade = {
