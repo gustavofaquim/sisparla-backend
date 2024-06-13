@@ -190,11 +190,8 @@ const apoiadorRecadastramentoController = {
                 , comunicacao
             } = req.body;
 
-            console.log(comunicacao);
-            return
-
-            
-
+   
+        
 
             let vinculacao;
             let dadosTelefone;
