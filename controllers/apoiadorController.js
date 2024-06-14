@@ -570,9 +570,9 @@ const apoiadorController = {
 
         const { id } = req.params;
 
-        console.log('Aqui');
-        
-        console.log(generateToken(id));
+        //Estava usando somente para testar o recurso do recadastramento...
+        //console.log('Aqui');
+        //console.log(generateToken(id));
 
         try {  
             const apoiador = await apoiadorModel.findOne({
@@ -691,6 +691,7 @@ const apoiadorController = {
             const origemId = apoiador?.OrigemApoiador?.IdOrigem;
             const origemNome = apoiador?.OrigemApoiador?.Descricao;
             const dataInsercao = apoiador?.DataInsercao;
+            const sexo = apoiador?.Sexo;
 
             const apoiadorVinculado = apoiador?.ApoiadorVinculado;
 
@@ -762,7 +763,7 @@ const apoiadorController = {
                 cep, cidade, estado, bairro, logradouro, complemento, numeroEndereco, pontoReferencia, 
                 entidadeTipo, entidadeNome, entidadeNomeAntigo, entidadeSigla, entidadeCargo, entidadeLideranca, partidoId,
                 partidoLideranca,partidoZona, partidoSecao, diretorioMunicpio, diretorioUF, partidoNome, partidoCargo, demandas, 
-                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome, dataInsercao, apoiadorVinculado, idFiliacao
+                grupoId, grupoNome, responsavelId, responsavelNome, origemId, origemNome, dataInsercao, apoiadorVinculado, idFiliacao, sexo
             };
 
             return apoiadorD;
@@ -795,7 +796,8 @@ const apoiadorController = {
 
             const {idApoiador, nome, apelido,  cpf, dataNascimento, profissao,  religiao, email, informacaoAdicional, idClassificacao, idSituacao, numeroAntigo, numeroTelefone, whats,
             idEndereco, cep, cidade, estado, bairro, complemento, logradouro, numeroEndereco, pontoReferencia, entidadeTipo, entidadeNome, entidadeSigla,
-            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado, responsavelId} = req.body;
+            entidadeCargo, entidadeLideranca, partidoId, partidoLideranca, partidoCargo, grupo, origemId, dataInsercao, apoiadorVinculado, responsavelId, sexo
+            } = req.body;
 
 
             //let dadosEntidade;
@@ -886,9 +888,9 @@ const apoiadorController = {
                 Origem: origemId,
                 DataInsercao: dataInsercao,
                 Responsavel: responsavelId,
-                ApoiadorVinculado: apoiadorVinculado
+                ApoiadorVinculado: apoiadorVinculado,
+                Sexo: sexo
             };
-
             
             
             const apoiadorAtualizado = await apoiadorController.atualizarApoiadorComVinculacao(dadosApoiador, null, dadosTelefone);
@@ -1013,7 +1015,7 @@ const apoiadorController = {
                 cepSemMascara, cidade, estado, logradouro, numero, bairro, complemento, pontoReferencia, 
                 entidadeNome, entidadeTipo, entidadeSigla, entidadeCargo, entidadeLideranca,
                 partidoId, partidoCargo, partidoLideranca, secao, zona, diretorioMunicpio, diretorioUF, grupo, responsavelId, responsavelNome, origem,
-                informacoesAdicionais, dataInsercao, apoiadorVinculado 
+                informacoesAdicionais, dataInsercao, apoiadorVinculado, sexo 
             } = req.body
 
 
@@ -1100,7 +1102,8 @@ const apoiadorController = {
                 Grupo: grupo,
                 Origem: origem,
                 DataInsercao: dataInsercao,
-                ApoiadorVinculado: apoiadorVinculado
+                ApoiadorVinculado: apoiadorVinculado,
+                Sexo: sexo
             };
 
             

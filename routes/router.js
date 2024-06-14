@@ -103,6 +103,12 @@ import dashboardRouter from "./dashboard.js";
 router.use("/", dashboardRouter);
 
 
+// Sexo
+import sexoRouter from "./sexo.js";
+router.use("/", sexoRouter);
+
+
+
 // tTwilio
 //import twilioRouter from "./twilio.js";
 //router.use("/", twilioRouter);

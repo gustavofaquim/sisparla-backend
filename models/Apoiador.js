@@ -124,6 +124,10 @@ const Apoiador = sequelize.define('Apoiador', {
     ApoiadorVinculado:{
         type: DataTypes.STRING,
         allowNull: true
+    },
+    Sexo:{
+        type: DataTypes.STRING,
+        allowNull: true
     }
  
 }, { 
