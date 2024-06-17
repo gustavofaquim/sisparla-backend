@@ -1,3 +1,7 @@
+
+import sequelize from "../db/conn.js";
+
+
 import cidadeModel from "../models/Cidade.js";
 import apoiadorModel from "../models/Apoiador.js";
 import enderecoModel from "../models/Endereco.js";
@@ -5,6 +9,51 @@ import profissaoModel from "../models/Profissao.js";
 import SituacaoCadastro from "../models/SituacaoCadastro.js";
 
 const filtrosController = {
+
+
+    filtrosApoiadores: async(req,res) => {
+
+        try {
+            const cidades = await sequelize.query(`
+                SELECT 
+                    DISTINCT c.IdCidade, c.Nome, c.Estado
+                FROM CIDADE c
+                INNER JOIN ENDERECO e ON c.IdCidade = e.Cidade
+                INNER JOIN APOIADOR a ON e.IdEndereco = a.Endereco;
+            `, { type: sequelize.QueryTypes.SELECT });
+
+            const profissoes = await sequelize.query(`
+                SELECT 
+                    DISTINCT p.IdProfissao, p.Nome
+                FROM PROFISSAO p
+                INNER JOIN APOIADOR a ON p.IdProfissao = a.Profissao;
+            `, { type: sequelize.QueryTypes.SELECT });
+
+            const situacoes = await sequelize.query(`
+                SELECT 
+                    DISTINCT s.idSituacao, s.Descricao
+                FROM SITUACAO_CADASTRO s
+                INNER JOIN APOIADOR a ON s.idSituacao = a.Situacao;
+            `, { type: sequelize.QueryTypes.SELECT });
+
+            const religioes = await sequelize.query(`
+                SELECT 
+                    DISTINCT a.Religiao
+                FROM APOIADOR a
+                WHERE a.Religiao IS NOT NULL AND a.Religiao <> '';
+            `, { type: sequelize.QueryTypes.SELECT });
+            
+
+            console.log(situacoes);
+            console.log(religioes);
+            
+            res.json({ cidades, profissoes, situacoes, religioes });
+
+        } catch (error) {
+            console.log(`Erro ao buscar os filtros de apoiadores: ${error}`);
+            res.status(500).json({ msg: '`Erro ao buscar os filtros de apoiadores' });
+        }
+    },
 
     cidadeAndProfissao: async (req, res) => {
         try {
@@ -31,6 +80,8 @@ const filtrosController = {
                     },
                 ],
             });
+
+
 
             const cidadesUnicas = new Set();
             const profissoesUnicas = new Set();
