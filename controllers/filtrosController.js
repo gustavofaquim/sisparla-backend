@@ -43,9 +43,6 @@ const filtrosController = {
                 WHERE a.Religiao IS NOT NULL AND a.Religiao <> '';
             `, { type: sequelize.QueryTypes.SELECT });
             
-
-            console.log(situacoes);
-            console.log(religioes);
             
             res.json({ cidades, profissoes, situacoes, religioes });
 
