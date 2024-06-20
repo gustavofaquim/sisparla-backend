@@ -150,20 +150,29 @@ const usuarioController = {
             const usuarios = await usuarioModel.findAll({
                 where: {
                   Status: 1,
-                }
+                },
+                include: [
+                    {
+                        model: PerfilAcesso,
+                        as: 'PerfilAcesso',
+                        foreignKey: 'Perfil'
+                    }, 
+                ]
             });
 
+            
+           // Construindo URLs de imagens
+           const usuariosComImagens = usuarios.map(user => {
+                const imageUrl = user.Avatar
+                ? `${req.protocol}://${req.get('host')}/uploads/images/users/${user.Avatar}`
+                : null;
+                
+                return { ...user.dataValues, imageUrl };
+            });
 
-            /*const usuarios = await usuarioModel.findAll({
-                where: {
-                  Status: 1,
-                  Nome: {
-                    [Op.like]: `%${busca}%` // Usando Op.like para comparar substrings
-                  }
-                }
-            });  */
-
-            res.json(usuarios);
+            //console.log(usuariosComImagens)
+    
+            res.json(usuariosComImagens);
 
         } catch (error) {
             console.log(`Erro buscar usuarios: ${error}`);

@@ -1,9 +1,21 @@
 import express  from "express";
+import multer from "./config/multer.js";
+import path from "path";
+import { fileURLToPath } from 'url';
 import cors  from "cors";
 import bodyParser from 'body-parser';
 import cronService from './services/cronService.js'; // Importe o agendador cron
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 const app = express();
+
+
+// Servir arquivos estáticos diretamente da raiz
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use(bodyParser.json({limit: '35mb'}));

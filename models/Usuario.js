@@ -42,6 +42,10 @@ const Usuario = sequelize.define('Usuario', {
     Status: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    Avatar: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
     
 },{ 
