@@ -77,6 +77,16 @@ const eventoController = {
 
     },
 
+    countEventos: async(req,res) => {
+        try {
+            const countEventos = await eventoModel.count();
+
+            return res.status(200).json(countEventos);
+        } catch (error) {
+            return res.status(500).json({msg: 'Erro ao exibir a quantidade de eventos.'});
+        }
+    },
+
     create: async(req,res) => {
         try {
             

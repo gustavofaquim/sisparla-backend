@@ -8,6 +8,11 @@ router
     .route("/eventos")
     .get(verificarToken,verificarPermissao('Vizualizar'), (req, res) => eventoController.findAll(req,res));
 
+
+router
+    .route("/count-eventos")
+    .get(verificarToken,verificarPermissao('Vizualizar'), (req, res) => eventoController.countEventos(req,res));
+
 router 
     .route("/eventos/:id")
     .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => eventoController.findById(req,res));
