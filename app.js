@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import cronService from './services/cronService.js'; // Importe o agendador cron
 
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -44,6 +45,7 @@ app.use(express.json());
 import routes from "./routes/router.js";
 
 app.use("/api", routes);
+
 
 
 app.listen(3000, function(){

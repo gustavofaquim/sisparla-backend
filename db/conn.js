@@ -1,7 +1,9 @@
 import Sequelize from 'sequelize';
 import dotenv from 'dotenv';
 
-dotenv.config();
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+dotenv.config({ path: envFile });
+
 
 const { DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME, DB_DIALECT } = process.env;
 
