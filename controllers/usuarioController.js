@@ -164,7 +164,7 @@ const usuarioController = {
            // Construindo URLs de imagens
            const usuariosComImagens = usuarios.map(user => {
                 const imageUrl = user.Avatar
-                ? `${req.protocol}://${req.get('host')}/uploads/images/users/${user.Avatar}`
+                ? `http://${req.get('host')}/uploads/images/users/${user.Avatar}`
                 : null;
                 
                 return { ...user.dataValues, imageUrl };
