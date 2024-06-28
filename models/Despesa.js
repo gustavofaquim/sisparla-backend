@@ -19,19 +19,19 @@ const Despesa = sequelize.define('Despesa', {
     },
     Descricao:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     Detalhamento: {
         type: DataTypes.STRING,
         allowNull: true
     },
     Valor: {
-        type: DataTypes.DOUBLE,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     Data: {
        type: DataTypes.DATE,
-       allowNull: false 
+       allowNull: true 
     },
     Credor: {
         type: DataTypes.DOUBLE,

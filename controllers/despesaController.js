@@ -27,6 +27,7 @@ const DespesaController = {
                     },
                 ]
             }
+
             
             const despesas = await despesaModel.findAll({
                 include: [
@@ -100,15 +101,21 @@ const DespesaController = {
             
             const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, Credor} = req.body;
 
+            const valorConvertido  = parseFloat(valor.replace(',', '.'));
+
+
             const novaDespesa = await despesaModel.create({
                 Descricao: descricao,
                 Detalhamento: detalhamento,
-                Valor: valor,
+                Valor: valorConvertido,
                 Data: dataDespesa,
                 Tipo: idTipo,
                 Origem: idOrigem,
                 Credor: Credor
             })
+
+        
+
 
             return res.status(200).json({novaDespesa});
 
@@ -132,11 +139,13 @@ const DespesaController = {
 
             const {Descricao, Detalhamento, Valor, Data, Tipo, Origem, Credor} = req.body;
 
+            const valorConvertido  = parseFloat(Valor.replace(',', '.'));
+
 
             const despesaAtualizada = await despesaModel.update({
                 Descricao: Descricao,
                 Detalhamento: Detalhamento,
-                Valor: Valor,
+                Valor: valorConvertido,
                 Data: Data,
                 Tipo: Tipo,
                 Origem: Origem,
