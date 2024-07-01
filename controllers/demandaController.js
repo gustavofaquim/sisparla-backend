@@ -14,14 +14,15 @@ const demandaController = {
 
         try {
 
-            const {termoBusca} = req.query;
-            
+            const termoBusca = req.query.termoBusca;
+            const filtroStatus = req.query.status;
+          
             const whereClause = {};
 
             if(termoBusca){
                 whereClause[Op.or] = [
                     {Assunto: {[Op.like]: `%${termoBusca}%`} },
-                   {
+                    {
                         '$DemandaCategoria.Descricao$':{
                             [Op.like] : `%${termoBusca}%`
                         },
@@ -32,6 +33,10 @@ const demandaController = {
                         }
                     }
                 ]
+            }
+
+            if (filtroStatus && filtroStatus != 'todas') {
+                whereClause['$DemandaSituaco.IdSituacao$'] = filtroStatus
             }
 
             const demandas = await demandaModel.findAll({
@@ -62,7 +67,8 @@ const demandaController = {
                     ['Data', 'DESC'], // Exemplo de ordenação por data de criação em ordem decrescente
                 ]
             });
-            
+
+          
             res.json(demandas);
 
         } catch (error) {
