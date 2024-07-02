@@ -27,11 +27,11 @@ router
 
 router
     .route("/view-apoiadores")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.viewApoiadores(req,res));
+    .get(verificarToken, verificarPermissao('Emitir Relatório'), (req,res) => apoiadorController.viewApoiadores(req,res));
 
 router
     .route("/count-apoiadores")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.count(req,res));
+    .get(verificarToken, verificarPermissao('Emitir Relatório'), (req,res) => apoiadorController.count(req,res));
 
 
 router
@@ -41,7 +41,7 @@ router
 
 router
     .route("/aniversariantes")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => apoiadorController.findByBirthday(req,res));
+    .get(verificarToken, verificarPermissao('Emitir Relatório'),(req,res) => apoiadorController.findByBirthday(req,res));
 
 
 router

@@ -11,7 +11,7 @@ router
 
 router
     .route("/count-eventos")
-    .get(verificarToken,verificarPermissao('Vizualizar'), (req, res) => eventoController.countEventos(req,res));
+    .get(verificarToken,verificarPermissao('Emitir Relatório'), (req, res) => eventoController.countEventos(req,res));
 
 router 
     .route("/eventos/:id")

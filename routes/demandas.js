@@ -16,11 +16,11 @@ router
 
 router
     .route("/view-demandas")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => demandaController.viewDemandas(req,res));
+    .get(verificarToken, verificarPermissao('Emitir Relatório'),(req,res) => demandaController.viewDemandas(req,res));
 
 router
     .route("/count-demandas")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => demandaController.countDemandas(req,res));
+    .get(verificarToken, verificarPermissao('Emitir Relatório'),(req,res) => demandaController.countDemandas(req,res));
 
 router
     .route("/demandas")
