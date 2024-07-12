@@ -28,12 +28,8 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    RegraAcesso: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    Perfil: {
-        type: DataTypes.STRING,
+    PerfilAcesso: {
+        type: DataTypes.INTEGER,
         references:{
             model: PerfilAcesso,
             key: 'IdPerfil'
@@ -54,8 +50,8 @@ const Usuario = sequelize.define('Usuario', {
 })
 
 Usuario.belongsTo(PerfilAcesso, {
-    foreignKey: 'Perfil',
-    as: 'PerfilAcesso'
+    foreignKey: 'PerfilAcesso',
+    as: 'PerfilAcessoUsuario'
 });
 
 
