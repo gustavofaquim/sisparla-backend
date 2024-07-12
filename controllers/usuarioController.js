@@ -48,15 +48,17 @@ const usuarioController = {
                 u.NomeUsuario,
                 u.Nome,
                 u.Senha,
-                u.Perfil AS IdPerfil,
+                u.PerfilAcesso AS IdPerfil,
                 pa.Nome as PerfilNome,
+                t.Nome AS Tela,
                 p.IdPermissao,
                 p.Nome AS PermissaoNome
             FROM
-                USUARIO u
-                LEFT JOIN PERFIL_ACESSO pa ON u.Perfil = pa.IdPerfil
-                LEFT JOIN PERFIL_PERMISSAO pp ON pa.IdPerfil = pp.IdPerfil
-                LEFT JOIN PERMISSAO p ON pp.IdPermissao = p.IdPermissao
+                	USUARIO u
+                    INNER JOIN PERFIL_ACESSO PA ON u.PerfilAcesso = PA.IdPerfil
+                    INNER JOIN PERFIL_PERMISSAO PP ON PP.IdPerfil = PA.IdPerfil
+                    INNER JOIN TELA t on t.IdTela = PP.IdTela
+                    INNER JOIN PERMISSAO p ON p.IdPermissao = PP.IdPermissao
             WHERE
                 u.NomeUsuario = :nomeUsuario;`;
                 
@@ -67,8 +69,7 @@ const usuarioController = {
                 type: sequelize.QueryTypes.SELECT 
             });
 
-
-
+            
             if (results.length === 0) {
                 res.status(401).json({ msg: 'Nome de Usuário inválido' });
                 return;
@@ -80,27 +81,28 @@ const usuarioController = {
                 NomeUsuario: results[0].NomeUsuario,
                 Senha: results[0].Senha,
                 Nome: results[0].Nome,
-                RegraAcesso: results[0].RegraAcesso,
                 Sistema: results[0].Sistema,
                 Perfil: {
                     IdPerfil: results[0].IdPerfil,
                     Nome: results[0].PerfilNome,
-                    Permissoes: []
+                    Telas: []
                 }
             };
             
              // Iterar sobre os resultados para agregar permissões
             results.forEach(row => {
-                if (row.IdPermissao && row.PermissaoNome) {
-                    usuario.Perfil.Permissoes.push({
-                        IdPermissao: row.IdPermissao,
-                        Nome: row.PermissaoNome
+                if (row.IdPermissao && row.PermissaoNome && row.Tela) {
+                    usuario.Perfil.Telas.push({
+                        Tela: row.Tela,
+                        permissoes: {
+                            IdPermissao: row.IdPermissao,
+                            Nome: row.PermissaoNome}
                     });
                 }
             });
             
             
-                          
+                
 
             const password = await bcrypt.compare(senha, usuario.Senha);
 
@@ -109,7 +111,7 @@ const usuarioController = {
                 return;
             }
 
-            if(usuario?.Perfil?.Permissoes.length == 0 ){
+            if(usuario?.Perfil?.Telas.length == 0 ){
                 res.status(401).json({msg: 'Você não possui permissão para acessar esse recurso.'});
                 return;
             }
@@ -125,7 +127,9 @@ const usuarioController = {
                     regra: usuario.RegraAcesso,
                     perfil: usuario.Perfil.IdPerfil,
                     sistema: usuario.Sistema, 
-                    permissoes: usuario.Perfil.Permissoes
+                    telas: usuario.Perfil.Telas,
+                        
+                   
                 }, 
                 secret
             );
@@ -147,6 +151,7 @@ const usuarioController = {
 
            // const busca = req?.query?.inputValue
 
+
             const usuarios = await usuarioModel.findAll({
                 where: {
                   Status: 1,
@@ -154,7 +159,7 @@ const usuarioController = {
                 include: [
                     {
                         model: PerfilAcesso,
-                        as: 'PerfilAcesso',
+                        as: 'PerfilAcessoUsuario',
                         foreignKey: 'Perfil'
                     }, 
                 ]
