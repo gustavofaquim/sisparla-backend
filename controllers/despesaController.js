@@ -165,6 +165,7 @@ const DespesaController = {
     deleteByid: async(req,res) => {
 
         const { id } = req.params;
+
         try {
             
             if(!id){

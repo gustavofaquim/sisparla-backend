@@ -86,11 +86,14 @@ const credorController = {
     },
 
     create: async(req,res) => {
+
         try {
             
             const {nome, estado, cidade, cepSemMascara,  bairro, logradouro, complemento, pontoReferencia, telefone, tipo, documento} = req.body;
 
             const cep = cepSemMascara;
+
+            
 
             // Inicia a transação
             const t = await sequelize.transaction();
@@ -119,7 +122,8 @@ const credorController = {
             return res.status(200).json({novoCredor});
 
         } catch (error) {
-            return res.status(500).json({msg: 'Erro ao cadastrar o novo credor'});
+            console.log(error);
+            return res.status(500).json({msg: `Erro ao cadastrar o novo credor: ${error.message}`});
         }
     },
 
@@ -187,7 +191,7 @@ const credorController = {
     deleteByid: async(req,res) => {
 
         const { id } = req.params;
-    
+
         try {
             if(!id){
                 return res.status(500).json({msg: 'Credor não encontrada'});
@@ -197,7 +201,7 @@ const credorController = {
                 where: {IdCredor: id},
             })
 
-            return res.status(200).json({credorExcluido});
+            return res.status(200).json('Excluido com sucesso');
 
         } catch (error) {
             
