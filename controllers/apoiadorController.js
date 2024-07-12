@@ -163,9 +163,9 @@ const apoiadorController = {
         try {
 
             
+
             const termoBusca = req.query.termoBusca;
             const filtroProfissao = req.query.profissao;
-            const filtroPartido = req.query.partido;
             const filtroCidade = req.query.cidade;
             const filtroSituacao = req.query.situacao;
             const filtroReligiao = req.query.religiao;
@@ -225,9 +225,7 @@ const apoiadorController = {
                 whereClause['$Religiao$'] = filtroReligiao;
             }
 
-            /*if(filtroCidade && filtroCidade != 'todas'){
-                whereClause['$EnderecoApoiador.CidadeEndereco.IdCidade$'] = filtroCidade;
-            }*/
+           
 
             if (filtroCidade && filtroCidade !== 'todas') {
                 whereClause[Op.and] = [
@@ -307,17 +305,15 @@ const apoiadorController = {
                             foreignKey: 'Partido',
                         }
                     },
-                    /*{
-                        model: Apoiador,
-                        as: 'VinculacaoApoiador',
-                       
-                    }*/
+                  
                 ],
                 where: whereClause,
+                order: [['DataInsercao', 'DESC']],
                 limit: endIndex - startIndex, // Limitar o número de resultados com base no índice de início e fim
                 offset: startIndex, // Ignorar os resultados anteriores ao índice de início
             });
 
+           
            
             res.json(apoiadores);
         
