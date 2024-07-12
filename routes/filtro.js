@@ -8,6 +8,6 @@ import filtrosController from '../controllers/filtrosController.js';
 
 router
     .route("/filtros")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => filtrosController.filtrosApoiadores(req,res));
+    .get(verificarToken,(req,res) => filtrosController.filtrosApoiadores(req,res));
 
 export default router;

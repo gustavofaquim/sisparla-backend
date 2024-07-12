@@ -6,17 +6,17 @@ import entidadeController from '../controllers/entidadeController.js';
 
 router
     .route("/entidades")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Criar'], ['apoiadores']),(req,res) => entidadeController.findAll(req,res));
 
 
 router
     .route("/entidades/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findByType(req,res))
+    .get(verificarToken,verificarPermissao(['Criar'], ['apoiadores']),(req,res) => entidadeController.findByType(req,res))
 
 
 router
     .route("/entidadesn/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => entidadeController.findByNot(req,res))   
+    .get(verificarToken,verificarPermissao(['Criar'], ['apoiadores']),(req,res) => entidadeController.findByNot(req,res))   
 
 
 router

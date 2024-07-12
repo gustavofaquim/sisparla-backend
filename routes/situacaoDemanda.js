@@ -7,7 +7,7 @@ import situacaoDemandaController from "../controllers/situacaoDemandaController.
 
 router
     .route("/situacao-demandas")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => situacaoDemandaController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['demandas']),(req,res) => situacaoDemandaController.findAll(req,res));
 
 
 export default router;

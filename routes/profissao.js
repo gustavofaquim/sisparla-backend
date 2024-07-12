@@ -7,7 +7,7 @@ const router = express.Router();
 
 router
     .route("/profissoes")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => profissaoController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar','Criar'], ['profissoes', 'apoiadores']),(req,res) => profissaoController.findAll(req,res));
 
 router
     .route("/lista-profissoes/")
@@ -16,23 +16,23 @@ router
     
 router
     .route("/profissoes-total")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => profissaoController.countFindAll(req,res));    
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['profissoes']),(req,res) => profissaoController.countFindAll(req,res));    
 
 router
     .route("/profissao/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => profissaoController.findById(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['profissoes']),(req,res) => profissaoController.findById(req,res));
 
 router
     .route("/profissao")
-    .post(verificarToken,verificarPermissao('Criar'), (req,res) => profissaoController.create(req,res));
+    .post(verificarToken,verificarPermissao(['Criar'], ['profissoes']), (req,res) => profissaoController.create(req,res));
 
 router
     .route("/profissao/:id")
-    .put(verificarToken,verificarPermissao('Atualizar'),(req,res) => profissaoController.updateById(req,res));
+    .put(verificarToken,verificarPermissao(['Atualizar'], ['profissoes']),(req,res) => profissaoController.updateById(req,res));
 
     router
     .route("/profissao/:id")
-    .delete(verificarToken,verificarPermissao('Deletar'), (req,res) => profissaoController.deleteById(req,res));
+    .delete(verificarToken,verificarPermissao(['Deletar'], ['profissoes']), (req,res) => profissaoController.deleteById(req,res));
 
 
 export default router;

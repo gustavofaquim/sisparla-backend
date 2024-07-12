@@ -15,7 +15,7 @@ router
 
 router
     .route('/lista-usuarios')
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => usuarioController.findAssets(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['usuarios']),(req,res) => usuarioController.findAssets(req,res));
 
 
 export default router;

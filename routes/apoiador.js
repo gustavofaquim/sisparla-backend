@@ -9,56 +9,54 @@ const router = express.Router();
 
 router
     .route("/apoiadores")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.findAll(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['apoiadores']),(req,res) => apoiadorController.findAll(req,res));
 
 
 router
     .route("/lista-apoiadores")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.findList(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['apoiadores']), (req,res) => apoiadorController.findList(req,res));
 
 router
     .route("/filtro-apoiadores")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.filterAll(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['apoiadores']), (req,res) => apoiadorController.filterAll(req,res));
 
 router
     .route("/apoiadores-total")
-    .get(verificarToken, verificarPermissao('Vizualizar'), (req,res) => apoiadorController.countFindAll(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['apoiadores']),(req,res) => apoiadorController.countFindAll(req,res));
 
 
 router
     .route("/view-apoiadores")
-    .get(verificarToken, verificarPermissao('Emitir Relatório'), (req,res) => apoiadorController.viewApoiadores(req,res));
+    .get(verificarToken, verificarPermissao(['Emitir Relatório'], ['apoidores']), (req,res) => apoiadorController.viewApoiadores(req,res));
 
 router
     .route("/count-apoiadores")
-    .get(verificarToken, verificarPermissao('Emitir Relatório'), (req,res) => apoiadorController.count(req,res));
+    .get(verificarToken, verificarPermissao(['Emitir Relatório'], ['apoiadores']), (req,res) => apoiadorController.count(req,res));
 
 
 router
     .route("/apoiadores/:id")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => apoiadorController.findById(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['apoiadores']),(req,res) => apoiadorController.findById(req,res));
 
 
 router
     .route("/aniversariantes")
-    .get(verificarToken, verificarPermissao('Emitir Relatório'),(req,res) => apoiadorController.findByBirthday(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['aniversariantes']),(req,res) => apoiadorController.findByBirthday(req,res));
 
 
 router
     .route("/apoiador/:id")
-    .delete(verificarToken, verificarPermissao('Deletar'), (req,res) => apoiadorController.deleteById(req,res));
+    .delete(verificarToken, verificarPermissao(['Deletar'], ['apoiadores']), (req,res) => apoiadorController.deleteById(req,res));
 
 
 router
     .route("/apoiadores")
-    .post(verificarToken, verificarPermissao('Criar'),(req,res) => apoiadorController.create(req,res));
+    .post(verificarToken, verificarPermissao(['Criar'], ['apoiadores']),(req,res) => apoiadorController.create(req,res));
 
 
 router
     .route("/apoiadores/:id")
-    .put(verificarToken, verificarPermissao('Atualizar'), (req,res) => apoiadorController.updateById(req,res));
-
-
+    .put(verificarToken, verificarPermissao(['Atualizar'], ['apoiadores']), (req,res) => apoiadorController.updateById(req,res));
 
 
 

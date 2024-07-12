@@ -7,22 +7,22 @@ import grupoController from "../controllers/grupoController.js";
 
 router
     .route("/grupos")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => grupoController.findAll(req,res));
+    .get(verificarToken,(req,res) => grupoController.findAll(req,res));
 
 router
     .route("/grupo")
-    .post(verificarToken,verificarPermissao('Criar'),(req,res) => grupoController.create(req,res));
+    .post(verificarToken,verificarPermissao(['Criar'],['grupos']),(req,res) => grupoController.create(req,res));
 
 router
     .route("/grupo/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => grupoController.findById(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'],['grupos']),(req,res) => grupoController.findById(req,res));
 
 router
     .route("/grupo/:id")
-    .put(verificarToken,verificarPermissao('Atualizar'),(req,res) => grupoController.updateById(req,res));
+    .put(verificarToken,verificarPermissao(['Atualizar'], ['grupos']),(req,res) => grupoController.updateById(req,res));
 
 router
     .route("/grupo/:id")
-    .delete(verificarToken,verificarPermissao('Deletar'),(req,res) => grupoController.deleteByid(req,res));
+    .delete(verificarToken,verificarPermissao(['Deletar'], ['grupos']),(req,res) => grupoController.deleteByid(req,res));
 
 export default router;

@@ -7,6 +7,6 @@ import categoriaDemandaController from "../controllers/categoriaDemandaControlle
 
 router
     .route("/categorias-demandas")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => categoriaDemandaController.findAll(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['demandas']),(req,res) => categoriaDemandaController.findAll(req,res));
 
 export default router;

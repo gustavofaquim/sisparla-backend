@@ -11,11 +11,11 @@ router
 
 router
     .route("/religiao/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => religiaoController.findById(req,res));
+    .get(verificarToken,verificarPermissao(['Criar']),(req,res) => religiaoController.findById(req,res));
 
 router
     .route("/religiao")
-    .post(verificarToken,verificarPermissao('Criar'),(req,res) => religiaoController.create(req,res));
+    .post(verificarToken,verificarPermissao(['Criar']),(req,res) => religiaoController.create(req,res));
 
 router
     .route("/religiao/:id")

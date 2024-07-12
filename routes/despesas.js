@@ -10,54 +10,54 @@ import credorController from '../controllers/credorController.js';
 
 router
     .route("/despesas")
-    .get(verificarToken, verificarPermissao('Vizualizar'),(req,res) => despesaController.findAll(req,res));
+    .get(verificarToken, verificarPermissao(['Visualizar'], ['despesas']),(req,res) => despesaController.findAll(req,res));
 
 router
     .route("/despesas/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => despesaController.findById(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['despesas']),(req,res) => despesaController.findById(req,res));
 
 router
     .route("/despesa")
-    .post(verificarToken,verificarPermissao('Criar'),(req,res) => despesaController.create(req,res));
+    .post(verificarToken,verificarPermissao(['Criar'], ['despesas']),(req,res) => despesaController.create(req,res));
 
 router
     .route("/despesa/:id")
-    .put(verificarToken,verificarPermissao('Atualizar'),(req,res) => despesaController.updateById(req,res));
+    .put(verificarToken,verificarPermissao(['Atualizar'], ['despesas']),(req,res) => despesaController.updateById(req,res));
 
 router
     .route("/despesa/:id")
-    .delete(verificarToken,verificarPermissao('Deletar'),(req,res) => despesaController.deleteByid(req,res));
+    .delete(verificarToken,verificarPermissao(['Deletar'], ['despesas']),(req,res) => despesaController.deleteByid(req,res));
 
 router
     .route("/tipos-despesas")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => tipoDespesaController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['despesas']),(req,res) => tipoDespesaController.findAll(req,res));
 
 
 router
     .route("/origens-despesas")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => origemDespesaController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['despesas']),(req,res) => origemDespesaController.findAll(req,res));
 
 
 router
     .route("/credores")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => credorController.findAll(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['despesas']),(req,res) => credorController.findAll(req,res));
 
 router
     .route("/credor")
-    .post(verificarToken,verificarPermissao('Criar'),(req,res) => credorController.create(req,res));
+    .post(verificarToken,verificarPermissao(['Criar'], ['despesas']),(req,res) => credorController.create(req,res));
 
 router
     .route("/credor/:id")
-    .get(verificarToken,verificarPermissao('Vizualizar'),(req,res) => credorController.findById(req,res));
+    .get(verificarToken,verificarPermissao(['Visualizar'], ['despesas']),(req,res) => credorController.findById(req,res));
 
 
 router
     .route("/credor/:id")
-    .put(verificarToken,verificarPermissao('Atualizar'),(req,res) => credorController.updateById(req,res));
+    .put(verificarToken,verificarPermissao(['Atualizar'], ['despesas']),(req,res) => credorController.updateById(req,res));
 
 router
     .route("/credor/:id")
-    .delete(verificarToken,verificarPermissao('Deletar'),(req,res) => credorController.deleteByid(req,res));
+    .delete(verificarToken,verificarPermissao(['Deletar'], ['despesas']),(req,res) => credorController.deleteByid(req,res));
 
 
 

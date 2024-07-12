@@ -8,11 +8,11 @@ import dashboardController from '../controllers/dashboardController.js';
 
 router 
     .route("/faixa-etaria")
-    .get(verificarToken,  verificarPermissao('Emitir Relatório'),(req,res) => dashboardController.ageRange(req,res));
+    .get(verificarToken,  verificarPermissao(['Visualizar'], ['graficos']),(req,res) => dashboardController.ageRange(req,res));
 
 router 
     .route("/cidades-apoiadores")
-    .get(verificarToken,  verificarPermissao('Emitir Relatório'),(req,res) => dashboardController.distributionCity(req,res));
+    .get(verificarToken,  verificarPermissao(['Visualizar'], ['graficos']),(req,res) => dashboardController.distributionCity(req,res));
 
     
 export default router;
