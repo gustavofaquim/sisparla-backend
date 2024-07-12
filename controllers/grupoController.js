@@ -101,10 +101,10 @@ const grupoController = {
                 return res.status(500).json("Grupo não encontrado");
             }
 
-            const {nome, responsavel} = req.body;
+            const {Nome, responsavel} = req.body;
 
             const grupoAtualizado = await grupoModel.update({
-                Nome: nome,
+                Nome: Nome,
                 Responsavel: responsavel
              },{
                 where: {IdGrupo: id}
