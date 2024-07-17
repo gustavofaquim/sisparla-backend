@@ -49,7 +49,7 @@ const usuarioController = {
                 u.Nome,
                 u.Senha,
                 u.PerfilAcesso AS IdPerfil,
-                pa.Nome as PerfilNome,
+                PA.Nome as PerfilNome,
                 t.Nome AS Tela,
                 p.IdPermissao,
                 p.Nome AS PermissaoNome
@@ -64,16 +64,19 @@ const usuarioController = {
                 
             let results = [];
 
+
             results = await sequelize.query(query, {
                 replacements: { nomeUsuario },
                 type: sequelize.QueryTypes.SELECT 
             });
 
+        
             
             if (results.length === 0) {
                 res.status(401).json({ msg: 'Nome de Usuário inválido' });
                 return;
             }
+
     
            // Agregar os resultados
             const usuario = {
@@ -88,6 +91,7 @@ const usuarioController = {
                     Telas: []
                 }
             };
+
             
              // Iterar sobre os resultados para agregar permissões
             results.forEach(row => {
@@ -100,10 +104,9 @@ const usuarioController = {
                     });
                 }
             });
-            
-            
-                
 
+
+            
             const password = await bcrypt.compare(senha, usuario.Senha);
 
             if(!password){
@@ -117,6 +120,7 @@ const usuarioController = {
             }
 
             const secret = 'secreto';
+
 
             // Gerar token JWT
             const token = jwt.sign(
@@ -134,9 +138,9 @@ const usuarioController = {
                 secret
             );
             
-            
+           
             //res.json({ token });
-            res.setHeader('Authorization', `Bearer ${token}`);
+            // res.setHeader('Authorization', `Bearer ${token}`); -> não funciona no servidor de produção
             res.status(200).json({token});
 
         } catch (error) {

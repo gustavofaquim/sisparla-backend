@@ -2,6 +2,7 @@ const verificarPermissao = (requiredPermissions, telas) => {
     return (req, res, next) => {
         const { usuario } = req;
 
+
         if (!usuario || !usuario.telas || usuario.telas.length === 0) {
             return res.status(403).json({ msg: 'Você não tem permissão para acessar este recurso.' });
         }
@@ -20,6 +21,8 @@ const verificarPermissao = (requiredPermissions, telas) => {
 
             return acc;
         }, {});
+
+        
 
         // Check if the user has any of the required permissions for any of the specified screens
         const hasPermission = telas.some(tela => {

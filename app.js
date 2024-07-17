@@ -15,13 +15,17 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 
+app.use(cors());
+
+
+
 // Servir arquivos estáticos diretamente da raiz
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use(bodyParser.json({limit: '35mb'}));
 
-app.use(cors());
+
 
 app.use(
     bodyParser.urlencoded({

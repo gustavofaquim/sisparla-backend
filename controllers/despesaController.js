@@ -99,7 +99,7 @@ const DespesaController = {
 
         try {
             
-            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, Credor} = req.body;
+            const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, Credor, Mes, Ano} = req.body;
 
             const valorConvertido  = parseFloat(valor.replace(',', '.'));
 
@@ -111,7 +111,9 @@ const DespesaController = {
                 Data: dataDespesa,
                 Tipo: idTipo,
                 Origem: idOrigem,
-                Credor: Credor
+                Credor: Credor,
+                Mes: Mes,
+                Ano: Ano
             })
 
         
