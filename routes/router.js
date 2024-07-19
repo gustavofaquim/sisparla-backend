@@ -108,6 +108,8 @@ import sexoRouter from "./sexo.js";
 router.use("/", sexoRouter);
 
 
+import exportDados from "./exportRoutes.js";
+router.use("/", exportDados);
 
 // tTwilio
 //import twilioRouter from "./twilio.js";
