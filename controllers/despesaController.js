@@ -101,8 +101,12 @@ const DespesaController = {
             
             const {descricao, detalhamento, valor, dataDespesa, idTipo, idOrigem, Credor, Mes, Ano} = req.body;
 
-            const valorConvertido  = parseFloat(valor.replace(',', '.'));
+            let valorConvertido = 0;
 
+            if(valor){
+                valorConvertido  = parseFloat(valor.replace(',', '.'));
+            }
+             
 
             const novaDespesa = await despesaModel.create({
                 Descricao: descricao,

@@ -19,19 +19,19 @@ const Evento = sequelize.define("Evento", {
     },
     Responsavel:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     Local:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     DataHorario:{
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
     },
     Relacao:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 
 },{

@@ -5,8 +5,7 @@ const exportExcel = async (req, res) => {
   try {
 
     const {relatorio} = req.body;
-    console.log('Entrou aquiiii')
-    console.log(relatorio)
+
 
     const workbook = new ExcelJS.Workbook();
 
