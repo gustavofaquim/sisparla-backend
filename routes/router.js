@@ -119,6 +119,7 @@ router.use("/", exportDados);
 import mensagemRouter from "./mensagem.js";
 router.use("/", mensagemRouter);
 
-
+import localizacaoRouter from "./localizacao.js";
+router.use("/", localizacaoRouter);
 
 export default router;
