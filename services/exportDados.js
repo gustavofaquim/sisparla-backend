@@ -20,7 +20,8 @@ const exportDataToExcel = async (relatorio) => {
                         WHEN (FP.Lideranca NOT LIKE '%n%') THEN 'Sim'
                         WHEN V.Lideranca NOT LIKE '%n%' THEN 'Sim'
                         ELSE 'Não'
-                    END AS 'Lideranca?',
+                    END AS 'Lideranca',
+                    DATE_FORMAT(A.DataInsercao, '%d/%m/%Y') AS 'DataCadastro',
                     A.InformacaoAdicional AS 'Observação'
                 FROM
                     APOIADOR A
@@ -41,8 +42,8 @@ const exportDataToExcel = async (relatorio) => {
     //const [rows] = await connection.execute(sql);
 
     const data = [
-      ['Nome', 'DataNascimento', 'CEP', 'Endereco', 'Complemento', 'Bairro', 'Cidade', 'UF', 'Celular', 'Email', 'Genero', 'Lideranca', 'Observacao'],
-      ...rows.map(row => [row.Nome, row.DataNascimento, row.CEP, row.Endereco, row.Complemento, row.Bairro, row.Cidade, row.UF, row.Celular, row.Email, row.Genero, row.Lideranca, row.Observacao])
+      ['Nome', 'DataNascimento', 'CEP', 'Endereco', 'Complemento', 'Bairro', 'Cidade', 'UF', 'Celular', 'Email', 'Genero', 'Lideranca', 'Data Cadastro', 'Observacao'],
+      ...rows.map(row => [row.Nome, row.DataNascimento, row.CEP, row.Endereco, row.Complemento, row.Bairro, row.Cidade, row.UF, row.Celular, row.Email, row.Genero, row.Lideranca,row.DataCadastro, row.Observacao])
     ]
     
     return data;
