@@ -14,7 +14,7 @@ const Campanha =  sequelize.define('Campanha', {
         allowNull: false,
     },
     Ano: {
-        type: DataTypes.YEAR,
+        type: DataTypes.STRING,
         allowNull: true,
     },
 },{

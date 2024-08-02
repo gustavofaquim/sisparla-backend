@@ -11,7 +11,7 @@ const Demanda = sequelize.define('Demanda', {
     IdDemanda:{
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: true,
+        allowNull: false,
         unique: true
     },
     Assunto:{
@@ -25,7 +25,7 @@ const Demanda = sequelize.define('Demanda', {
     Apoiador:{
         type: DataTypes.INTEGER,
         references:{
-            model: 'Apoiador',
+            model:'Apoiador',
             key: 'IdApoiador'
         }
     },
