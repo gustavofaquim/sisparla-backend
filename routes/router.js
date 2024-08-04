@@ -111,8 +111,11 @@ router.use("/", sexoRouter);
 import exportDados from "./exportRoutes.js";
 router.use("/", exportDados);
 
-import daacaoRouter from "./doacao.js"
-router.use("/", daacaoRouter);
+import doacaoRouter from "./doacao.js"
+router.use("/", doacaoRouter);
+
+import campanhaRouter from "./campanha.js";
+router.use("/", campanhaRouter);
 
 
 // tTwilio
